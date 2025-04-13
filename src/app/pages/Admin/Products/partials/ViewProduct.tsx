@@ -77,10 +77,9 @@ const ViewProduct: React.FC<ViewProductProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-1">
             <Image
-              src={product.image || 'https://placehold.co/400x400'}
+              src={product.image || ''}
               alt={product.title || 'Product image'}
               className="rounded-lg object-cover w-full"
-              fallback="https://placehold.co/400x400?text=No+Image"
             />
           </div>
 

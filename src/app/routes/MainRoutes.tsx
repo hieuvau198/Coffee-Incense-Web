@@ -32,6 +32,7 @@ const MainRoutes = () => {
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
 
+      {/* Admin routes */}
       <Route path="" element={<AdminLayout />}>
         <Route path="" element={<Navigate to="/dashboard" />} />
         <Route path="dashboard" element={<Dashboard />} />
@@ -42,6 +43,7 @@ const MainRoutes = () => {
         <Route path="reviews" element={<Reviews />} />
         <Route path="settings" element={<Settings />} />
       </Route>
+      
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

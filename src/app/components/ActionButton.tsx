@@ -1,82 +1,87 @@
 import React from 'react';
-import { Button, Tooltip, Popconfirm } from 'antd';
-import { 
-  EditOutlined, 
-  DeleteOutlined, 
-  EyeOutlined, 
-  QuestionCircleOutlined 
-} from '@ant-design/icons';
+import { Button, Tooltip, Space, Popconfirm } from 'antd';
+import { EyeOutlined, EditOutlined, DeleteOutlined, PrinterOutlined } from '@ant-design/icons';
 
-interface ActionButtonProps {
+interface ActionButtonsProps {
   onView?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
-  deleteConfirmTitle?: string;
-  viewTooltip?: string;
-  editTooltip?: string;
+  onPrint?: () => void;
+  disablePrint?: boolean;
+  hideEdit?: boolean;
+  hideDelete?: boolean;
+  hidePrint?: boolean;
   deleteTooltip?: string;
+  deleteDescription?: string;
 }
 
-const ActionButtons: React.FC<ActionButtonProps> = ({
+const ActionButtons: React.FC<ActionButtonsProps> = ({
   onView,
   onEdit,
   onDelete,
-  deleteConfirmTitle = 'Bạn có chắc chắn muốn xóa?',
-  viewTooltip = 'Xem chi tiết',
-  editTooltip = 'Chỉnh sửa',
-  deleteTooltip = 'Xóa'
+  onPrint,
+  disablePrint = false,
+  hideEdit = false,
+  hideDelete = false,
+  hidePrint = true,
+  deleteTooltip = "Xóa",
+  deleteDescription = "Bạn có chắc chắn muốn xóa?"
 }) => {
   return (
-    <div style={{ display: 'flex', gap: '8px' }}>
+    <Space size="middle">
       {onView && (
-        <Tooltip title={viewTooltip}>
+        <Tooltip title="Xem Chi Tiết">
           <Button
+            type="text"
             icon={<EyeOutlined />}
-            size="small"
             onClick={onView}
-            style={{ 
-              color: 'var(--coffee-dark)',
-              borderColor: 'var(--coffee-cream)'
-            }}
+            className="text-blue-600 hover:text-blue-800"
           />
         </Tooltip>
       )}
       
-      {onEdit && (
-        <Tooltip title={editTooltip}>
+      {!hideEdit && onEdit && (
+        <Tooltip title="Chỉnh Sửa">
           <Button
+            type="text"
             icon={<EditOutlined />}
-            size="small"
             onClick={onEdit}
-            style={{ 
-              color: 'var(--coffee-medium)',
-              borderColor: 'var(--coffee-cream)'
-            }}
+            className="text-green-600 hover:text-green-800"
           />
         </Tooltip>
       )}
-      
-      {onDelete && (
-        <Tooltip title={deleteTooltip}>
-          <Popconfirm
-            title={deleteConfirmTitle}
-            onConfirm={onDelete}
-            okText="Đồng ý"
-            cancelText="Hủy"
-            icon={<QuestionCircleOutlined style={{ color: 'var(--cinnamon)' }} />}
-          >
+
+      {!hideDelete && onDelete && (
+        <Popconfirm
+          title={deleteTooltip}
+          description={deleteDescription}
+          onConfirm={onDelete}
+          okText="Xóa"
+          cancelText="Hủy"
+          okButtonProps={{ danger: true }}
+        >
+          <Tooltip title={deleteTooltip}>
             <Button
+              type="text"
               icon={<DeleteOutlined />}
-              size="small"
-              danger
-              style={{ 
-                borderColor: 'var(--cinnamon)',
-              }}
+              className="text-red-600 hover:text-red-800"
             />
-          </Popconfirm>
+          </Tooltip>
+        </Popconfirm>
+      )}
+
+      {!hidePrint && onPrint && (
+        <Tooltip title="In">
+          <Button
+            type="text"
+            icon={<PrinterOutlined />}
+            onClick={onPrint}
+            disabled={disablePrint}
+            className={`${disablePrint ? 'text-gray-400' : 'text-purple-600 hover:text-purple-800'}`}
+          />
         </Tooltip>
       )}
-    </div>
+    </Space>
   );
 };
 
