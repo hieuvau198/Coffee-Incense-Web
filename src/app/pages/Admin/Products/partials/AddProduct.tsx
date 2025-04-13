@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Form, Input, InputNumber, Select, Switch, Space, message, Upload } from 'antd';
-import { ArrowLeftOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, Card, Form, Input, InputNumber, Select, Switch, message } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { productService } from '../../../../services/productService';
-import { Product, ProductCategory } from '../../../../models/product';
+import { ProductCategory } from '../../../../models/product';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -14,7 +14,6 @@ interface AddProductProps {
 const AddProduct: React.FC<AddProductProps> = ({ onBack }) => {
   const [form] = Form.useForm();
   const [categories, setCategories] = useState<ProductCategory[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   useEffect(() => {

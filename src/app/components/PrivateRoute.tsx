@@ -11,7 +11,7 @@ export default function PrivateRoute({
   redirectUrl: string;
   allowedroles: Role[];
 }) {
-  const auth = useAuthStore((state: any) => state);
+  const auth = useAuthStore((state) => state);
 
   // Check if the user is authenticated and has allowed role to access the route
   return auth?.isAuthenticated && allowedroles.includes(auth.role) ? (

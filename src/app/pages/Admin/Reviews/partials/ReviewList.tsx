@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Table, Space, Tag, Input, Select, Rate, Tooltip, message, DatePicker, Card } from "antd";
+import React from "react";
+import { Input, Select, Rate, Tooltip, DatePicker, Card } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import RenderBoldTitle from "@/app/components/RenderBoldTitle";

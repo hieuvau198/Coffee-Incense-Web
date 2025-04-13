@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Form,
   Input,
@@ -8,7 +7,6 @@ import {
   Select,
   Space,
   Divider,
-  Radio,
 } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
 import RenderBoldTitle from '@/app/components/RenderBoldTitle';
@@ -29,10 +27,10 @@ const Settings = () => {
         layout="vertical"
         onFinish={onFinish}
         initialValues={{
-          siteName: "70Tour",
-          siteEmail: "contact@70tour.com",
+          siteName: "EBC",
+          siteEmail: "contact@EBC.com",
           sitePhone: "+1 234 567 8900",
-          currency: "USD",
+          currency: "VND",
           timezone: "UTC",
           enableNotifications: true,
           enableEmailNotifications: true,

@@ -1,15 +1,11 @@
 import { Button } from "antd";
 import Logo from "../Logo";
 import Navigation from "./Navigation";
-import { FiSearch, FiShoppingCart, FiUser } from "react-icons/fi";
+import { FiSearch, FiShoppingCart } from "react-icons/fi";
 import { Link, useNavigate } from "react-router";
 
 const Header = () => {
   const navigate = useNavigate();
-
-  const handleSignIn = () => {
-    navigate("/login");
-  };
 
   return (
     <header className="bg-white text-[#8B7156] shadow-sm fixed top-0 left-0 w-full z-50">

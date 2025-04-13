@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { Button, Pagination, Tabs } from "antd";
+import { Button, Pagination } from "antd";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { products } from "../../../../../mocks/product";
-
-const { TabPane } = Tabs;
 
 const ProductList = () => {
   const navigate = useNavigate();

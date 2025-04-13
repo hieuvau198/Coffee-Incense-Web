@@ -1,6 +1,5 @@
 import { Menu } from "antd";
 import Logo from "@/app/components/Logo";
-import useAuthStore from "@/app/stores/authStore";
 import { Layout } from "antd";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";

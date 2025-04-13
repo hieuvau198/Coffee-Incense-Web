@@ -1,5 +1,5 @@
-import React from 'react';
-import { Card, Row, Col, Statistic, Table, Space, Tag, Button } from "antd";
+
+import { Card, Row, Col, Statistic, Table, Tag, Button } from "antd";
 import {
   UserOutlined,
   ShoppingCartOutlined,

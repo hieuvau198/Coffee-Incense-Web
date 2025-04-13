@@ -1,5 +1,4 @@
 import { Link, useLocation } from "react-router";
-import { useState } from "react";
 
 const Navigation = () => {
   const location = useLocation();

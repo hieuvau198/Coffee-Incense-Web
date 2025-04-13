@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Input, Space, Tag, Card, Select, Tooltip } from 'antd';
+import { Button, Input, Tag, Card, Select, Tooltip } from 'antd';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Product } from '../../../../models/product';
 import type { ColumnsType } from 'antd/es/table';

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Form, Input, InputNumber, Select, Switch, message, Spin } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { productService } from '../../../../services/productService';
-import { Product, ProductCategory } from '../../../../models/product';
+import { ProductCategory } from '../../../../models/product';
 
 const { Option } = Select;
 const { TextArea } = Input;

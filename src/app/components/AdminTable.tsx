@@ -1,5 +1,4 @@
-import React from 'react';
-import { Table, Card } from 'antd';
+import { Table } from 'antd';
 import type { TableProps } from 'antd';
 
 interface AdminTableProps<T> extends Omit<TableProps<T>, 'className' | 'scroll'> {

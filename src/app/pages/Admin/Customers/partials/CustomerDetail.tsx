@@ -55,8 +55,6 @@ interface CustomerDetailProps {
 const CustomerDetail: React.FC<CustomerDetailProps> = ({ customerId, onBack }) => {
   const [customer, setCustomer] = useState<CustomerData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('1');
-
   // In a real app, this would be an API call
   useEffect(() => {
     setLoading(true);
