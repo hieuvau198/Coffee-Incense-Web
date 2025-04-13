@@ -1,6 +1,6 @@
-import React from 'react';
-import { Button, Tag, Input, Select, DatePicker, Tooltip, Card } from 'antd';
-import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { Button, Tag, Input, Select, DatePicker, Space, Table, Card, message } from 'antd';
+import { SearchOutlined, PlusOutlined, EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import RenderBoldTitle from '@/app/components/RenderBoldTitle';
 import ActionButtons from '@/app/components/ActionButton';
@@ -32,44 +32,65 @@ const BookingList: React.FC<BookingListProps> = ({
   onEditOrder,
   handleDelete
 }) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [searchText, setSearchText] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [paymentFilter, setPaymentFilter] = useState<string>('');
+  const [dateRange, setDateRange] = useState<[string, string] | null>(null);
+
+  const handleSearch = (value: string) => {
+    setSearchText(value);
+  };
+
+  const handleStatusFilter = (value: string) => {
+    setStatusFilter(value);
+  };
+
+  const handlePaymentFilter = (value: string) => {
+    setPaymentFilter(value);
+  };
+
+  const handleDateRangeChange = (dates: any, dateStrings: [string, string]) => {
+    setDateRange(dateStrings);
+  };
+
+  const confirmDelete = (id: string) => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')) {
+      handleDelete(id);
+    }
+  };
+
   const columns: ColumnsType<BookingData> = [
     {
-      title: RenderBoldTitle('Mã Đơn Hàng'),
+      title: 'Mã Đơn Hàng',
       dataIndex: 'orderId',
       key: 'orderId',
-      width: 120,
-    },
-    {
-      title: RenderBoldTitle('Khách Hàng'),
-      dataIndex: 'customerName',
-      key: 'customerName',
       width: 150,
     },
     {
-      title: RenderBoldTitle('Sản Phẩm'),
+      title: 'Khách Hàng',
+      dataIndex: 'customerName',
+      key: 'customerName',
+      width: 180,
+    },
+    {
+      title: 'Sản Phẩm',
       dataIndex: 'products',
       key: 'products',
       width: 250,
-      ellipsis: {
-        showTitle: false,
-      },
-      render: (products: string) => (
-        <Tooltip placement="topLeft" title={products}>
-          <span>{products}</span>
-        </Tooltip>
-      ),
+      ellipsis: true,
     },
     {
-      title: RenderBoldTitle('Ngày Đặt'),
+      title: 'Ngày Đặt',
       dataIndex: 'date',
       key: 'date',
       width: 120,
     },
     {
-      title: RenderBoldTitle('Trạng Thái'),
+      title: 'Trạng Thái',
       dataIndex: 'status',
       key: 'status',
-      width: 120,
+      width: 150,
       render: (status: 'completed' | 'processing' | 'cancelled') => {
         const colors = {
           completed: 'green',
@@ -82,30 +103,65 @@ const BookingList: React.FC<BookingListProps> = ({
           cancelled: 'ĐÃ HỦY',
         };
         return (
+          <Tag color={colors[status]} className="text-center">
+            {labels[status]}
+          </Tag>
+        );
+      },
+      filters: [
+        { text: 'Hoàn Thành', value: 'completed' },
+        { text: 'Đang Xử Lý', value: 'processing' },
+        { text: 'Đã Hủy', value: 'cancelled' },
+      ],
+      onFilter: (value, record) => record.status === value,
+    },
+    {
+      title: 'Giá Tiền',
+      dataIndex: 'amount',
+      key: 'amount',
+      width: 140,
+      render: (amount: number) => `${amount.toLocaleString('vi-VN')} VNĐ`,
+      sorter: (a, b) => a.amount - b.amount,
+    },
+    {
+      title: 'Thanh Toán',
+      dataIndex: 'paymentStatus',
+      key: 'paymentStatus',
+      width: 130,
+      render: (status: 'paid' | 'pending' | 'refunded') => {
+        const colors = {
+          paid: 'green',
+          pending: 'orange',
+          refunded: 'blue',
+        };
+        const labels = {
+          paid: 'ĐÃ THANH TOÁN',
+          pending: 'CHƯA THANH TOÁN',
+          refunded: 'ĐÃ HOÀN TIỀN',
+        };
+        return (
           <Tag color={colors[status]}>
             {labels[status]}
           </Tag>
         );
       },
+      filters: [
+        { text: 'Đã Thanh Toán', value: 'paid' },
+        { text: 'Chưa Thanh Toán', value: 'pending' },
+        { text: 'Đã Hoàn Tiền', value: 'refunded' },
+      ],
+      onFilter: (value, record) => record.paymentStatus === value,
     },
     {
-      title: RenderBoldTitle('Giá Tiền'),
-      dataIndex: 'amount',
-      key: 'amount',
-      width: 140,
-      render: (amount: number) => `${amount.toLocaleString('vi-VN')} VNĐ`,
-    },
-    {
-      title: RenderBoldTitle('Thao Tác'),
-      key: 'actions',
-      width: 150,
+      title: 'Thao Tác',
+      key: 'action',
+      width: 120,
+      align: 'center',
       render: (_, record) => (
-        <ActionButtons
-          onView={() => onViewOrder(record.orderId)}
-          onEdit={() => onEditOrder(record.orderId)}
-          onDelete={() => handleDelete(record.orderId)}
-          deleteTooltip="Xóa đơn hàng"
-          deleteDescription="Bạn có chắc chắn muốn xóa đơn hàng này?"
+        <Button 
+          type="text" 
+          icon={<EyeOutlined className="text-lg" />} 
+          onClick={() => onViewOrder(record.orderId)}
         />
       ),
     },
@@ -134,9 +190,24 @@ const BookingList: React.FC<BookingListProps> = ({
     }
   ];
 
+  // Filter data based on search and filters
+  const filteredData = data.filter(item => {
+    const matchSearch = searchText === '' || 
+      item.orderId.toLowerCase().includes(searchText.toLowerCase()) ||
+      item.customerName.toLowerCase().includes(searchText.toLowerCase()) ||
+      item.products.toLowerCase().includes(searchText.toLowerCase());
+    
+    const matchStatus = statusFilter === '' || item.status === statusFilter;
+    const matchPayment = paymentFilter === '' || item.paymentStatus === paymentFilter;
+    
+    // Date range filter logic would go here
+    
+    return matchSearch && matchStatus && matchPayment;
+  });
+
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="space-y-4 w-full overflow-x-hidden">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Quản Lý Đơn Hàng</h1>
         <Button 
           type="primary" 
@@ -148,39 +219,68 @@ const BookingList: React.FC<BookingListProps> = ({
         </Button>
       </div>
 
-      <Card className="shadow-sm">
-        <div className="mb-4 flex gap-4">
+      <Card className="mb-4 shadow-sm">
+        <div className="flex flex-wrap gap-4 max-w-full">
           <Input
             placeholder="Tìm kiếm đơn hàng..."
             prefix={<SearchOutlined />}
-            className="max-w-xs"
+            value={searchText}
+            onChange={(e) => handleSearch(e.target.value)}
+            style={{ width: 250 }}
           />
+          
           <Select
             placeholder="Trạng Thái Đơn Hàng"
-            className="min-w-[150px]"
+            style={{ width: 200 }}
+            allowClear
+            value={statusFilter || undefined}
+            onChange={handleStatusFilter}
             options={[
+              { value: '', label: 'Tất cả trạng thái' },
               { value: 'completed', label: 'Hoàn Thành' },
               { value: 'processing', label: 'Đang Xử Lý' },
               { value: 'cancelled', label: 'Đã Hủy' },
             ]}
           />
+          
           <Select
             placeholder="Trạng Thái Thanh Toán"
-            className="min-w-[150px]"
+            style={{ width: 200 }}
+            allowClear
+            value={paymentFilter || undefined}
+            onChange={handlePaymentFilter}
             options={[
+              { value: '', label: 'Tất cả thanh toán' },
               { value: 'paid', label: 'Đã Thanh Toán' },
               { value: 'pending', label: 'Chưa Thanh Toán' },
               { value: 'refunded', label: 'Đã Hoàn Tiền' },
             ]}
           />
-          <RangePicker placeholder={['Từ Ngày', 'Đến Ngày']} />
+          
+          <RangePicker 
+            placeholder={['Từ Ngày', 'Đến Ngày']}
+            onChange={handleDateRangeChange}
+          />
         </div>
-
-        <AdminTable
+      </Card>
+      
+      <Card className="shadow-sm">
+        <Table
           columns={columns}
-          dataSource={data}
+          dataSource={filteredData}
           rowKey="key"
-          itemsName="đơn hàng"
+          loading={loading}
+          pagination={{ 
+            pageSize: 10,
+            showSizeChanger: true,
+            position: ['bottomRight'],
+            showTotal: (total) => `Tổng số ${total} đơn hàng`
+          }}
+          scroll={{ x: 1200 }}
+          className="overflow-x-auto"
+          size="middle"
+          bordered={false}
+          rowClassName={(record, index) => index % 2 === 0 ? 'bg-[#FAFAFA]' : ''}
         />
       </Card>
     </div>

@@ -1,5 +1,5 @@
-import { DatePicker } from "antd";
 import React, { useState } from "react";
+import { message } from "antd";
 import PaymentDetail from "./partials/PaymentDetail";
 import PaymentList from "./partials/PaymentList";
 
@@ -19,7 +19,21 @@ const Payments: React.FC = () => {
     setSelectedPaymentId(null);
   };
 
+  const handleDeletePayment = async (id: string) => {
+    try {
+      // TODO: Implement API call to delete payment
+      message.success('Xóa thanh toán thành công');
+    } catch (error) {
+      message.error('Có lỗi xảy ra khi xóa thanh toán');
+    }
+  };
+
   const renderContent = () => {
+    if (viewMode === "view" && !selectedPaymentId) {
+      handleBack();
+      return null;
+    }
+
     switch (viewMode) {
       case "view":
         return (
@@ -32,6 +46,7 @@ const Payments: React.FC = () => {
         return (
           <PaymentList
             onViewPayment={handleViewPayment}
+            handleDeletePayment={handleDeletePayment}
           />
         );
     }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Rate, Descriptions, Tag, Button, Avatar, Card, message } from "antd";
-import { UserOutlined, CalendarOutlined, ShoppingOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { Typography, Rate, Descriptions, Tag, Button, Avatar, Card, message, Row, Col, Statistic, Divider } from "antd";
+import { UserOutlined, CalendarOutlined, ShoppingOutlined, ArrowLeftOutlined, CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import Loading from "@/app/components/Loading";
 import RenderBoldTitle from "@/app/components/RenderBoldTitle";
 

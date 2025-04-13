@@ -6,81 +6,89 @@ import { jwtDecode } from "jwt-decode";
 import { setCookie } from "@/app/modules/cookie";
 import { User } from "../models/user";
 
-interface AuthState {
-  user: User | null;
+const useAuthStore = create<{
   isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
-  token: string | null;
-  
-  // Methods
-  login: (email: string, password: string) => Promise<void>;
+  userId: number;
+  email: string;
+  name: string;
+  avatar: string;
+  role: Role;
+  login: (token: string) => void;
   logout: () => void;
-  setUser: (user: User) => void;
-  setLoading: (isLoading: boolean) => void;
-  setError: (error: string | null) => void;
-}
-
-const useAuthStore = create<AuthState>((set, get) => ({
-  user: null,
-  isAuthenticated: false,
-  isLoading: false,
-  error: null,
-  token: localStorage.getItem('authToken'),
-  
-  login: async (email: string, password: string) => {
-    set({ isLoading: true, error: null });
-    try {
-      // This would be an API call in a real application
-      // For demo purposes we're just mocking it
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Mock successful login
-      const mockUser: User = {
-        id: '1',
-        name: 'Admin User',
-        email: email,
-        role: Role.ADMIN,
-        avatar: null
-      };
-      
-      const mockToken = 'mock-jwt-token';
-      localStorage.setItem('authToken', mockToken);
-      
-      set({
-        user: mockUser,
-        token: mockToken,
-        isAuthenticated: true,
-        isLoading: false
-      });
-    } catch (error) {
-      set({ 
-        error: 'Login failed. Please check your credentials.', 
-        isLoading: false 
-      });
-    }
-  },
-  
-  logout: () => {
-    localStorage.removeItem('authToken');
-    set({
-      user: null,
-      token: null,
+  updateAccount: (data: User) => void;
+}>()(
+  persist(
+    (set) => ({
       isAuthenticated: false,
-    });
-  },
-  
-  setUser: (user: User) => {
-    set({ user, isAuthenticated: true });
-  },
-  
-  setLoading: (isLoading: boolean) => {
-    set({ isLoading });
-  },
-  
-  setError: (error: string | null) => {
-    set({ error });
-  }
-}));
+      userId: 0,
+      email: "",
+      name: "",
+      avatar: "",
+      role: Role.GUEST,
+      login: (token: string) => {
+        // set({
+        //   isAuthenticated: true,
+        //   // email: userInfo.email,
+        //   // name: userInfo.email,
+        //   // avatar: userInfo.email,
+        //   // role: userInfo.role,
+        // });
+        if (typeof token !== "string") {
+          console.error("Invalid token:", token);
+          return;
+        }
+
+        try {
+          const decoded: User = jwtDecode(token);
+
+          if (decoded?.email) {
+            console.log("Email:", decoded.email);
+          } else {
+            console.error("Email1 not found in token payload");
+          }
+
+          setCookie("accessToken", token, 7);
+          console.log("Token:", decoded);
+
+          set({
+            isAuthenticated: true,
+            userId: decoded.userId || 0,
+            email: decoded.email,
+            name: decoded.name || decoded.email,
+            avatar: decoded.avatar || "",
+            role: decoded.role || Role.GUEST,
+          });
+          console.log("Login successfully");
+          console.log("User info:", decoded);
+        } catch (error) {
+          console.error("Failed to decode token:", error);
+        }
+      },
+
+      logout: () => {
+        setCookie("accessToken", "", 0);
+        set({
+          isAuthenticated: false,
+          userId: 0,
+          email: "",
+          name: "",
+          avatar: "",
+          role: Role.GUEST,
+        });
+      },
+      updateAccount: (data: User) => {
+        set({
+          name: data.name,
+          avatar: data.avatar || "",
+        });
+      },
+    }),
+    {
+      name: "auth",
+      storage: createJSONStorage(() => localStorage),
+      // storage: createJSONStorage(() => sessionStorage),
+    }
+  )
+);
 
 export default useAuthStore;

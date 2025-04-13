@@ -1,272 +1,231 @@
-import React, { useState } from 'react';
-import { Button, Input, Tag, Card, Select, Tooltip } from 'antd';
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
-import { Product } from '../../../../models/product';
+import React, { useEffect, useState } from 'react';
+import { Button, Input, Select, Space, Table, Tag, message, Card } from 'antd';
+import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
-import ActionButtons from '@/app/components/ActionButton';
-import AdminTable from '@/app/components/AdminTable';
-import RenderBoldTitle from '@/app/components/RenderBoldTitle';
+import { Product } from '../../../../models/product';
+import { productService } from '../../../../services/productService';
 
-interface ProductsListProps {
-  onViewProduct: (productId: string | number) => void;
-  onEditProduct: (productId: string | number) => void;
-  onAddProduct: () => void;
-  handleDelete: (id: string | number) => void;
+interface ProductListProps {
+  onAddClick: () => void;
+  onEditClick: (productId: string | number) => void;
+  onViewClick: (productId: string | number) => void;
 }
 
-const ProductsList: React.FC<ProductsListProps> = ({
-  onViewProduct,
-  onEditProduct,
-  onAddProduct,
-  handleDelete
-}) => {
-  const [loading, setLoading] = useState(false);
-  const [searchText, setSearchText] = useState('');
+const ProductList: React.FC<ProductListProps> = ({ onAddClick, onEditClick, onViewClick }) => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchText, setSearchText] = useState<string>('');
   const [categoryFilter, setCategoryFilter] = useState<string>('');
-  const [stockFilter, setStockFilter] = useState<string>('');
-  const [featuredFilter, setFeaturedFilter] = useState<boolean | null>(null);
+  const [categories, setCategories] = useState<{ value: string | number; label: string }[]>([]);
 
-  // Sample data
-  const products: Product[] = [
-    {
-      id: '1',
-      title: 'Hương Cà Phê Nguyên Chất',
-      description: 'Hương thơm đặc trưng từ hạt cà phê Arabica',
-      price: 159000,
-      image: 'https://placehold.co/100x100',
-      category: 'incense',
-      stock: 50,
-      featured: true,
-    },
-    {
-      id: '2',
-      title: 'Nhang Vòng Cà Phê',
-      description: 'Nhang vòng từ bột cà phê tự nhiên',
-      price: 199000,
-      image: 'https://placehold.co/100x100',
-      category: 'incense',
-      stock: 30,
-      featured: true,
-    },
-    {
-      id: '3',
-      title: 'Bột Hương Cà Phê',
-      description: 'Bột hương từ cà phê Robusta',
-      price: 99000,
-      image: 'https://placehold.co/100x100',
-      category: 'powder',
-      stock: 0,
-      featured: false,
-    },
-    {
-      id: '4',
-      title: 'Đế Đốt Nhang',
-      description: 'Đế đốt nhang bằng gốm cao cấp',
-      price: 299000,
-      image: 'https://placehold.co/100x100',
-      category: 'accessories',
-      stock: 5,
-      featured: false,
+  useEffect(() => {
+    fetchProducts();
+    fetchCategories();
+  }, []);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const data = await productService.getAllProducts();
+      setProducts(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      message.error('Không thể tải danh sách sản phẩm');
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  // Filter products
+  const fetchCategories = async () => {
+    try {
+      const data = await productService.getAllCategories();
+      setCategories(
+        data.map(category => ({
+          value: category.id,
+          label: category.name,
+        }))
+      );
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  const handleDelete = async (id: string | number) => {
+    try {
+      // Simulate API call
+      // In a real app, you would call an API endpoint
+      message.success('Xóa sản phẩm thành công');
+      // Refresh the product list after deletion
+      fetchProducts();
+    } catch (error) {
+      message.error('Có lỗi xảy ra khi xóa sản phẩm');
+    }
+  };
+
+  const handleSearch = (value: string) => {
+    setSearchText(value);
+  };
+
+  const handleCategoryFilter = (value: string) => {
+    setCategoryFilter(value);
+  };
+
   const filteredProducts = products.filter(product => {
-    const matchesSearch = 
-      !searchText || 
-      (product.title?.toLowerCase().includes(searchText.toLowerCase()) ?? false) ||
-      (product.description?.toLowerCase().includes(searchText.toLowerCase()) ?? false);
-
-    const matchesCategory = !categoryFilter || product.category === categoryFilter;
-
-    const stockNumber = product.stock ?? 0;
-    const matchesStock = !stockFilter || (
-      stockFilter === 'inStock' && stockNumber > 10 ||
-      stockFilter === 'lowStock' && stockNumber > 0 && stockNumber <= 10 ||
-      stockFilter === 'outOfStock' && stockNumber === 0
-    );
-
-    const matchesFeatured = featuredFilter === null || product.featured === featuredFilter;
-
-    return matchesSearch && matchesCategory && matchesStock && matchesFeatured;
+    const matchSearch = !searchText 
+      || product.title?.toLowerCase().includes(searchText.toLowerCase())
+      || product.description?.toLowerCase().includes(searchText.toLowerCase());
+    
+    const matchCategory = !categoryFilter || product.category === categoryFilter;
+    
+    return matchSearch && matchCategory;
   });
 
   const columns: ColumnsType<Product> = [
     {
-      title: RenderBoldTitle('Hình Ảnh'),
+      title: 'Hình ảnh',
       dataIndex: 'image',
       key: 'image',
       width: 120,
-      render: (image) => (
-        <div className="w-16 h-16 overflow-hidden rounded-md">
-          <img 
-            src={image || 'https://placehold.co/100x100'} 
-            alt="Product" 
-            className="w-full h-full object-cover"
-          />
-        </div>
+      render: (image: string) => (
+        <img 
+          src={image || 'https://placehold.co/80x80?text=No+Image'} 
+          alt="Product" 
+          className="w-20 h-20 object-cover rounded"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = 'https://placehold.co/80x80?text=Error';
+          }}
+        />
       ),
     },
     {
-      title: RenderBoldTitle('Tên Sản Phẩm'),
+      title: 'Tên sản phẩm',
       dataIndex: 'title',
       key: 'title',
-      width: 250,
-      ellipsis: {
-        showTitle: false,
-      },
-      render: (title: string | null | undefined) => (
-        <Tooltip placement="topLeft" title={title || 'Chưa có tên'}>
-          <span>{title || 'Chưa có tên'}</span>
-        </Tooltip>
-      ),
+      sorter: (a, b) => (a.title || '').localeCompare(b.title || ''),
     },
     {
-      title: RenderBoldTitle('Danh Mục'),
+      title: 'Danh mục',
       dataIndex: 'category',
       key: 'category',
-      width: 150,
-      render: (category: string | null | undefined) => {
-        const colorMap: Record<string, string> = {
-          'incense': 'green',
-          'powder': 'orange',
-          'accessories': 'blue',
-        };
-        const labels: Record<string, string> = {
-          'incense': 'Nhang hương',
-          'powder': 'Bột hương',
-          'accessories': 'Phụ kiện',
-        };
+      render: (category: string) => {
+        const categoryObj = categories.find(cat => cat.value === category);
         return (
-          <Tag color={category ? colorMap[category] || 'default' : 'default'}>
-            {category ? labels[category] || 'Khác' : 'Chưa phân loại'}
+          <Tag color={
+            category === 'incense' ? 'green' :
+            category === 'powder' ? 'orange' :
+            category === 'accessories' ? 'blue' : 'default'
+          }>
+            {categoryObj?.label || category}
           </Tag>
         );
       },
+      filters: categories.map(cat => ({ text: cat.label, value: cat.value })),
+      onFilter: (value, record) => record.category === value,
     },
     {
-      title: RenderBoldTitle('Giá Tiền'),
+      title: 'Giá',
       dataIndex: 'price',
       key: 'price',
-      width: 150,
-      render: (price: number | null | undefined) => 
-        price ? `${price.toLocaleString('vi-VN')} VNĐ` : 'Chưa có giá',
+      render: (price: number) => `${price?.toLocaleString('vi-VN')} VNĐ`,
+      sorter: (a, b) => (a.price || 0) - (b.price || 0),
     },
     {
-      title: RenderBoldTitle('Tồn Kho'),
+      title: 'Tồn kho',
       dataIndex: 'stock',
       key: 'stock',
-      width: 120,
-      render: (stock: number | null | undefined) => {
-        const stockNumber = stock ?? 0;
-        let color = 'green';
-        if (stockNumber <= 0) {
-          color = 'red';
-        } else if (stockNumber < 10) {
-          color = 'orange';
-        }
-        return <Tag color={color}>{stockNumber}</Tag>;
-      },
+      render: (stock: number) => (
+        <Tag color={!stock || stock <= 0 ? 'red' : stock < 10 ? 'orange' : 'green'}>
+          {stock || 0}
+        </Tag>
+      ),
+      sorter: (a, b) => (a.stock || 0) - (b.stock || 0),
     },
     {
-      title: RenderBoldTitle('Nổi Bật'),
+      title: 'Nổi bật',
       dataIndex: 'featured',
       key: 'featured',
-      width: 120,
-      render: (featured: boolean | null | undefined) => (
+      render: (featured: boolean) => (
         <Tag color={featured ? 'blue' : 'default'}>
           {featured ? 'Có' : 'Không'}
         </Tag>
       ),
+      filters: [
+        { text: 'Có', value: true },
+        { text: 'Không', value: false },
+      ],
+      onFilter: (value, record) => record.featured === value,
     },
     {
-      title: RenderBoldTitle('Thao Tác'),
-      key: 'actions',
-      width: 150,
-      fixed: 'right',
+      title: 'Thao tác',
+      key: 'action',
+      width: 200,
       render: (_, record) => (
-        <ActionButtons
-          onView={() => record.id && onViewProduct(record.id)}
-          onEdit={() => record.id && onEditProduct(record.id)}
-          onDelete={() => record.id && handleDelete(record.id)}
-          deleteTooltip="Xóa sản phẩm"
-          deleteDescription="Bạn có chắc chắn muốn xóa sản phẩm này?"
-        />
+        <Space size="small">
+          <Button
+            icon={<EyeOutlined />}
+            onClick={() => onViewClick(record.id || 0)}
+          />
+          <Button
+            icon={<EditOutlined />}
+            onClick={() => onEditClick(record.id || 0)}
+          />
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => handleDelete(record.id || 0)}
+          />
+        </Space>
       ),
     },
   ];
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Quản Lý Sản Phẩm</h1>
-        <Button 
-          type="primary" 
-          icon={<PlusOutlined />} 
-          onClick={onAddProduct}
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Danh sách sản phẩm</h1>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={onAddClick}
           className="bg-[#8B7156] hover:bg-[#64503C]"
         >
-          Thêm Sản Phẩm
+          Thêm sản phẩm
         </Button>
       </div>
-
-      <Card className="shadow-sm">
-        <div className="mb-4 flex gap-4 flex-wrap">
+      
+      <Card className="mb-4">
+        <div className="flex flex-wrap gap-4">
           <Input
             placeholder="Tìm kiếm sản phẩm..."
             prefix={<SearchOutlined />}
-            className="max-w-xs"
-            allowClear
             value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
+            style={{ width: 250 }}
           />
+          
           <Select
-            placeholder="Danh Mục"
-            className="min-w-[150px]"
+            placeholder="Lọc theo danh mục"
+            style={{ width: 200 }}
             allowClear
-            value={categoryFilter}
-            onChange={setCategoryFilter}
+            value={categoryFilter || undefined}
+            onChange={handleCategoryFilter}
             options={[
-              { value: 'incense', label: 'Nhang hương' },
-              { value: 'powder', label: 'Bột hương' },
-              { value: 'accessories', label: 'Phụ kiện' },
-            ]}
-          />
-          <Select
-            placeholder="Trạng Thái"
-            className="min-w-[150px]"
-            allowClear
-            value={stockFilter}
-            onChange={setStockFilter}
-            options={[
-              { value: 'inStock', label: 'Còn hàng' },
-              { value: 'lowStock', label: 'Sắp hết' },
-              { value: 'outOfStock', label: 'Hết hàng' },
-            ]}
-          />
-          <Select
-            placeholder="Sản Phẩm Nổi Bật"
-            className="min-w-[150px]"
-            allowClear
-            value={featuredFilter}
-            onChange={setFeaturedFilter}
-            options={[
-              { value: true, label: 'Có' },
-              { value: false, label: 'Không' },
+              { value: '', label: 'Tất cả danh mục' },
+              ...categories,
             ]}
           />
         </div>
-
-        <AdminTable
-          columns={columns}
-          dataSource={filteredProducts}
-          rowKey={record => record.id?.toString() || ''}
-          loading={loading}
-          itemsName="sản phẩm"
-        />
       </Card>
+      
+      <Table
+        columns={columns}
+        dataSource={filteredProducts}
+        rowKey="id"
+        loading={loading}
+        pagination={{ pageSize: 10, showSizeChanger: true }}
+      />
     </div>
   );
 };
 
-export default ProductsList;
+export default ProductList;

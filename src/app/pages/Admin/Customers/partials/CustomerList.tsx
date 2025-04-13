@@ -1,10 +1,7 @@
-import { MailOutlined, PhoneOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { Input, Select, Space, Tag, Card } from 'antd';
+import { MailOutlined, PhoneOutlined, SearchOutlined, UserOutlined, EyeOutlined } from '@ant-design/icons';
+import { Input, Select, Space, Tag, Card, Table, Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useState } from 'react';
-import RenderBoldTitle from '@/app/components/RenderBoldTitle';
-import ActionButtons from '@/app/components/ActionButton';
-import AdminTable from '@/app/components/AdminTable';
 
 interface CustomerData {
   key: string;
@@ -28,7 +25,7 @@ const CustomerList: React.FC<CustomerListProps> = ({ onViewCustomer }) => {
 
   const columns: ColumnsType<CustomerData> = [
     {
-      title: RenderBoldTitle('Khách Hàng'),
+      title: 'Khách Hàng',
       dataIndex: 'name',
       key: 'name',
       width: 200,
@@ -40,7 +37,7 @@ const CustomerList: React.FC<CustomerListProps> = ({ onViewCustomer }) => {
       ),
     },
     {
-      title: RenderBoldTitle('Email'),
+      title: 'Email',
       dataIndex: 'email',
       key: 'email',
       width: 250,
@@ -52,7 +49,7 @@ const CustomerList: React.FC<CustomerListProps> = ({ onViewCustomer }) => {
       ),
     },
     {
-      title: RenderBoldTitle('Số Điện Thoại'),
+      title: 'Số Điện Thoại',
       dataIndex: 'phone',
       key: 'phone',
       width: 150,
@@ -64,44 +61,52 @@ const CustomerList: React.FC<CustomerListProps> = ({ onViewCustomer }) => {
       ),
     },
     {
-      title: RenderBoldTitle('Trạng Thái'),
+      title: 'Trạng Thái',
       dataIndex: 'status',
       key: 'status',
-      width: 120,
+      width: 150,
       render: (status: 'active' | 'inactive') => (
-        <Tag color={status === 'active' ? 'green' : 'red'}>
+        <Tag color={status === 'active' ? 'green' : 'red'} className="text-center">
           {status === 'active' ? 'Đang hoạt động' : 'Ngừng hoạt động'}
         </Tag>
       ),
+      filters: [
+        { text: 'Đang Hoạt Động', value: 'active' },
+        { text: 'Ngừng Hoạt Động', value: 'inactive' },
+      ],
+      onFilter: (value, record) => record.status === value,
     },
     {
-      title: RenderBoldTitle('Số Đơn Hàng'),
+      title: 'Số Đơn Hàng',
       dataIndex: 'totalBookings',
       key: 'totalBookings',
       width: 120,
+      sorter: (a, b) => a.totalBookings - b.totalBookings,
     },
     {
-      title: RenderBoldTitle('Tổng Chi Tiêu'),
+      title: 'Tổng Chi Tiêu',
       dataIndex: 'totalSpent',
       key: 'totalSpent',
       width: 150,
       render: (value) => `${value.toLocaleString('vi-VN')} VNĐ`,
+      sorter: (a, b) => a.totalSpent - b.totalSpent,
     },
     {
-      title: RenderBoldTitle('Đơn Hàng Gần Nhất'),
+      title: 'Đơn Hàng Gần Nhất',
       dataIndex: 'lastBooking',
       key: 'lastBooking',
       width: 150,
     },
     {
-      title: RenderBoldTitle('Thao Tác'),
-      key: 'actions',
-      width: 150,
+      title: 'Thao Tác',
+      key: 'action',
+      width: 100,
+      align: 'center',
       render: (_, record) => (
-        <ActionButtons
-          onView={() => onViewCustomer(record.key)}
-          hideEdit
-          hideDelete
+        <Button 
+          type="text" 
+          icon={<EyeOutlined className="text-lg" />} 
+          onClick={() => onViewCustomer(record.key)}
         />
       ),
     },
@@ -140,25 +145,25 @@ const CustomerList: React.FC<CustomerListProps> = ({ onViewCustomer }) => {
   );
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="space-y-4 w-full overflow-x-hidden">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Quản Lý Khách Hàng</h1>
       </div>
 
-      <Card className="shadow-sm">
-        <div className="mb-4 flex gap-4">
+      <Card className="mb-4 shadow-sm">
+        <div className="flex flex-wrap gap-4 max-w-full">
           <Input
             placeholder="Tìm kiếm khách hàng..."
             prefix={<SearchOutlined />}
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            className="max-w-xs"
+            style={{ width: 250 }}
           />
           <Select
             placeholder="Trạng Thái"
             value={statusFilter}
             onChange={setStatusFilter}
-            className="min-w-[150px]"
+            style={{ width: 200 }}
             options={[
               { value: 'all', label: 'Tất Cả' },
               { value: 'active', label: 'Đang Hoạt Động' },
@@ -166,13 +171,25 @@ const CustomerList: React.FC<CustomerListProps> = ({ onViewCustomer }) => {
             ]}
           />
         </div>
+      </Card>
 
-        <AdminTable
+      <Card className="shadow-sm">
+        <Table
           columns={columns}
           dataSource={filteredCustomers}
-          loading={loading}
           rowKey="key"
-          itemsName="khách hàng"
+          loading={loading}
+          pagination={{ 
+            pageSize: 10,
+            showSizeChanger: true,
+            position: ['bottomRight'],
+            showTotal: (total) => `Tổng số ${total} khách hàng`
+          }}
+          scroll={{ x: 1200 }}
+          className="overflow-x-auto"
+          size="middle"
+          bordered={false}
+          rowClassName={(record, index) => index % 2 === 0 ? 'bg-[#FAFAFA]' : ''}
         />
       </Card>
     </div>

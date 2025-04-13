@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Tag, Input, Select, DatePicker, Tooltip, message, Card } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Tag, Input, Select, DatePicker, Card, Table, Button, Space } from "antd";
+import { SearchOutlined, EyeOutlined, PrinterOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import RenderBoldTitle from '@/app/components/RenderBoldTitle';
 import ActionButtons from '@/app/components/ActionButton';
@@ -24,6 +24,12 @@ interface PaymentListProps {
 }
 
 const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
+  const [loading, setLoading] = useState(false);
+  const [searchText, setSearchText] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [methodFilter, setMethodFilter] = useState<string>('');
+  const [dateRange, setDateRange] = useState<[string, string] | null>(null);
+
   const [paymentData, setPaymentData] = useState<PaymentData[]>([
     {
       key: "1",
@@ -67,118 +73,176 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
     },
   ]);
 
+  const handleSearch = (value: string) => {
+    setSearchText(value);
+  };
+
+  const handleStatusFilter = (value: string) => {
+    setStatusFilter(value);
+  };
+
+  const handleMethodFilter = (value: string) => {
+    setMethodFilter(value);
+  };
+
+  const handleDateRangeChange = (dates: any, dateStrings: [string, string]) => {
+    setDateRange(dateStrings);
+  };
+
   const handlePrintReceipt = (id: string) => {
-    message.success(`Đang in biên lai thanh toán #${id}`);
     // In a real app, this would open a print dialog or generate a PDF
+    console.log(`Đang in biên lai thanh toán #${id}`);
   };
 
   const columns: ColumnsType<PaymentData> = [
     {
-      title: RenderBoldTitle('Mã Thanh Toán'),
+      title: 'Mã Thanh Toán',
       dataIndex: 'paymentId',
       key: 'paymentId',
+      width: 150,
     },
     {
-      title: RenderBoldTitle('Khách Hàng'),
+      title: 'Khách Hàng',
       dataIndex: 'customer',
       key: 'customer',
+      width: 180,
     },
     {
-      title: RenderBoldTitle('Sản Phẩm'),
+      title: 'Sản Phẩm',
       dataIndex: 'products',
       key: 'products',
-      width: 200,
-      ellipsis: {
-        showTitle: false,
-      },
-      render: (products: string) => (
-        <Tooltip placement="topLeft" title={products}>
-          <span>{products}</span>
-        </Tooltip>
-      ),
+      width: 250,
+      ellipsis: true,
     },
     {
-      title: RenderBoldTitle('Số Tiền'),
+      title: 'Số Tiền',
       dataIndex: 'amount',
       key: 'amount',
+      width: 150,
       render: (amount: number) => `${amount.toLocaleString("vi-VN")} VNĐ`,
+      sorter: (a, b) => a.amount - b.amount,
     },
     {
-      title: RenderBoldTitle('Ngày Thanh Toán'),
+      title: 'Ngày Thanh Toán',
       dataIndex: 'date',
       key: 'date',
+      width: 150,
     },
     {
-      title: RenderBoldTitle('Phương Thức'),
+      title: 'Phương Thức',
       dataIndex: 'method',
       key: 'method',
+      width: 150,
       render: (method: string) => {
-        const labels = {
+        const labels: Record<string, string> = {
           credit_card: "Thẻ tín dụng",
           paypal: "PayPal",
           bank_transfer: "Chuyển khoản",
           momo: "Ví MoMo",
         };
-        return labels[method as keyof typeof labels];
+        return labels[method] || method;
       },
+      filters: [
+        { text: "Thẻ tín dụng", value: "credit_card" },
+        { text: "PayPal", value: "paypal" },
+        { text: "Chuyển khoản", value: "bank_transfer" },
+        { text: "Ví MoMo", value: "momo" },
+      ],
+      onFilter: (value, record) => record.method === value,
     },
     {
-      title: RenderBoldTitle('Trạng Thái'),
+      title: 'Trạng Thái',
       dataIndex: 'status',
       key: 'status',
+      width: 150,
       render: (status: string) => {
-        const colors = {
+        const colors: Record<string, string> = {
           completed: "green",
           pending: "orange",
           failed: "red",
           refunded: "blue",
         };
-        const labels = {
-          completed: "Hoàn thành",
-          pending: "Đang xử lý",
-          failed: "Thất bại",
-          refunded: "Hoàn tiền",
+        const labels: Record<string, string> = {
+          completed: "HOÀN THÀNH",
+          pending: "ĐANG XỬ LÝ",
+          failed: "THẤT BẠI",
+          refunded: "HOÀN TIỀN",
         };
         return (
-          <Tag color={colors[status as keyof typeof colors]}>
-            {labels[status as keyof typeof labels]}
+          <Tag color={colors[status]} className="text-center">
+            {labels[status]}
           </Tag>
         );
       },
+      filters: [
+        { text: "Hoàn thành", value: "completed" },
+        { text: "Đang xử lý", value: "pending" },
+        { text: "Thất bại", value: "failed" },
+        { text: "Hoàn tiền", value: "refunded" },
+      ],
+      onFilter: (value, record) => record.status === value,
     },
     {
-      title: RenderBoldTitle('Thao Tác'),
-      key: 'actions',
+      title: 'Thao Tác',
+      key: 'action',
+      width: 120,
+      align: 'center',
       render: (_, record) => (
-        <ActionButtons
-          onView={() => onViewPayment(record.key)}
-          onPrint={() => handlePrintReceipt(record.paymentId)}
-          hideEdit
-          hideDelete
-          hidePrint={false}
-          disablePrint={record.status !== "completed"}
-        />
+        <Space size="small">
+          <Button 
+            type="text" 
+            icon={<EyeOutlined className="text-lg" />} 
+            onClick={() => onViewPayment(record.key)}
+          />
+          {record.status === "completed" && (
+            <Button
+              type="text"
+              icon={<PrinterOutlined className="text-lg" />}
+              onClick={() => handlePrintReceipt(record.paymentId)}
+            />
+          )}
+        </Space>
       ),
     },
   ];
 
+  const filteredData = paymentData.filter(payment => {
+    const matchSearch = searchText === '' || 
+      payment.paymentId.toLowerCase().includes(searchText.toLowerCase()) ||
+      payment.customer.toLowerCase().includes(searchText.toLowerCase()) ||
+      payment.products.toLowerCase().includes(searchText.toLowerCase());
+    
+    const matchStatus = statusFilter === '' || payment.status === statusFilter;
+    const matchMethod = methodFilter === '' || payment.method === methodFilter;
+    
+    // Date range filter logic would go here
+    
+    return matchSearch && matchStatus && matchMethod;
+  });
+
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="space-y-4 w-full overflow-x-hidden">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Quản Lý Thanh Toán</h1>
       </div>
 
-      <Card className="shadow-sm">
-        <div className="mb-4 flex gap-4">
+      <Card className="mb-4 shadow-sm">
+        <div className="flex flex-wrap gap-4 max-w-full">
           <Input
             placeholder="Tìm kiếm thanh toán..."
             prefix={<SearchOutlined />}
-            className="max-w-xs"
+            value={searchText}
+            onChange={(e) => handleSearch(e.target.value)}
+            style={{ width: 250 }}
           />
           <Select
             placeholder="Trạng thái thanh toán"
-            className="min-w-[150px]"
+            style={{ width: 200 }}
+            allowClear
+            value={statusFilter || undefined}
+            onChange={handleStatusFilter}
             options={[
+              { value: '', label: 'Tất cả trạng thái' },
               { value: "completed", label: "Hoàn thành" },
               { value: "pending", label: "Đang xử lý" },
               { value: "failed", label: "Thất bại" },
@@ -187,22 +251,42 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
           />
           <Select
             placeholder="Phương thức thanh toán"
-            className="min-w-[150px]"
+            style={{ width: 200 }}
+            allowClear
+            value={methodFilter || undefined}
+            onChange={handleMethodFilter}
             options={[
+              { value: '', label: 'Tất cả phương thức' },
               { value: "credit_card", label: "Thẻ tín dụng" },
               { value: "paypal", label: "PayPal" },
               { value: "bank_transfer", label: "Chuyển khoản" },
               { value: "momo", label: "Ví MoMo" },
             ]}
           />
-          <RangePicker placeholder={["Từ ngày", "Đến ngày"]} />
+          <RangePicker 
+            placeholder={["Từ ngày", "Đến ngày"]} 
+            onChange={handleDateRangeChange}
+          />
         </div>
+      </Card>
 
-        <AdminTable
+      <Card className="shadow-sm">
+        <Table
           columns={columns}
-          dataSource={paymentData}
+          dataSource={filteredData}
           rowKey="key"
-          itemsName="giao dịch"
+          loading={loading}
+          pagination={{ 
+            pageSize: 10,
+            showSizeChanger: true,
+            position: ['bottomRight'],
+            showTotal: (total) => `Tổng số ${total} giao dịch`
+          }}
+          scroll={{ x: 1200 }}
+          className="overflow-x-auto"
+          size="middle"
+          bordered={false}
+          rowClassName={(record, index) => index % 2 === 0 ? 'bg-[#FAFAFA]' : ''}
         />
       </Card>
     </div>

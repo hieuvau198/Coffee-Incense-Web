@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { message } from "antd";
+import { Card, message } from "antd";
 import BookingList from "./partials/BookingList";
 import AddBooking from "./partials/AddBooking";
 import ViewBooking from "./partials/ViewBooking";
@@ -11,16 +11,16 @@ const Bookings: React.FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
-  const handleAddOrder = () => {
+  const handleAddClick = () => {
     setViewMode("add");
   };
 
-  const handleViewOrder = (id: string) => {
+  const handleViewClick = (id: string) => {
     setSelectedOrderId(id);
     setViewMode("view");
   };
 
-  const handleEditOrder = (id: string) => {
+  const handleEditClick = (id: string) => {
     setSelectedOrderId(id);
     setViewMode("edit");
   };
@@ -43,45 +43,41 @@ const Bookings: React.FC = () => {
     }
   };
 
-  // Render different content based on the current view mode
-  const renderContent = () => {
-    switch (viewMode) {
-      case "add":
-        return (
-          <AddBooking 
-            onCancel={handleBack} 
-            onSuccess={handleBack} 
-          />
-        );
-      case "view":
-        return (
-          <ViewBooking 
-            orderId={selectedOrderId!} 
-            onBack={handleBack} 
-            onEdit={handleEditOrder} 
-          />
-        );
-      case "edit":
-        return (
-          <EditBooking 
-            orderId={selectedOrderId!} 
-            onCancel={handleBack} 
-            onSuccess={handleBack} 
-          />
-        );
-      default:
-        return (
-          <BookingList
-            onAddOrder={handleAddOrder}
-            onViewOrder={handleViewOrder}
-            onEditOrder={handleEditOrder}
-            handleDelete={handleDelete}
-          />
-        );
-    }
-  };
+  return (
+    <Card className="shadow-sm h-full overflow-hidden">
+      {viewMode === "list" && (
+        <BookingList
+          onAddOrder={handleAddClick}
+          onViewOrder={handleViewClick}
+          onEditOrder={handleEditClick}
+          handleDelete={handleDelete}
+        />
+      )}
 
-  return renderContent();
+      {viewMode === "add" && (
+        <AddBooking 
+          onCancel={handleBack} 
+          onSuccess={handleBack} 
+        />
+      )}
+
+      {viewMode === "view" && selectedOrderId && (
+        <ViewBooking 
+          orderId={selectedOrderId} 
+          onBack={handleBack} 
+          onEdit={handleEditClick} 
+        />
+      )}
+
+      {viewMode === "edit" && selectedOrderId && (
+        <EditBooking 
+          orderId={selectedOrderId} 
+          onCancel={handleBack} 
+          onSuccess={handleBack} 
+        />
+      )}
+    </Card>
+  );
 };
 
 export default Bookings; 

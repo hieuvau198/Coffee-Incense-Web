@@ -10,7 +10,7 @@ const ProfileDropdown: React.FC = () => {
   // Dummy user for demonstration
   const currentUser = {
     name: 'Admin',
-    role: 'Administrator',
+    role: '',
     avatar: null
   };
 

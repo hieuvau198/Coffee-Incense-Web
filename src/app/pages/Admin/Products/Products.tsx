@@ -1,89 +1,64 @@
 import React, { useState } from 'react';
-import { message } from 'antd';
-import ProductsList from './partials/ProductList';
+import { Card } from 'antd';
+import ProductList from './partials/ProductList';
 import AddProduct from './partials/AddProduct';
 import EditProduct from './partials/EditProduct';
 import ViewProduct from './partials/ViewProduct';
 
-type ViewMode = 'list' | 'detail' | 'add' | 'edit';
+type ViewMode = 'list' | 'add' | 'edit' | 'view';
 
 const Products: React.FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedProductId, setSelectedProductId] = useState<string | number | null>(null);
 
-  const handleViewProduct = (productId: string | number) => {
-    setSelectedProductId(productId);
-    setViewMode('detail');
-  };
-
-  const handleAddProduct = () => {
+  const handleAddClick = () => {
     setViewMode('add');
   };
 
-  const handleEditProduct = (productId: string | number) => {
+  const handleEditClick = (productId: string | number) => {
     setSelectedProductId(productId);
     setViewMode('edit');
   };
 
-  const handleBackToList = () => {
+  const handleViewClick = (productId: string | number) => {
+    setSelectedProductId(productId);
+    setViewMode('view');
+  };
+
+  const handleBack = () => {
     setViewMode('list');
     setSelectedProductId(null);
   };
 
-  const handleDelete = async (id: string | number) => {
-    try {
-      // TODO: Implement API call to delete product
-      message.success('Xóa sản phẩm thành công');
-    } catch (error) {
-      message.error('Có lỗi xảy ra khi xóa sản phẩm');
-    }
-  };
-
-  const renderContent = () => {
-    if ((viewMode === 'detail' || viewMode === 'edit') && !selectedProductId) {
-      handleBackToList();
-      return null;
-    }
-
-    switch (viewMode) {
-      case 'detail':
-        return (
-          <ViewProduct
-            productId={selectedProductId!}
-            onBack={handleBackToList}
-            onEdit={handleEditProduct}
-          />
-        );
-      case 'add':
-        return (
-          <AddProduct
-            onBack={handleBackToList}
-          />
-        );
-      case 'edit':
-        return (
-          <EditProduct
-            productId={selectedProductId!}
-            onBack={handleBackToList}
-          />
-        );
-      case 'list':
-      default:
-        return (
-          <ProductsList 
-            onViewProduct={handleViewProduct} 
-            onAddProduct={handleAddProduct} 
-            onEditProduct={handleEditProduct}
-            handleDelete={handleDelete}
-          />
-        );
-    }
-  };
-
   return (
-    <div className="p-6">
-      {renderContent()}
-    </div>
+    <Card className="shadow-sm h-full">
+      {viewMode === 'list' && (
+        <ProductList
+          onAddClick={handleAddClick}
+          onEditClick={handleEditClick}
+          onViewClick={handleViewClick}
+        />
+      )}
+
+      {viewMode === 'add' && (
+        <AddProduct onBack={handleBack} />
+      )}
+
+      {viewMode === 'edit' && selectedProductId && (
+        <EditProduct
+          productId={selectedProductId}
+          onBack={handleBack}
+        />
+      )}
+
+      {viewMode === 'view' && selectedProductId && (
+        <ViewProduct
+          productId={selectedProductId}
+          onBack={handleBack}
+          onEdit={handleEditClick}
+        />
+      )}
+    </Card>
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Card } from 'antd';
 import CustomerDetail from './partials/CustomerDetail';
 import CustomerList from './partials/CustomerList';
 
@@ -18,27 +19,19 @@ const Customers: React.FC = () => {
     setSelectedCustomerId(null);
   };
 
-  const renderContent = () => {
-    switch (viewMode) {
-      case 'detail':
-        return (
-          <CustomerDetail
-            customerId={selectedCustomerId as string}
-            onBack={handleBackToList}
-          />
-        );
-      case 'list':
-      default:
-        return (
-          <CustomerList onViewCustomer={handleViewCustomer} />
-        );
-    }
-  };
-
   return (
-    <div className="p-6">
-      {renderContent()}
-    </div>
+    <Card className="shadow-sm h-full overflow-hidden">
+      {viewMode === 'list' && (
+        <CustomerList onViewCustomer={handleViewCustomer} />
+      )}
+
+      {viewMode === 'detail' && selectedCustomerId && (
+        <CustomerDetail
+          customerId={selectedCustomerId}
+          onBack={handleBackToList}
+        />
+      )}
+    </Card>
   );
 };
 
