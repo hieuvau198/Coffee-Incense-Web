@@ -1,37 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { 
-  Typography, 
-  Descriptions, 
-  Tag, 
-  Button, 
-  Card, 
-  Space, 
-  message, 
-  Steps, 
-  Divider,
-  Row,
-  Col,
-  Statistic,
-  Tabs
-} from "antd";
-import {
-  ArrowLeftOutlined,
-  CreditCardOutlined,
-  BankOutlined,
-  DollarOutlined,
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  CloseCircleOutlined,
-  PrinterOutlined,
-  UserOutlined,
-  CalendarOutlined,
-  GlobalOutlined,
-  TeamOutlined
-} from "@ant-design/icons";
+import { Typography, Descriptions, Tag, Button, Card, Space, message, Steps, Divider,Row,Col,Statistic,Tabs} from "antd";
+import {ArrowLeftOutlined,CreditCardOutlined,BankOutlined,DollarOutlined,CheckCircleOutlined,ClockCircleOutlined,CloseCircleOutlined,PrinterOutlined,UserOutlined, ShoppingOutlined,ShoppingCartOutlined} from "@ant-design/icons";
 import Loading from "@/app/components/Loading";
 import RenderBoldTitle from '@/app/components/RenderBoldTitle';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title } = Typography;
 
 interface PaymentData {
   key: string;
@@ -39,11 +12,15 @@ interface PaymentData {
   customer: string;
   customerEmail: string;
   customerPhone: string;
-  tour: string;
-  tourId: string;
+  products: {
+    id: string;
+    name: string;
+    quantity: number;
+    price: number;
+  }[];
   amount: number;
   date: string;
-  method: "credit_card" | "paypal" | "bank_transfer";
+  method: "credit_card" | "paypal" | "bank_transfer" | "momo";
   status: "completed" | "pending" | "failed" | "refunded";
   cardInfo?: {
     cardType: string;
@@ -54,11 +31,11 @@ interface PaymentData {
     accountNumber: string;
   };
   transactionId: string;
-  bookingDetails: {
-    bookingId: string;
-    bookingDate: string;
-    participants: number;
-    departureDate: string;
+  orderDetails: {
+    orderId: string;
+    orderDate: string;
+    shippingAddress: string;
+    note?: string;
   };
   refundInfo?: {
     refundDate: string;
@@ -87,9 +64,21 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
         customer: "Nguyễn Văn A",
         customerEmail: "nguyenvana@example.com",
         customerPhone: "0901234567",
-        tour: "TOUR DU LỊCH ĐÀ LẠT",
-        tourId: "TOUR-001",
-        amount: 2590000,
+        products: [
+          {
+            id: "PRD-001",
+            name: "Hương Cà Phê",
+            quantity: 2,
+            price: 149000
+          },
+          {
+            id: "PRD-002",
+            name: "Nụ Hương Cà Phê",
+            quantity: 1,
+            price: 199000
+          }
+        ],
+        amount: 499000,
         date: "15/04/2024",
         method: "credit_card",
         status: "completed",
@@ -98,11 +87,10 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
           lastFourDigits: "4567",
         },
         transactionId: "TXN123456789",
-        bookingDetails: {
-          bookingId: "BK001",
-          bookingDate: "10/04/2024",
-          participants: 2,
-          departureDate: "20/05/2024",
+        orderDetails: {
+          orderId: "ORD001",
+          orderDate: "10/04/2024",
+          shippingAddress: "123 Nguyễn Văn Linh, Quận 7, TP.HCM",
         },
       },
       "2": {
@@ -111,18 +99,30 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
         customer: "Trần Thị B",
         customerEmail: "tranthib@example.com",
         customerPhone: "0912345678",
-        tour: "TOUR DU LỊCH PHÚ QUỐC",
-        tourId: "TOUR-002",
-        amount: 4990000,
+        products: [
+          {
+            id: "PRD-003",
+            name: "Bột Hương Cà Phê",
+            quantity: 3,
+            price: 180000
+          },
+          {
+            id: "PRD-004",
+            name: "Nhang Vòng Cà Phê",
+            quantity: 2,
+            price: 120000
+          }
+        ],
+        amount: 780000,
         date: "16/04/2024",
-        method: "paypal",
+        method: "momo",
         status: "pending",
         transactionId: "TXN234567890",
-        bookingDetails: {
-          bookingId: "BK002",
-          bookingDate: "12/04/2024",
-          participants: 3,
-          departureDate: "25/05/2024",
+        orderDetails: {
+          orderId: "ORD002",
+          orderDate: "12/04/2024",
+          shippingAddress: "456 Lê Văn Việt, Quận 9, TP.HCM",
+          note: "Giao hàng giờ hành chính"
         },
       },
       "3": {
@@ -131,8 +131,7 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
         customer: "Lê Văn C",
         customerEmail: "levanc@example.com",
         customerPhone: "0923456789",
-        tour: "TOUR DU LỊCH ĐÀ NẴNG",
-        tourId: "TOUR-003",
+        products: [],
         amount: 6500000,
         date: "17/04/2024",
         method: "bank_transfer",
@@ -142,11 +141,10 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
           accountNumber: "****7890",
         },
         transactionId: "TXN345678901",
-        bookingDetails: {
-          bookingId: "BK003",
-          bookingDate: "14/04/2024",
-          participants: 4,
-          departureDate: "30/05/2024",
+        orderDetails: {
+          orderId: "ORD003",
+          orderDate: "14/04/2024",
+          shippingAddress: "789 Nguyễn Văn Linh, Quận 7, TP.HCM",
         },
       },
       "4": {
@@ -155,8 +153,7 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
         customer: "Phạm Thị D",
         customerEmail: "phamthid@example.com",
         customerPhone: "0934567890",
-        tour: "TOUR DU LỊCH NHA TRANG",
-        tourId: "TOUR-004",
+        products: [],
         amount: 5290000,
         date: "18/04/2024",
         method: "credit_card",
@@ -166,16 +163,15 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
           lastFourDigits: "1234",
         },
         transactionId: "TXN456789012",
-        bookingDetails: {
-          bookingId: "BK004",
-          bookingDate: "15/04/2024",
-          participants: 2,
-          departureDate: "05/06/2024",
+        orderDetails: {
+          orderId: "ORD004",
+          orderDate: "15/04/2024",
+          shippingAddress: "101 Nguyễn Văn Linh, Quận 7, TP.HCM",
         },
         refundInfo: {
           refundDate: "20/04/2024",
           refundAmount: 5290000,
-          reason: "Hủy tour do khách không thể tham gia",
+          reason: "Hủy đơn hàng do khách không thể tham gia",
         },
       },
     };
@@ -244,6 +240,8 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
         return <BankOutlined />;
       case "paypal":
         return <DollarOutlined />;
+      case "momo":
+        return <DollarOutlined />;
       default:
         return <DollarOutlined />;
     }
@@ -297,6 +295,7 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
     credit_card: "Thẻ tín dụng",
     paypal: "PayPal",
     bank_transfer: "Chuyển khoản",
+    momo: "MoMo",
   };
 
   return (
@@ -401,27 +400,37 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
         <div className="lg:col-span-2">
           <Card title={RenderBoldTitle("Thông Tin Giao Dịch")} className="mb-6" variant="borderless">
             <Tabs
-              defaultActiveKey="booking"
+              defaultActiveKey="order"
               items={[
                 {
-                  key: 'booking',
-                  label: RenderBoldTitle('Đặt Tour'),
+                  key: 'order',
+                  label: RenderBoldTitle('Đơn Hàng'),
                   children: (
                     <Descriptions column={1} bordered>
-                      <Descriptions.Item label="Mã đặt tour">
-                        {payment.bookingDetails.bookingId}
+                      <Descriptions.Item label="Mã đơn hàng">
+                        {payment.orderDetails.orderId}
                       </Descriptions.Item>
-                      <Descriptions.Item label="Tour">
-                        <div className="flex items-center">
-                          <GlobalOutlined className="mr-2" /> {payment.tour} (#{payment.tourId})
-                        </div>
+                      <Descriptions.Item label="Sản phẩm">
+                        {payment.products.map((product, index) => (
+                          <div key={product.id} className="flex items-center justify-between mb-2">
+                            <div className="flex items-center">
+                              <ShoppingOutlined className="mr-2" /> 
+                              {product.name} x{product.quantity}
+                            </div>
+                            <div>
+                              {(product.price * product.quantity).toLocaleString("vi-VN")} VNĐ
+                            </div>
+                          </div>
+                        ))}
                       </Descriptions.Item>
-                      <Descriptions.Item label="Ngày khởi hành">
-                        <CalendarOutlined className="mr-2" /> {payment.bookingDetails.departureDate}
+                      <Descriptions.Item label="Địa chỉ giao hàng">
+                        {payment.orderDetails.shippingAddress}
                       </Descriptions.Item>
-                      <Descriptions.Item label="Số người tham gia">
-                        <TeamOutlined className="mr-2" /> {payment.bookingDetails.participants} người
-                      </Descriptions.Item>
+                      {payment.orderDetails.note && (
+                        <Descriptions.Item label="Ghi chú">
+                          {payment.orderDetails.note}
+                        </Descriptions.Item>
+                      )}
                     </Descriptions>
                   ),
                 },
@@ -435,8 +444,8 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
                       status={getStepStatus(payment.status)}
                       items={[
                         {
-                          title: 'Đặt Tour',
-                          description: payment.bookingDetails.bookingDate,
+                          title: 'Đặt Hàng',
+                          description: payment.orderDetails.orderDate,
                         },
                         {
                           title: 'Thanh Toán',
@@ -488,22 +497,32 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
             </Descriptions>
           </Card>
 
-          <Card title={RenderBoldTitle("Thông Tin Đặt Tour")} className="mb-6" variant="borderless">
+          <Card title={RenderBoldTitle("Thông Tin Đơn Hàng")} className="mb-6" variant="borderless">
             <Descriptions column={1} bordered>
-              <Descriptions.Item label="Mã đặt tour">
-                {payment.bookingDetails.bookingId}
+              <Descriptions.Item label="Mã đơn hàng">
+                {payment.orderDetails.orderId}
               </Descriptions.Item>
-              <Descriptions.Item label="Tour">
-                <div className="flex items-center">
-                  <GlobalOutlined className="mr-2" /> {payment.tour} (#{payment.tourId})
-                </div>
+              <Descriptions.Item label="Sản phẩm">
+                {payment.products.map((product, index) => (
+                  <div key={product.id} className="flex items-center justify-between mb-2">
+                    <div className="flex items-center">
+                      <ShoppingCartOutlined className="mr-2" /> 
+                      {product.name}
+                    </div>
+                    <div>
+                      Số lượng: {product.quantity} | Đơn giá: {product.price.toLocaleString("vi-VN")} VNĐ
+                    </div>
+                  </div>
+                ))}
               </Descriptions.Item>
-              <Descriptions.Item label="Ngày khởi hành">
-                <CalendarOutlined className="mr-2" /> {payment.bookingDetails.departureDate}
+              <Descriptions.Item label="Địa chỉ giao hàng">
+                {payment.orderDetails.shippingAddress}
               </Descriptions.Item>
-              <Descriptions.Item label="Số người tham gia">
-                <TeamOutlined className="mr-2" /> {payment.bookingDetails.participants} người
-              </Descriptions.Item>
+              {payment.orderDetails.note && (
+                <Descriptions.Item label="Ghi chú">
+                  {payment.orderDetails.note}
+                </Descriptions.Item>
+              )}
             </Descriptions>
           </Card>
 

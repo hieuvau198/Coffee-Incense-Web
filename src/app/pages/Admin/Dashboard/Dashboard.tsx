@@ -1,164 +1,157 @@
 import React from 'react';
-import { Card, Row, Col, Statistic, Table, Space, Tag } from "antd";
+import { Card, Row, Col, Statistic, Table, Space, Tag, Button } from "antd";
 import {
   UserOutlined,
   ShoppingCartOutlined,
   DollarOutlined,
-  GlobalOutlined,
   ArrowUpOutlined,
-  ArrowDownOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import RenderBoldTitle from '@/app/components/RenderBoldTitle';
+import { useNavigate } from 'react-router';
 
-interface RecentBooking {
+interface RecentOrder {
   key: string;
   customer: string;
-  tour: string;
+  products: string;
   date: string;
   amount: number;
   status: "completed" | "pending" | "cancelled";
 }
 
 const Dashboard = () => {
-  const recentBookingsColumns: ColumnsType<RecentBooking> = [
+  const navigate = useNavigate();
+
+  const recentOrdersColumns: ColumnsType<RecentOrder> = [
     {
-      title: RenderBoldTitle('Customer'),
+      title: RenderBoldTitle('Khách Hàng'),
       dataIndex: "customer",
       key: "customer",
     },
     {
-      title: RenderBoldTitle('Tour'),
-      dataIndex: "tour",
-      key: "tour",
+      title: RenderBoldTitle('Sản Phẩm'),
+      dataIndex: "products",
+      key: "products",
     },
     {
-      title: RenderBoldTitle('Date'),
+      title: RenderBoldTitle('Ngày Đặt'),
       dataIndex: "date",
       key: "date",
     },
     {
-      title: RenderBoldTitle('Amount'),
+      title: RenderBoldTitle('Tổng Tiền'),
       dataIndex: "amount",
       key: "amount",
-      render: (amount: number) => `$${amount.toLocaleString()}`,
+      render: (amount: number) => `${amount.toLocaleString()} VNĐ`,
     },
     {
-      title: RenderBoldTitle('Status'),
+      title: RenderBoldTitle('Trạng Thái'),
       dataIndex: "status",
       key: "status",
       render: (status: string) => {
-        const colors = {
-          completed: "green",
-          pending: "orange",
-          cancelled: "red",
+        const statusMap = {
+          completed: { color: "green", text: "ĐÃ HOÀN THÀNH" },
+          pending: { color: "orange", text: "ĐANG XỬ LÝ" },
+          cancelled: { color: "red", text: "ĐÃ HỦY" },
         };
-        return (
-          <Tag color={colors[status as keyof typeof colors]}>
-            {status.toUpperCase()}
-          </Tag>
-        );
+        const { color, text } = statusMap[status as keyof typeof statusMap];
+        return <Tag color={color}>{text}</Tag>;
       },
     },
   ];
 
-  const recentBookingsData: RecentBooking[] = [
+  const recentOrdersData: RecentOrder[] = [
     {
       key: "1",
-      customer: "John Doe",
-      tour: "Paris City Tour",
-      date: "2024-04-15",
-      amount: 299,
+      customer: "Nguyễn Văn An",
+      products: "Hương Cà Phê Nguyên Chất x2",
+      date: "15/04/2024",
+      amount: 299000,
       status: "completed",
     },
     {
       key: "2",
-      customer: "Jane Smith",
-      tour: "London Adventure",
-      date: "2024-04-20",
-      amount: 399,
+      customer: "Trần Thị Bình",
+      products: "Nhang Vòng Cà Phê x3",
+      date: "20/04/2024",
+      amount: 399000,
       status: "pending",
     },
     {
       key: "3",
-      customer: "Mike Johnson",
-      tour: "Tokyo Explorer",
-      date: "2024-04-25",
-      amount: 499,
+      customer: "Lê Hoàng Nam",
+      products: "Hương Cà Phê Đặc Biệt x1",
+      date: "25/04/2024",
+      amount: 499000,
       status: "cancelled",
     },
   ];
 
   return (
-    <div className={`space-y-6 transition-all duration-300`}>
-      <h1 className="text-2xl font-bold">Dashboard Overview</h1>
-
-      <Row gutter={[16, 16]}>
+    <div className="dashboard-container">
+      <Row gutter={[24, 24]}>
         <Col xs={24} sm={12} lg={6}>
-          <Card title={RenderBoldTitle("Total Customers")} className="h-full">
+          <Card className="h-full">
             <Statistic
-              value={1234}
+              title="Tổng Khách Hàng"
+              value={1462}
               prefix={<UserOutlined />}
-              valueStyle={{ color: "#3f8600" }}
-              suffix={
-                <span className="text-green-500 text-sm ml-2">
-                  <ArrowUpOutlined /> 12%
-                </span>
-              }
+              valueStyle={{ color: "#8B7156" }}
             />
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card title={RenderBoldTitle("Total Bookings")} className="h-full">
+          <Card className="h-full" onClick={() => navigate('/bookings')} hoverable>
             <Statistic
-              value={856}
+              title="Tổng Đơn Hàng"
+              value={286}
               prefix={<ShoppingCartOutlined />}
-              valueStyle={{ color: "#1890ff" }}
-              suffix={
-                <span className="text-green-500 text-sm ml-2">
-                  <ArrowUpOutlined /> 8%
-                </span>
-              }
+              valueStyle={{ color: "#8B7156" }}
             />
+            <div className="mt-3">
+              <Button type="link" onClick={() => navigate('/bookings')} style={{ color: "#8B7156" }}>
+                Quản Lý Đơn Hàng
+              </Button>
+            </div>
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card title={RenderBoldTitle("Revenue")} className="h-full">
+          <Card className="h-full">
             <Statistic
-              value={45678}
+              title="Doanh Thu"
+              value={125680000}
               prefix={<DollarOutlined />}
-              valueStyle={{ color: "#3f8600" }}
-              suffix={
-                <span className="text-red-500 text-sm ml-2">
-                  <ArrowDownOutlined /> 3%
-                </span>
-              }
+              suffix="VNĐ"
+              valueStyle={{ color: "#8B7156" }}
             />
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card title={RenderBoldTitle("Active Tours")} className="h-full">
+          <Card className="h-full">
             <Statistic
-              value={24}
-              prefix={<GlobalOutlined />}
-              valueStyle={{ color: "#1890ff" }}
-              suffix={
-                <span className="text-green-500 text-sm ml-2">
-                  <ArrowUpOutlined /> 4%
-                </span>
-              }
+              title="Tăng Trưởng"
+              value={15.4}
+              prefix={<ArrowUpOutlined />}
+              suffix="%"
+              valueStyle={{ color: "#8B7156" }}
             />
           </Card>
         </Col>
       </Row>
 
-      <Card title={RenderBoldTitle("Recent Bookings")} className="mt-6">
+      <Card
+        title={<span className="font-bold">Đơn Hàng Gần Đây</span>}
+        className="mt-6"
+        extra={
+          <Button type="primary" onClick={() => navigate('/bookings')} style={{ backgroundColor: "#8B7156" }}>
+            Xem Tất Cả Đơn Hàng
+          </Button>
+        }
+      >
         <Table
-          columns={recentBookingsColumns}
-          dataSource={recentBookingsData}
-          pagination={false}
-          size="middle"
-          // scroll={{ x: isCollapsed ? 800 : 600 }}
+          columns={recentOrdersColumns}
+          dataSource={recentOrdersData}
+          pagination={{ pageSize: 5 }}
         />
       </Card>
     </div>

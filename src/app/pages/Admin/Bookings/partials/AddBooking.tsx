@@ -22,12 +22,12 @@ interface BookingFormData {
   specialRequests?: string;
 }
 
-// Sample tours data for the dropdown
-const availableTours = [
-  { id: '1', name: 'Tour Du Lịch Đà Lạt', price: 2590000 },
-  { id: '2', name: 'Tour Khám Phá Tokyo', price: 5990000 },
-  { id: '3', name: 'Tour Khám Phá Hội An', price: 1990000 },
-  { id: '4', name: 'Tour Du Lịch Phú Quốc', price: 3490000 },
+// Sample products data for the dropdown
+const availableProducts = [
+  { id: '1', name: 'Hương Cà Phê', price: 150000 },
+  { id: '2', name: 'Nụ Hương Cà Phê', price: 199000 },
+  { id: '3', name: 'Bột Hương Cà Phê', price: 120000 },
+  { id: '4', name: 'Nhang Vòng Cà Phê', price: 210000 },
 ];
 
 const AddBooking: React.FC<AddBookingProps> = ({ onCancel, onSuccess }) => {
@@ -39,14 +39,14 @@ const AddBooking: React.FC<AddBookingProps> = ({ onCancel, onSuccess }) => {
   };
 
   const handleSubmit = (values: BookingFormData) => {
-    console.log('Create booking values:', values);
-    message.success('Đặt tour đã được tạo thành công!');
+    console.log('Create order values:', values);
+    message.success('Đơn hàng đã được tạo thành công!');
     onSuccess();
   };
 
   return (
     <Card 
-      title="Thêm Đặt Tour Mới" 
+      title="Thêm Đơn Hàng Mới" 
       variant="borderless"
       extra={
         <Button 
@@ -98,14 +98,14 @@ const AddBooking: React.FC<AddBookingProps> = ({ onCancel, onSuccess }) => {
           </Form.Item>
           
           <Form.Item
-            label="Tour"
-            name="tourName"
-            rules={[{ required: true, message: 'Vui lòng chọn tour' }]}
+            label="Sản phẩm"
+            name="product"
+            rules={[{ required: true, message: 'Vui lòng chọn sản phẩm' }]}
           >
-            <Select placeholder="Chọn tour">
-              {availableTours.map(tour => (
-                <Option key={tour.id} value={tour.name}>
-                  {tour.name} ({tour.price.toLocaleString('vi-VN')} VNĐ)
+            <Select placeholder="Chọn sản phẩm">
+              {availableProducts.map(product => (
+                <Option key={product.id} value={product.name}>
+                  {product.name} ({product.price.toLocaleString('vi-VN')} VNĐ)
                 </Option>
               ))}
             </Select>
@@ -114,43 +114,54 @@ const AddBooking: React.FC<AddBookingProps> = ({ onCancel, onSuccess }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Form.Item
-            label="Ngày Đi"
+            label="Ngày Đặt Hàng"
             name="date"
-            rules={[{ required: true, message: 'Vui lòng chọn ngày đi' }]}
-            tooltip="Ngày đi phải từ ngày hiện tại trở đi"
+            rules={[{ required: true, message: 'Vui lòng chọn ngày đặt hàng' }]}
           >
             <DatePicker 
               className="w-full" 
               format="DD/MM/YYYY" 
-              placeholder="Chọn ngày đi"
+              placeholder="Chọn ngày đặt hàng"
               disabledDate={disabledDate}
             />
           </Form.Item>
           
           <div className="grid grid-cols-2 gap-4">
             <Form.Item
-              label="Số Người Lớn"
-              name="adults"
-              rules={[{ required: true, message: 'Vui lòng nhập số người lớn' }]}
+              label="Số Lượng"
+              name="quantity"
+              rules={[{ required: true, message: 'Vui lòng nhập số lượng' }]}
             >
-              <InputNumber min={1} className="w-full" placeholder="Số người lớn" />
+              <InputNumber min={1} className="w-full" placeholder="Số lượng" />
             </Form.Item>
             
             <Form.Item
-              label="Số Trẻ Em"
-              name="children"
-              rules={[{ required: true, message: 'Vui lòng nhập số trẻ em' }]}
+              label="Trạng Thái"
+              name="status"
+              rules={[{ required: true, message: 'Vui lòng chọn trạng thái' }]}
             >
-              <InputNumber min={0} className="w-full" placeholder="Số trẻ em" />
+              <Select placeholder="Chọn trạng thái">
+                <Option value="processing">Đang Xử Lý</Option>
+                <Option value="completed">Hoàn Thành</Option>
+                <Option value="cancelled">Đã Hủy</Option>
+              </Select>
             </Form.Item>
           </div>
         </div>
         
         <Form.Item
-          label="Yêu Cầu Đặc Biệt"
-          name="specialRequests"
+          label="Địa Chỉ Giao Hàng"
+          name="address"
+          rules={[{ required: true, message: 'Vui lòng nhập địa chỉ giao hàng' }]}
         >
-          <TextArea rows={4} placeholder="Nhập yêu cầu đặc biệt của khách hàng" />
+          <TextArea rows={2} placeholder="Nhập địa chỉ giao hàng" />
+        </Form.Item>
+        
+        <Form.Item
+          label="Ghi Chú"
+          name="note"
+        >
+          <TextArea rows={2} placeholder="Nhập ghi chú nếu có" />
         </Form.Item>
 
         <Form.Item className="flex justify-end">
@@ -165,8 +176,9 @@ const AddBooking: React.FC<AddBookingProps> = ({ onCancel, onSuccess }) => {
             type="primary" 
             htmlType="submit" 
             icon={<SaveOutlined />}
+            className="bg-[#8B7156] hover:bg-[#64503C]"
           >
-            Tạo Đặt Tour
+            Tạo Đơn Hàng
           </Button>
         </Form.Item>
       </Form>

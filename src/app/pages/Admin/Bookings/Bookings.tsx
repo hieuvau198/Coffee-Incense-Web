@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { message } from "antd";
 import BookingList from "./partials/BookingList";
 import AddBooking from "./partials/AddBooking";
 import ViewBooking from "./partials/ViewBooking";
@@ -8,25 +9,38 @@ type ViewMode = "list" | "add" | "view" | "edit";
 
 const Bookings: React.FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("list");
-  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null);
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
-  const handleAddBooking = () => {
+  const handleAddOrder = () => {
     setViewMode("add");
   };
 
-  const handleViewBooking = (id: string) => {
-    setSelectedBookingId(id);
+  const handleViewOrder = (id: string) => {
+    setSelectedOrderId(id);
     setViewMode("view");
   };
 
-  const handleEditBooking = (id: string) => {
-    setSelectedBookingId(id);
+  const handleEditOrder = (id: string) => {
+    setSelectedOrderId(id);
     setViewMode("edit");
   };
 
   const handleBack = () => {
     setViewMode("list");
-    setSelectedBookingId(null);
+    setSelectedOrderId(null);
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      // Trong thực tế, đây sẽ là API call để xóa đơn hàng
+      // await orderService.deleteOrder(id);
+      
+      message.success('Đã xóa đơn hàng thành công');
+      // Trong thực tế, cần refresh lại danh sách đơn hàng
+      // await fetchOrders();
+    } catch (error) {
+      message.error('Không thể xóa đơn hàng. Vui lòng thử lại sau.');
+    }
   };
 
   // Render different content based on the current view mode
@@ -42,15 +56,15 @@ const Bookings: React.FC = () => {
       case "view":
         return (
           <ViewBooking 
-            bookingId={selectedBookingId!} 
+            orderId={selectedOrderId!} 
             onBack={handleBack} 
-            onEdit={handleEditBooking} 
+            onEdit={handleEditOrder} 
           />
         );
       case "edit":
         return (
           <EditBooking 
-            bookingId={selectedBookingId!} 
+            orderId={selectedOrderId!} 
             onCancel={handleBack} 
             onSuccess={handleBack} 
           />
@@ -58,9 +72,10 @@ const Bookings: React.FC = () => {
       default:
         return (
           <BookingList
-            onAddBooking={handleAddBooking}
-            onViewBooking={handleViewBooking}
-            onEditBooking={handleEditBooking}
+            onAddOrder={handleAddOrder}
+            onViewOrder={handleViewOrder}
+            onEditOrder={handleEditOrder}
+            handleDelete={handleDelete}
           />
         );
     }

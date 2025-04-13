@@ -1,86 +1,115 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, DatePicker, InputNumber, Select, Button, Card, message, Spin } from 'antd';
-import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Button, Card, Form, Input, Select, DatePicker, InputNumber, Typography, Spin, Space, Divider } from 'antd';
 import dayjs from 'dayjs';
+import RenderBoldTitle from '@/app/components/RenderBoldTitle';
 
-const { TextArea } = Input;
+const { Title } = Typography;
 const { Option } = Select;
+const { TextArea } = Input;
+
+interface OrderItem {
+  id: string;
+  productName: string;
+  unitPrice: number;
+  quantity: number;
+  total: number;
+}
 
 interface EditBookingProps {
-  bookingId: string;
+  orderId: string;
   onCancel: () => void;
-  onSuccess: () => void;
+  onSuccess: (data: any) => void;
 }
 
-interface BookingFormData {
-  customerName: string;
-  phone: string;
-  email: string;
-  tourName: string;
-  date: dayjs.Dayjs;
-  adults: number;
-  children: number;
-  specialRequests?: string;
-  status: 'confirmed' | 'pending' | 'cancelled';
-  paymentStatus: 'paid' | 'pending' | 'refunded';
-}
-
-// Sample tours data for the dropdown
-const availableTours = [
-  { id: '1', name: 'Tour Du Lịch Đà Lạt', price: 2590000 },
-  { id: '2', name: 'Tour Khám Phá Tokyo', price: 5990000 },
-  { id: '3', name: 'Tour Khám Phá Hội An', price: 1990000 },
-  { id: '4', name: 'Tour Du Lịch Phú Quốc', price: 3490000 },
+const statusOptions = [
+  { value: 'processing', label: 'Đang Xử Lý' },
+  { value: 'completed', label: 'Hoàn Thành' },
+  { value: 'cancelled', label: 'Đã Hủy' },
 ];
 
-const EditBooking: React.FC<EditBookingProps> = ({ bookingId, onCancel, onSuccess }) => {
-  const [loading, setLoading] = useState(true);
-  const [form] = Form.useForm<BookingFormData>();
+const paymentStatusOptions = [
+  { value: 'pending', label: 'Chưa Thanh Toán' },
+  { value: 'paid', label: 'Đã Thanh Toán' },
+  { value: 'refunded', label: 'Đã Hoàn Tiền' },
+];
 
-  // Disallow selecting dates in the past
-  const disabledDate = (current: dayjs.Dayjs) => {
-    return current && current < dayjs().startOf('day');
-  };
+const EditBooking: React.FC<EditBookingProps> = ({ orderId, onCancel, onSuccess }) => {
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState<OrderItem[]>([]);
 
   useEffect(() => {
-    // Simulate API call to fetch booking details
-    setLoading(true);
+    // Simulate API call to fetch order data
     setTimeout(() => {
       // Sample data - in a real app, this would come from an API
-      const bookingData = {
-        customerName: bookingId === 'BK001' ? 'John Doe' : 'Jane Smith',
-        tourName: bookingId === 'BK001' ? 'Tour Du Lịch Đà Lạt' : 'Tour Khám Phá Tokyo',
-        date: bookingId === 'BK001' ? '15/04/2024' : '20/05/2024',
-        status: bookingId === 'BK001' ? 'confirmed' : 'pending',
-        paymentStatus: bookingId === 'BK001' ? 'paid' : 'pending',
-        phone: bookingId === 'BK001' ? '0123456789' : '0987654321',
-        email: bookingId === 'BK001' ? 'john.doe@example.com' : 'jane.smith@example.com',
-        adults: bookingId === 'BK001' ? 2 : 1,
-        children: bookingId === 'BK001' ? 1 : 0,
-        specialRequests: bookingId === 'BK001' ? 'Yêu cầu phòng view biển và đưa đón tại sân bay' : '',
+      const orderData = {
+        orderId: orderId,
+        customerName: orderId === 'OR001' ? 'Nguyễn Văn A' : 'Trần Thị B',
+        date: orderId === 'OR001' ? '2024-04-15' : '2024-05-20',
+        status: orderId === 'OR001' ? 'completed' : 'processing',
+        amount: orderId === 'OR001' ? 499000 : 780000,
+        paymentStatus: orderId === 'OR001' ? 'paid' : 'pending',
+        phone: orderId === 'OR001' ? '0987654321' : '0912345678',
+        email: orderId === 'OR001' ? 'nguyenvana@gmail.com' : 'tranthib@gmail.com',
+        address: orderId === 'OR001'
+          ? 'Số 12, Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh'
+          : 'Số 45, Đường Trần Hưng Đạo, Quận Hoàn Kiếm, Hà Nội',
+        note: orderId === 'OR001' ? 'Giao vào buổi sáng, gọi trước khi giao' : '',
+        items: orderId === 'OR001'
+          ? [
+              { id: '1', productName: 'Hương Cà Phê', unitPrice: 150000, quantity: 2, total: 300000 },
+              { id: '2', productName: 'Nụ Hương Cà Phê', unitPrice: 199000, quantity: 1, total: 199000 },
+            ]
+          : [
+              { id: '3', productName: 'Bột Hương Cà Phê', unitPrice: 120000, quantity: 3, total: 360000 },
+              { id: '4', productName: 'Nhang Vòng Cà Phê', unitPrice: 210000, quantity: 2, total: 420000 },
+            ],
       };
-      
+
+      // Set form values
       form.setFieldsValue({
-        customerName: bookingData.customerName,
-        tourName: bookingData.tourName,
-        date: dayjs(bookingData.date, "DD/MM/YYYY"),
-        status: bookingData.status as 'confirmed' | 'pending' | 'cancelled',
-        paymentStatus: bookingData.paymentStatus as 'paid' | 'pending' | 'refunded',
-        phone: bookingData.phone,
-        email: bookingData.email,
-        adults: bookingData.adults,
-        children: bookingData.children,
-        specialRequests: bookingData.specialRequests,
+        orderId: orderData.orderId,
+        customerName: orderData.customerName,
+        date: dayjs(orderData.date),
+        status: orderData.status,
+        paymentStatus: orderData.paymentStatus,
+        phone: orderData.phone,
+        email: orderData.email,
+        address: orderData.address,
+        note: orderData.note,
       });
-      
+
+      setItems(orderData.items);
       setLoading(false);
     }, 800);
-  }, [bookingId, form]);
+  }, [orderId, form]);
 
-  const handleSubmit = (values: BookingFormData) => {
-    console.log('Update booking values:', values);
-    message.success('Đặt tour đã được cập nhật thành công!');
-    onSuccess();
+  const handleFinish = (values: any) => {
+    // Convert date to string and prepare data for API
+    const formData = {
+      ...values,
+      date: values.date.format('YYYY-MM-DD'),
+      items: items,
+      amount: items.reduce((total, item) => total + item.total, 0),
+    };
+    
+    onSuccess(formData);
+  };
+
+  const updateItemQuantity = (id: string, quantity: number) => {
+    setItems(prevItems => 
+      prevItems.map(item => {
+        if (item.id === id) {
+          return {
+            ...item,
+            quantity,
+            total: item.unitPrice * quantity
+          };
+        }
+        return item;
+      })
+    );
   };
 
   if (loading) {
@@ -92,153 +121,161 @@ const EditBooking: React.FC<EditBookingProps> = ({ bookingId, onCancel, onSucces
   }
 
   return (
-    <Card 
-      title="Chỉnh Sửa Đặt Tour" 
-      variant="borderless"
-      extra={
-        <Button 
-          type="link" 
-          color="primary"
-          variant="text"
-          icon={<ArrowLeftOutlined />} 
+    <div className="p-6">
+      <Space className="mb-6">
+        <Button
+          icon={<ArrowLeftOutlined />}
           onClick={onCancel}
         >
           Quay lại
         </Button>
-      }
-    >
+        <Title level={4} className="m-0">Chỉnh Sửa Đơn Hàng #{orderId}</Title>
+      </Space>
+
       <Form
         form={form}
         layout="vertical"
-        onFinish={handleSubmit}
-        autoComplete="off"
+        onFinish={handleFinish}
+        className="mt-6"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Form.Item
-            label="Tên Khách Hàng"
-            name="customerName"
-            rules={[{ required: true, message: 'Vui lòng nhập tên khách hàng' }]}
-          >
-            <Input placeholder="Nhập tên khách hàng" />
-          </Form.Item>
-          
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              { required: true, message: 'Vui lòng nhập email' },
-              { type: 'email', message: 'Email không hợp lệ' }
-            ]}
-          >
-            <Input placeholder="Nhập email khách hàng" />
-          </Form.Item>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            <Card title={RenderBoldTitle("Thông Tin Đơn Hàng")} className="shadow-sm">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Form.Item
+                  name="orderId"
+                  label="Mã Đơn Hàng"
+                  rules={[{ required: true, message: 'Vui lòng nhập mã đơn hàng' }]}
+                >
+                  <Input disabled />
+                </Form.Item>
+                <Form.Item
+                  name="date"
+                  label="Ngày Đặt Hàng"
+                  rules={[{ required: true, message: 'Vui lòng chọn ngày đặt hàng' }]}
+                >
+                  <DatePicker className="w-full" format="DD/MM/YYYY" />
+                </Form.Item>
+                <Form.Item
+                  name="status"
+                  label="Trạng Thái Đơn Hàng"
+                  rules={[{ required: true, message: 'Vui lòng chọn trạng thái đơn hàng' }]}
+                >
+                  <Select>
+                    {statusOptions.map(option => (
+                      <Option key={option.value} value={option.value}>{option.label}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  name="paymentStatus"
+                  label="Trạng Thái Thanh Toán"
+                  rules={[{ required: true, message: 'Vui lòng chọn trạng thái thanh toán' }]}
+                >
+                  <Select>
+                    {paymentStatusOptions.map(option => (
+                      <Option key={option.value} value={option.value}>{option.label}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
+            </Card>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Form.Item
-            label="Số Điện Thoại"
-            name="phone"
-            rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
-          >
-            <Input placeholder="Nhập số điện thoại khách hàng" />
-          </Form.Item>
-          
-          <Form.Item
-            label="Tour"
-            name="tourName"
-            rules={[{ required: true, message: 'Vui lòng chọn tour' }]}
-          >
-            <Select placeholder="Chọn tour">
-              {availableTours.map(tour => (
-                <Option key={tour.id} value={tour.name}>
-                  {tour.name} ({tour.price.toLocaleString('vi-VN')} VNĐ)
-                </Option>
+            <Card title={RenderBoldTitle("Chi Tiết Sản Phẩm")} className="shadow-sm">
+              {items.map((item, index) => (
+                <div key={item.id} className="mb-4">
+                  <div className="grid grid-cols-12 gap-4 items-center">
+                    <div className="col-span-12 md:col-span-5">
+                      <div className="font-medium">{item.productName}</div>
+                      <div className="text-gray-500 text-sm">
+                        Đơn giá: {item.unitPrice.toLocaleString('vi-VN')} VNĐ
+                      </div>
+                    </div>
+                    <div className="col-span-5 md:col-span-3">
+                      <InputNumber
+                        min={1}
+                        defaultValue={item.quantity}
+                        onChange={(value) => updateItemQuantity(item.id, value as number)}
+                        className="w-full"
+                        addonBefore="Số lượng"
+                      />
+                    </div>
+                    <div className="col-span-7 md:col-span-4 text-right">
+                      <div className="font-medium">Thành tiền:</div>
+                      <div className="text-[#8B7156] font-bold">
+                        {item.total.toLocaleString('vi-VN')} VNĐ
+                      </div>
+                    </div>
+                  </div>
+                  {index < items.length - 1 && <Divider className="my-4" />}
+                </div>
               ))}
-            </Select>
-          </Form.Item>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Form.Item
-            label="Ngày Đi"
-            name="date"
-            rules={[{ required: true, message: 'Vui lòng chọn ngày đi' }]}
-            tooltip="Ngày đi phải từ ngày hiện tại trở đi"
-          >
-            <DatePicker 
-              className="w-full" 
-              format="DD/MM/YYYY" 
-              placeholder="Chọn ngày đi" 
-              disabledDate={disabledDate}
-            />
-          </Form.Item>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <Form.Item
-              label="Số Người Lớn"
-              name="adults"
-              rules={[{ required: true, message: 'Vui lòng nhập số người lớn' }]}
-            >
-              <InputNumber min={1} className="w-full" placeholder="Số người lớn" />
-            </Form.Item>
-            
-            <Form.Item
-              label="Số Trẻ Em"
-              name="children"
-              rules={[{ required: true, message: 'Vui lòng nhập số trẻ em' }]}
-            >
-              <InputNumber min={0} className="w-full" placeholder="Số trẻ em" />
-            </Form.Item>
+              <div className="mt-4 text-right">
+                <div className="text-lg font-medium">Tổng cộng:</div>
+                <div className="text-xl text-[#8B7156] font-bold">
+                  {items.reduce((sum, item) => sum + item.total, 0).toLocaleString('vi-VN')} VNĐ
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          <div className="lg:col-span-1 space-y-6">
+            <Card title={RenderBoldTitle("Thông Tin Khách Hàng")} className="shadow-sm">
+              <Form.Item
+                name="customerName"
+                label="Họ và Tên"
+                rules={[{ required: true, message: 'Vui lòng nhập tên khách hàng' }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  { required: true, message: 'Vui lòng nhập email' },
+                  { type: 'email', message: 'Email không hợp lệ' }
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="phone"
+                label="Số Điện Thoại"
+                rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="address"
+                label="Địa Chỉ"
+                rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
+              >
+                <TextArea rows={3} />
+              </Form.Item>
+              <Form.Item
+                name="note"
+                label="Ghi Chú"
+              >
+                <TextArea rows={3} />
+              </Form.Item>
+            </Card>
+
+            <div className="flex justify-center">
+              <Button 
+                type="primary" 
+                htmlType="submit" 
+                size="large"
+                className="w-full bg-[#8B7156] hover:bg-[#64503C]"
+              >
+                Lưu Thay Đổi
+              </Button>
+            </div>
           </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Form.Item
-            label="Trạng Thái Đặt Tour"
-            name="status"
-            rules={[{ required: true, message: 'Vui lòng chọn trạng thái' }]}
-          >
-            <Select placeholder="Chọn trạng thái đặt tour">
-              <Option value="confirmed">Đã Xác Nhận</Option>
-              <Option value="pending">Đang Chờ</Option>
-              <Option value="cancelled">Đã Hủy</Option>
-            </Select>
-          </Form.Item>
-          
-          <Form.Item
-            label="Trạng Thái Thanh Toán"
-            name="paymentStatus"
-            rules={[{ required: true, message: 'Vui lòng chọn trạng thái thanh toán' }]}
-          >
-            <Select placeholder="Chọn trạng thái thanh toán">
-              <Option value="paid">Đã Thanh Toán</Option>
-              <Option value="pending">Chưa Thanh Toán</Option>
-              <Option value="refunded">Đã Hoàn Tiền</Option>
-            </Select>
-          </Form.Item>
-        </div>
-        
-        <Form.Item
-          label="Yêu Cầu Đặc Biệt"
-          name="specialRequests"
-        >
-          <TextArea rows={4} placeholder="Nhập yêu cầu đặc biệt của khách hàng" />
-        </Form.Item>
-
-        <Form.Item className="flex justify-end mt-6">
-          <Button 
-            type="primary" 
-            color="primary"
-            variant='solid'
-            htmlType="submit" 
-            icon={<SaveOutlined />}
-          >
-            Lưu Thay Đổi
-          </Button>
-        </Form.Item>
       </Form>
-    </Card>
+    </div>
   );
 };
 
-export default EditBooking; 
+export default EditBooking;

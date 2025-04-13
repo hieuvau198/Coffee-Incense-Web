@@ -1,39 +1,43 @@
 import React from 'react';
-import { Table, Button, Space, Tag, Input, Select, DatePicker, Tooltip } from 'antd';
-import { SearchOutlined, EyeOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Space, Tag, Input, Select, DatePicker, Tooltip, Card } from 'antd';
+import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import RenderBoldTitle from '@/app/components/RenderBoldTitle';
+import ActionButtons from '@/app/components/ActionButton';
+import AdminTable from '@/app/components/AdminTable';
 
 const { RangePicker } = DatePicker;
 
-interface BookingDataType {
+interface BookingData {
   key: string;
-  bookingId: string;
+  orderId: string;
   customerName: string;
-  tourName: string;
+  products: string;
   date: string;
-  status: 'confirmed' | 'pending' | 'cancelled';
+  status: 'completed' | 'processing' | 'cancelled';
   amount: number;
   paymentStatus: 'paid' | 'pending' | 'refunded';
 }
 
 interface BookingListProps {
-  onAddBooking: () => void;
-  onViewBooking: (id: string) => void;
-  onEditBooking: (id: string) => void;
+  onAddOrder: () => void;
+  onViewOrder: (id: string) => void;
+  onEditOrder: (id: string) => void;
+  handleDelete: (id: string) => void;
 }
 
 const BookingList: React.FC<BookingListProps> = ({ 
-  onAddBooking, 
-  onViewBooking, 
-  onEditBooking 
+  onAddOrder, 
+  onViewOrder, 
+  onEditOrder,
+  handleDelete
 }) => {
-  const columns: ColumnsType<BookingDataType> = [
+  const columns: ColumnsType<BookingData> = [
     {
-      title: RenderBoldTitle('Mã Đặt Tour'),
-      dataIndex: 'bookingId',
-      key: 'bookingId',
-      width: 100,
+      title: RenderBoldTitle('Mã Đơn Hàng'),
+      dataIndex: 'orderId',
+      key: 'orderId',
+      width: 120,
     },
     {
       title: RenderBoldTitle('Khách Hàng'),
@@ -42,21 +46,21 @@ const BookingList: React.FC<BookingListProps> = ({
       width: 150,
     },
     {
-      title: RenderBoldTitle('Tour'),
-      dataIndex: 'tourName',
-      key: 'tourName',
+      title: RenderBoldTitle('Sản Phẩm'),
+      dataIndex: 'products',
+      key: 'products',
       width: 250,
       ellipsis: {
         showTitle: false,
       },
-      render: (tourName: string) => (
-        <Tooltip placement="topLeft" title={tourName}>
-          <span>{tourName}</span>
+      render: (products: string) => (
+        <Tooltip placement="topLeft" title={products}>
+          <span>{products}</span>
         </Tooltip>
       ),
     },
     {
-      title: RenderBoldTitle('Ngày Đi'),
+      title: RenderBoldTitle('Ngày Đặt'),
       dataIndex: 'date',
       key: 'date',
       width: 120,
@@ -66,21 +70,26 @@ const BookingList: React.FC<BookingListProps> = ({
       dataIndex: 'status',
       key: 'status',
       width: 120,
-      render: (status: 'confirmed' | 'pending' | 'cancelled') => {
+      render: (status: 'completed' | 'processing' | 'cancelled') => {
         const colors = {
-          confirmed: 'green',
-          pending: 'orange',
+          completed: 'green',
+          processing: 'orange',
           cancelled: 'red',
+        };
+        const labels = {
+          completed: 'HOÀN THÀNH',
+          processing: 'ĐANG XỬ LÝ',
+          cancelled: 'ĐÃ HỦY',
         };
         return (
           <Tag color={colors[status]}>
-            {status.toUpperCase()}
+            {labels[status]}
           </Tag>
         );
       },
     },
     {
-      title: RenderBoldTitle('Giá Tiền (VNĐ)'),
+      title: RenderBoldTitle('Giá Tiền'),
       dataIndex: 'amount',
       key: 'amount',
       width: 140,
@@ -91,113 +100,89 @@ const BookingList: React.FC<BookingListProps> = ({
       key: 'actions',
       width: 150,
       render: (_, record) => (
-        <Space size="middle">
-          <Tooltip title="Xem chi tiết">
-            <Button
-              type="link"
-              color="blue"
-              variant="solid"
-              icon={<EyeOutlined />}
-              onClick={() => onViewBooking(record.bookingId)}
-            />
-          </Tooltip>
-          <Tooltip title="Chỉnh sửa">
-            <Button
-              type="link"
-              color="primary"
-              variant="solid"
-              icon={<EditOutlined />}
-              onClick={() => onEditBooking(record.bookingId)}
-            />
-          </Tooltip>
-          <Tooltip title="Xóa">
-            <Button
-              type="link"
-              color="danger"
-              variant="solid"
-              icon={<DeleteOutlined />}
-            />
-          </Tooltip>
-        </Space>
+        <ActionButtons
+          onView={() => onViewOrder(record.orderId)}
+          onEdit={() => onEditOrder(record.orderId)}
+          onDelete={() => handleDelete(record.orderId)}
+          deleteTooltip="Xóa đơn hàng"
+          deleteDescription="Bạn có chắc chắn muốn xóa đơn hàng này?"
+        />
       ),
     },
   ];
 
-  const data: BookingDataType[] = [
+  const data: BookingData[] = [
     {
       key: '1',
-      bookingId: 'BK001',
-      customerName: 'John Doe',
-      tourName: 'Bali Paradise Tour',
+      orderId: 'OR001',
+      customerName: 'Nguyễn Văn A',
+      products: 'Hương Cà Phê (2), Nụ Hương Cà Phê (1)',
       date: '2024-04-15',
-      status: 'confirmed',
-      amount: 1299000,
+      status: 'completed',
+      amount: 499000,
       paymentStatus: 'paid',
     },
     {
       key: '2',
-      bookingId: 'BK002',
-      customerName: 'Jane Smith',
-      tourName: 'Tokyo Explorer',
+      orderId: 'OR002',
+      customerName: 'Trần Thị B',
+      products: 'Bột Hương Cà Phê (3), Nhang Vòng Cà Phê (2)',
       date: '2024-05-20',
-      status: 'pending',
-      amount: 1499000,
+      status: 'processing',
+      amount: 780000,
       paymentStatus: 'pending',
     }
   ];
 
   return (
     <div className="p-6">
-      <div className="mb-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Quản Lý Đặt Tour</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Quản Lý Đơn Hàng</h1>
         <Button 
           type="primary" 
           icon={<PlusOutlined />}
-          onClick={onAddBooking}
+          onClick={onAddOrder}
+          className="bg-[#8B7156] hover:bg-[#64503C]"
         >
-          Tạo Đặt Tour
+          Tạo Đơn Hàng
         </Button>
       </div>
 
-      <div className="mb-4 flex gap-4">
-        <Input
-          placeholder="Tìm kiếm đặt tour..."
-          prefix={<SearchOutlined />}
-          className="max-w-xs"
-        />
-        <Select
-          placeholder="Trạng Thái Đặt Tour"
-          style={{ width: 200 }}
-          options={[
-            { value: 'confirmed', label: 'Đã Xác Nhận' },
-            { value: 'pending', label: 'Đang Chờ' },
-            { value: 'cancelled', label: 'Đã Hủy' },
-          ]}
-        />
-        <Select
-          placeholder="Trạng Thái Thanh Toán"
-          style={{ width: 200 }}
-          options={[
-            { value: 'paid', label: 'Đã Thanh Toán' },
-            { value: 'pending', label: 'Chưa Thanh Toán' },
-            { value: 'refunded', label: 'Đã Hoàn Tiền' },
-          ]}
-        />
-        <RangePicker placeholder={['Từ Ngày', 'Đến Ngày']} />
-      </div>
+      <Card className="shadow-sm">
+        <div className="mb-4 flex gap-4">
+          <Input
+            placeholder="Tìm kiếm đơn hàng..."
+            prefix={<SearchOutlined />}
+            className="max-w-xs"
+          />
+          <Select
+            placeholder="Trạng Thái Đơn Hàng"
+            className="min-w-[150px]"
+            options={[
+              { value: 'completed', label: 'Hoàn Thành' },
+              { value: 'processing', label: 'Đang Xử Lý' },
+              { value: 'cancelled', label: 'Đã Hủy' },
+            ]}
+          />
+          <Select
+            placeholder="Trạng Thái Thanh Toán"
+            className="min-w-[150px]"
+            options={[
+              { value: 'paid', label: 'Đã Thanh Toán' },
+              { value: 'pending', label: 'Chưa Thanh Toán' },
+              { value: 'refunded', label: 'Đã Hoàn Tiền' },
+            ]}
+          />
+          <RangePicker placeholder={['Từ Ngày', 'Đến Ngày']} />
+        </div>
 
-      <Table
-        columns={columns}
-        dataSource={data}
-        rowKey="key"
-        pagination={{
-          total: data.length,
-          pageSize: 10,
-          showSizeChanger: true,
-          showTotal: (total) => `Tổng số ${total} đặt tour`,
-        }}
-        scroll={{ x: 1100 }}
-      />
+        <AdminTable
+          columns={columns}
+          dataSource={data}
+          rowKey="key"
+          itemsName="đơn hàng"
+        />
+      </Card>
     </div>
   );
 };

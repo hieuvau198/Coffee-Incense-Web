@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Table, Button, Space, Tag, Input, Select, DatePicker, Tooltip, message } from "antd";
-import { SearchOutlined, EyeOutlined, PrinterOutlined } from "@ant-design/icons";
+import { Button, Space, Tag, Input, Select, DatePicker, Tooltip, message, Card } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import RenderBoldTitle from '@/app/components/RenderBoldTitle';
+import ActionButtons from '@/app/components/ActionButton';
+import AdminTable from '@/app/components/AdminTable';
 
 const { RangePicker } = DatePicker;
 
@@ -10,10 +12,10 @@ interface PaymentData {
   key: string;
   paymentId: string;
   customer: string;
-  tour: string;
+  products: string;
   amount: number;
   date: string;
-  method: "credit_card" | "paypal" | "bank_transfer";
+  method: "credit_card" | "paypal" | "bank_transfer" | "momo";
   status: "completed" | "pending" | "failed" | "refunded";
 }
 
@@ -27,8 +29,8 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
       key: "1",
       paymentId: "PAY-001",
       customer: "Nguyễn Văn A",
-      tour: "TOUR DU LỊCH ĐÀ LẠT",
-      amount: 2590000,
+      products: "Hương Cà Phê (2), Nụ Hương Cà Phê (1)",
+      amount: 499000,
       date: "15/04/2024",
       method: "credit_card",
       status: "completed",
@@ -37,8 +39,8 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
       key: "2",
       paymentId: "PAY-002",
       customer: "Trần Thị B",
-      tour: "TOUR DU LỊCH PHÚ QUỐC",
-      amount: 4990000,
+      products: "Bột Hương Cà Phê (3), Nhang Vòng Cà Phê (2)",
+      amount: 780000,
       date: "16/04/2024",
       method: "paypal",
       status: "pending",
@@ -47,8 +49,8 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
       key: "3",
       paymentId: "PAY-003",
       customer: "Lê Văn C",
-      tour: "TOUR DU LỊCH ĐÀ NẴNG",
-      amount: 6500000,
+      products: "Hương Sào Cà Phê (4), Hương Khoanh Cà Phê (2)",
+      amount: 650000,
       date: "17/04/2024",
       method: "bank_transfer",
       status: "failed",
@@ -57,10 +59,10 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
       key: "4",
       paymentId: "PAY-004",
       customer: "Phạm Thị D",
-      tour: "TOUR DU LỊCH NHA TRANG",
-      amount: 5290000,
+      products: "Nhang Vòng Cà Phê (3), Hương Cà Phê (2)",
+      amount: 529000,
       date: "18/04/2024",
-      method: "credit_card",
+      method: "momo",
       status: "refunded",
     },
   ]);
@@ -82,16 +84,16 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
       key: 'customer',
     },
     {
-      title: RenderBoldTitle('Tour'),
-      dataIndex: 'tour',
-      key: 'tour',
+      title: RenderBoldTitle('Sản Phẩm'),
+      dataIndex: 'products',
+      key: 'products',
       width: 200,
       ellipsis: {
         showTitle: false,
       },
-      render: (tour: string) => (
-        <Tooltip placement="topLeft" title={tour}>
-          <span>{tour}</span>
+      render: (products: string) => (
+        <Tooltip placement="topLeft" title={products}>
+          <span>{products}</span>
         </Tooltip>
       ),
     },
@@ -115,6 +117,7 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
           credit_card: "Thẻ tín dụng",
           paypal: "PayPal",
           bank_transfer: "Chuyển khoản",
+          momo: "Ví MoMo",
         };
         return labels[method as keyof typeof labels];
       },
@@ -147,74 +150,61 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
       title: RenderBoldTitle('Thao Tác'),
       key: 'actions',
       render: (_, record) => (
-        <Space size="middle">
-          <Tooltip title="Xem chi tiết">
-            <Button
-              type="link"
-              color="blue"
-              variant="solid"
-              icon={<EyeOutlined />}
-              onClick={() => onViewPayment(record.key)}
-            />
-          </Tooltip>
-          <Tooltip title="In biên lai">
-            <Button
-              type="link"
-              color="green"
-              variant="solid"
-              icon={<PrinterOutlined />}
-              onClick={() => handlePrintReceipt(record.paymentId)}
-              disabled={record.status !== "completed"}
-            />
-          </Tooltip>
-        </Space>
+        <ActionButtons
+          onView={() => onViewPayment(record.key)}
+          onPrint={() => handlePrintReceipt(record.paymentId)}
+          hideEdit
+          hideDelete
+          hidePrint={false}
+          disablePrint={record.status !== "completed"}
+        />
       ),
     },
   ];
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Quản Lý Thanh Toán</h1>
-
-      <div className="mb-6 flex flex-wrap gap-4">
-        <Input
-          placeholder="Tìm kiếm thanh toán..."
-          prefix={<SearchOutlined />}
-          className="max-w-xs"
-        />
-        <Select
-          placeholder="Trạng thái thanh toán"
-          className="min-w-[150px]"
-          options={[
-            { value: "completed", label: "Hoàn thành" },
-            { value: "pending", label: "Đang xử lý" },
-            { value: "failed", label: "Thất bại" },
-            { value: "refunded", label: "Hoàn tiền" },
-          ]}
-        />
-        <Select
-          placeholder="Phương thức thanh toán"
-          className="min-w-[150px]"
-          options={[
-            { value: "credit_card", label: "Thẻ tín dụng" },
-            { value: "paypal", label: "PayPal" },
-            { value: "bank_transfer", label: "Chuyển khoản" },
-          ]}
-        />
-        <RangePicker placeholder={["Từ ngày", "Đến ngày"]} />
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Quản Lý Thanh Toán</h1>
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={paymentData}
-        pagination={{
-          total: paymentData.length,
-          pageSize: 10,
-          showSizeChanger: true,
-          showTotal: (total) => `Tổng số ${total} giao dịch`,
-        }}
-        scroll={{ x: 1100 }}
-      />
+      <Card className="shadow-sm">
+        <div className="mb-4 flex gap-4">
+          <Input
+            placeholder="Tìm kiếm thanh toán..."
+            prefix={<SearchOutlined />}
+            className="max-w-xs"
+          />
+          <Select
+            placeholder="Trạng thái thanh toán"
+            className="min-w-[150px]"
+            options={[
+              { value: "completed", label: "Hoàn thành" },
+              { value: "pending", label: "Đang xử lý" },
+              { value: "failed", label: "Thất bại" },
+              { value: "refunded", label: "Hoàn tiền" },
+            ]}
+          />
+          <Select
+            placeholder="Phương thức thanh toán"
+            className="min-w-[150px]"
+            options={[
+              { value: "credit_card", label: "Thẻ tín dụng" },
+              { value: "paypal", label: "PayPal" },
+              { value: "bank_transfer", label: "Chuyển khoản" },
+              { value: "momo", label: "Ví MoMo" },
+            ]}
+          />
+          <RangePicker placeholder={["Từ ngày", "Đến ngày"]} />
+        </div>
+
+        <AdminTable
+          columns={columns}
+          dataSource={paymentData}
+          rowKey="key"
+          itemsName="giao dịch"
+        />
+      </Card>
     </div>
   );
 };

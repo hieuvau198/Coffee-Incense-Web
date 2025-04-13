@@ -1,13 +1,11 @@
-import { EyeOutlined, MailOutlined, PhoneOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Card, Input, Select, Space, Table, Tag, Tooltip, Typography } from 'antd';
+import { MailOutlined, PhoneOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { Input, Select, Space, Tag, Card } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useEffect, useState } from 'react';
 import RenderBoldTitle from '@/app/components/RenderBoldTitle';
+import ActionButtons from '@/app/components/ActionButton';
+import AdminTable from '@/app/components/AdminTable';
 
-const { Title } = Typography;
-const { Option } = Select;
-
-// CustomerData interface
 interface CustomerData {
   key: string;
   name: string;
@@ -19,106 +17,21 @@ interface CustomerData {
   lastBooking: string;
 }
 
-// Props interface
 interface CustomerListProps {
-  onViewCustomer: (customerId: string) => void;
+  onViewCustomer: (id: string) => void;
 }
 
 const CustomerList: React.FC<CustomerListProps> = ({ onViewCustomer }) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [customers, setCustomers] = useState<CustomerData[]>([]);
 
-  // Fetch customer data
-  useEffect(() => {
-    // Simulate API call
-    const fetchData = async () => {
-      setLoading(true);
-
-      // Mock data
-      const mockData: CustomerData[] = [
-        {
-          key: '1',
-          name: 'John Doe',
-          email: 'john.doe@example.com',
-          phone: '+1 (555) 123-4567',
-          status: 'active',
-          totalBookings: 8,
-          totalSpent: 1240.50,
-          lastBooking: '2023-09-15',
-        },
-        {
-          key: '2',
-          name: 'Jane Smith',
-          email: 'jane.smith@example.com',
-          phone: '+1 (555) 987-6543',
-          status: 'active',
-          totalBookings: 12,
-          totalSpent: 2340.75,
-          lastBooking: '2023-10-20',
-        },
-        {
-          key: '3',
-          name: 'Robert Johnson',
-          email: 'robert.j@example.com',
-          phone: '+1 (555) 456-7890',
-          status: 'inactive',
-          totalBookings: 3,
-          totalSpent: 450.25,
-          lastBooking: '2023-04-10',
-        },
-        {
-          key: '4',
-          name: 'Emily Wilson',
-          email: 'emily.w@example.com',
-          phone: '+1 (555) 321-8765',
-          status: 'active',
-          totalBookings: 6,
-          totalSpent: 890.30,
-          lastBooking: '2023-09-30',
-        },
-        {
-          key: '5',
-          name: 'Michael Brown',
-          email: 'michael.b@example.com',
-          phone: '+1 (555) 234-5678',
-          status: 'inactive',
-          totalBookings: 2,
-          totalSpent: 320.15,
-          lastBooking: '2023-02-22',
-        },
-      ];
-
-      setTimeout(() => {
-        setCustomers(mockData);
-        setLoading(false);
-      }, 1000);
-    };
-
-    fetchData();
-  }, []);
-
-  // Filter customers based on search text and status filter
-  const filteredCustomers = customers.filter(customer => {
-    const matchesSearch =
-      customer.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      customer.email.toLowerCase().includes(searchText.toLowerCase()) ||
-      customer.phone.includes(searchText);
-
-    const matchesStatus =
-      statusFilter === 'all' ||
-      customer.status === statusFilter;
-
-    return matchesSearch && matchesStatus;
-  });
-
-  // Define table columns
   const columns: ColumnsType<CustomerData> = [
     {
-      title: RenderBoldTitle('Name'),
+      title: RenderBoldTitle('Khách Hàng'),
       dataIndex: 'name',
       key: 'name',
+      width: 200,
       render: (text) => (
         <Space>
           <UserOutlined />
@@ -130,6 +43,7 @@ const CustomerList: React.FC<CustomerListProps> = ({ onViewCustomer }) => {
       title: RenderBoldTitle('Email'),
       dataIndex: 'email',
       key: 'email',
+      width: 250,
       render: (text) => (
         <Space>
           <MailOutlined />
@@ -138,9 +52,10 @@ const CustomerList: React.FC<CustomerListProps> = ({ onViewCustomer }) => {
       ),
     },
     {
-      title: RenderBoldTitle('Phone'),
+      title: RenderBoldTitle('Số Điện Thoại'),
       dataIndex: 'phone',
       key: 'phone',
+      width: 150,
       render: (text) => (
         <Space>
           <PhoneOutlined />
@@ -149,71 +64,117 @@ const CustomerList: React.FC<CustomerListProps> = ({ onViewCustomer }) => {
       ),
     },
     {
-      title: RenderBoldTitle('Total Bookings'),
+      title: RenderBoldTitle('Trạng Thái'),
+      dataIndex: 'status',
+      key: 'status',
+      width: 120,
+      render: (status: 'active' | 'inactive') => (
+        <Tag color={status === 'active' ? 'green' : 'red'}>
+          {status === 'active' ? 'Đang hoạt động' : 'Ngừng hoạt động'}
+        </Tag>
+      ),
+    },
+    {
+      title: RenderBoldTitle('Số Đơn Hàng'),
       dataIndex: 'totalBookings',
       key: 'totalBookings',
-      sorter: (a, b) => a.totalBookings - b.totalBookings,
+      width: 120,
     },
     {
-      title: RenderBoldTitle('Total Spent'),
+      title: RenderBoldTitle('Tổng Chi Tiêu'),
       dataIndex: 'totalSpent',
       key: 'totalSpent',
-      render: (value) => `$${value.toFixed(2)}`,
-      sorter: (a, b) => a.totalSpent - b.totalSpent,
+      width: 150,
+      render: (value) => `${value.toLocaleString('vi-VN')} VNĐ`,
     },
     {
-      title: RenderBoldTitle('Last Booking'),
+      title: RenderBoldTitle('Đơn Hàng Gần Nhất'),
       dataIndex: 'lastBooking',
       key: 'lastBooking',
-      sorter: (a, b) => new Date(a.lastBooking).getTime() - new Date(b.lastBooking).getTime(),
+      width: 150,
     },
     {
-      title: RenderBoldTitle('Actions'),
+      title: RenderBoldTitle('Thao Tác'),
       key: 'actions',
+      width: 150,
       render: (_, record) => (
-        <Space size="middle">
-          <Tooltip title="View Details">
-            <Button
-              type="primary"
-              color="blue"
-              variant="solid"
-              icon={<EyeOutlined />}
-              onClick={() => onViewCustomer(record.key)}
-            />
-          </Tooltip>
-        </Space>
+        <ActionButtons
+          onView={() => onViewCustomer(record.key)}
+          hideEdit
+          hideDelete
+        />
       ),
     },
   ];
 
+  // Sample data
+  const customers: CustomerData[] = [
+    {
+      key: '1',
+      name: 'Nguyễn Văn A',
+      email: 'nguyenvana@email.com',
+      phone: '0901234567',
+      status: 'active',
+      totalBookings: 5,
+      totalSpent: 2500000,
+      lastBooking: '2024-04-15',
+    },
+    {
+      key: '2',
+      name: 'Trần Thị B',
+      email: 'tranthib@email.com',
+      phone: '0909876543',
+      status: 'inactive',
+      totalBookings: 2,
+      totalSpent: 980000,
+      lastBooking: '2024-03-20',
+    },
+  ];
+
+  const filteredCustomers = customers.filter(customer => 
+    (statusFilter === 'all' || customer.status === statusFilter) &&
+    (searchText === '' || 
+      customer.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      customer.email.toLowerCase().includes(searchText.toLowerCase()) ||
+      customer.phone.includes(searchText))
+  );
+
   return (
-    <div className="shadow-sm">
-      <div className="mb-6">
-        <Title level={3}>Customers</Title>
-        <div className="flex justify-between items-center mb-4">
-          <div className="w-1/3">
-            <Input
-              placeholder="Search customers..."
-              prefix={<SearchOutlined />}
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              className="w-full"
-            />
-          </div>
-        </div>
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Quản Lý Khách Hàng</h1>
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={filteredCustomers}
-        loading={loading}
-        pagination={{
-          pageSize: 10,
-          showSizeChanger: true,
-          showTotal: (total) => `Total ${total} customers`,
-        }}
-        rowKey="key"
-      />
+      <Card className="shadow-sm">
+        <div className="mb-4 flex gap-4">
+          <Input
+            placeholder="Tìm kiếm khách hàng..."
+            prefix={<SearchOutlined />}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            className="max-w-xs"
+          />
+          <Select
+            placeholder="Trạng Thái"
+            value={statusFilter}
+            onChange={setStatusFilter}
+            className="min-w-[150px]"
+            options={[
+              { value: 'all', label: 'Tất Cả' },
+              { value: 'active', label: 'Đang Hoạt Động' },
+              { value: 'inactive', label: 'Ngừng Hoạt Động' },
+            ]}
+          />
+        </div>
+
+        <AdminTable
+          columns={columns}
+          dataSource={filteredCustomers}
+          loading={loading}
+          rowKey="key"
+          itemsName="khách hàng"
+        />
+      </Card>
     </div>
   );
 };

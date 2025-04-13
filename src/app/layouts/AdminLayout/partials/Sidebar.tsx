@@ -8,20 +8,19 @@ import {
   HomeOutlined,
   GlobalOutlined,
   TeamOutlined,
-  CalendarOutlined,
   SettingOutlined,
   CreditCardOutlined,
   CommentOutlined,
+  ShoppingCartOutlined,
 } from "@ant-design/icons";
 
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { role } = useAuthStore();
   
-  const activeItemStyle = "!bg-emerald-600 !text-white hover:!bg-emerald-700";
-  const itemStyle = "w-full flex hover:!bg-emerald-600 !text-zinc-600 hover:!text-white";
+  const activeItemStyle = "!bg-[#FFF5F3] !text-[#8B7156] hover:!bg-[#FFF5F3]";
+  const itemStyle = "w-full flex hover:!bg-[#F9F2EA] !text-zinc-600 hover:!text-[#8B7156]";
   
   const [selectedKey, setSelectedKey] = useState("/dashboard");
   
@@ -32,8 +31,8 @@ const Sidebar = () => {
     // Match path to the correct menu item
     if (path.includes("/dashboard")) {
       setSelectedKey("/dashboard");
-    } else if (path.includes("/tours")) {
-      setSelectedKey("/tours");
+    } else if (path.includes("/product")) {
+      setSelectedKey("/product");
     } else if (path.includes("/bookings")) {
       setSelectedKey("/bookings");
     } else if (path.includes("/customers")) {
@@ -58,18 +57,18 @@ const Sidebar = () => {
       icon: <HomeOutlined />,
     },
     {
-      label: "Quản Lý Tour",
-      key: "/tours",
-      path: "/tours",
-      className: selectedKey === "/tours" ? activeItemStyle : itemStyle,
+      label: "Quản Lý Sản Phẩm",
+      key: "/product",
+      path: "/product",
+      className: selectedKey === "/product" ? activeItemStyle : itemStyle,
       icon: <GlobalOutlined />,
     },
     {
-      label: "Đặt Tour",
+      label: "Quản Lý Đơn Hàng",
       key: "/bookings",
       path: "/bookings",
       className: selectedKey === "/bookings" ? activeItemStyle : itemStyle,
-      icon: <CalendarOutlined />,
+      icon: <ShoppingCartOutlined />,
     },
     {
       label: "Khách Hàng",

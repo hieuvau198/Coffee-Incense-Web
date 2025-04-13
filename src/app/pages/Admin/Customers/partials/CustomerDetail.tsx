@@ -1,46 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Typography,
-  Descriptions,
-  Tag,
-  Button,
-  Card,
-  Space,
-  Avatar,
-  Divider,
-  Table,
-  Tooltip,
-  Tabs,
-  Empty,
-  Badge,
-  Statistic,
-  Row,
-  Col,
-  Spin
-} from 'antd';
-import {
-  ArrowLeftOutlined,
-  UserOutlined,
-  MailOutlined,
-  PhoneOutlined,
-  CalendarOutlined,
-  ClockCircleOutlined,
-  DollarOutlined,
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  ShoppingOutlined,
-  StarOutlined,
-  GlobalOutlined,
-  TeamOutlined,
-  CreditCardOutlined,
-  EditOutlined,
-  DeleteOutlined
-} from '@ant-design/icons';
+import {Typography,Descriptions,Tag,Button,Card,Avatar,Table,Tooltip,Tabs,Empty,Statistic,Row,Col} from 'antd';
+import {ArrowLeftOutlined,UserOutlined,DollarOutlined,ShoppingOutlined} from '@ant-design/icons';
 import Loading from '@/app/components/Loading';
 import type { ColumnsType } from 'antd/es/table';
 import RenderBoldTitle from '@/app/components/RenderBoldTitle';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Text } = Typography;
 const { TabPane } = Tabs;
 
 interface BookingHistory {

@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Rate, Descriptions, Tag, Button, Avatar, Card, Space, message } from "antd";
-import { UserOutlined, CalendarOutlined, GlobalOutlined, ArrowLeftOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Typography, Rate, Descriptions, Tag, Button, Avatar, Card, message } from "antd";
+import { UserOutlined, CalendarOutlined, ShoppingOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import Loading from "@/app/components/Loading";
 import RenderBoldTitle from "@/app/components/RenderBoldTitle";
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Text } = Typography;
 
 interface ReviewData {
   key: string;
   customer: string;
-  tour: string;
+  position: string;
+  text: string;
   rating: number;
-  comment: string;
   date: string;
   status: "approved" | "pending" | "rejected";
 }
@@ -30,31 +30,30 @@ const ReviewDetail: React.FC<ReviewDetailProps> = ({ reviewId, onBack }) => {
     const mockData: Record<string, ReviewData> = {
       "1": {
         key: "1",
-        customer: "Nguyễn Văn A",
-        tour: "TOUR DU LỊCH ĐÀ LẠT",
+        customer: "Lê Hoàng Khang",
+        position: "Sản phẩm tốt nhất, mình mua và ngửi quá tốt",
+        text: "Giao hàng nhanh, đóng gói đẹp lắm, mình rất thích hương thơm của sản phẩm.",
         rating: 5,
-        comment:
-          "Tour rất tuyệt vời! Hướng dẫn viên nhiệt tình, chương trình tham quan hợp lý. Khách sạn sạch sẽ, đồ ăn ngon. Tôi đặc biệt ấn tượng với cảnh đẹp tại đồi chè Cầu Đất và vườn hoa thành phố. Nếu có cơ hội, tôi sẽ quay lại Đà Lạt và tiếp tục sử dụng dịch vụ của công ty.",
         date: "15/04/2024",
         status: "approved",
       },
       "2": {
         key: "2",
-        customer: "Trần Thị B",
-        tour: "TOUR DU LỊCH PHÚ QUỐC",
-        rating: 4,
-        comment: "Cảnh đẹp, đồ ăn ngon. Tuy nhiên thời gian tham quan hơi gấp. Hướng dẫn viên nhiệt tình nhưng còn thiếu kinh nghiệm về một số điểm du lịch. Cần cải thiện việc sắp xếp lịch trình để khách có thời gian nghỉ ngơi và tham quan kỹ hơn.",
+        customer: "Lê Phạm Khánh Hà",
+        position: "Sản phẩm khác biệt, tôi rất thích vì không tạo ra mùi khói",
+        text: "Sản phẩm rất đặc biệt, mình có thể hương thơm hàng giờ mà không có khói.",
+        rating: 5,
         date: "16/04/2024",
-        status: "pending",
+        status: "approved",
       },
       "3": {
         key: "3",
-        customer: "Lê Văn C",
-        tour: "TOUR DU LỊCH ĐÀ NẴNG",
-        rating: 3,
-        comment: "Tour ổn, nhưng giá hơi cao so với chất lượng dịch vụ. Khách sạn không đúng như quảng cáo, phòng nhỏ và thiếu tiện nghi. Hướng dẫn viên thân thiện nhưng lịch trình chưa hợp lý, mất nhiều thời gian di chuyển.",
+        customer: "Đặng Hoàng",
+        position: "Sản phẩm quá tốt nhất",
+        text: "Mình rất thích mùi hương, đặc biệt là hương cà phê rất đặc trưng và dễ chịu.",
+        rating: 5,
         date: "17/04/2024",
-        status: "rejected",
+        status: "approved",
       },
     };
 
@@ -73,9 +72,6 @@ const ReviewDetail: React.FC<ReviewDetailProps> = ({ reviewId, onBack }) => {
     if (review) {
       setReview({ ...review, status: "approved" });
       message.success("Đã duyệt đánh giá thành công");
-
-      // In a real app, you would make an API call here
-      // Example: await api.approveReview(review.key);
     }
   };
 
@@ -83,9 +79,6 @@ const ReviewDetail: React.FC<ReviewDetailProps> = ({ reviewId, onBack }) => {
     if (review) {
       setReview({ ...review, status: "rejected" });
       message.error("Đã từ chối đánh giá");
-
-      // In a real app, you would make an API call here
-      // Example: await api.rejectReview(review.key);
     }
   };
 
@@ -134,7 +127,7 @@ const ReviewDetail: React.FC<ReviewDetailProps> = ({ reviewId, onBack }) => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
-          <Card variant="borderless" className="shadow-none sticky top-5 ">
+          <Card variant="borderless" className="shadow-none sticky top-5">
             <div className="flex flex-col items-center mb-4">
               <Avatar size={100} icon={<UserOutlined />} />
               <Title level={4} className="mt-4 mb-0">
@@ -150,8 +143,32 @@ const ReviewDetail: React.FC<ReviewDetailProps> = ({ reviewId, onBack }) => {
               <Descriptions.Item label="Đánh Giá">
                 <Rate disabled value={review.rating} /> ({review.rating}/5)
               </Descriptions.Item>
+              <Descriptions.Item label="Trạng Thái">
+                <Tag color={statusColors[review.status]}>
+                  {statusLabels[review.status]}
+                </Tag>
+              </Descriptions.Item>
             </Descriptions>
 
+            {review.status === "pending" && (
+              <div className="mt-4 space-y-2">
+                <Button 
+                  type="primary" 
+                  block 
+                  onClick={handleApprove}
+                  className="bg-[#8B7156] hover:bg-[#64503C]"
+                >
+                  Duyệt Đánh Giá
+                </Button>
+                <Button 
+                  danger 
+                  block 
+                  onClick={handleReject}
+                >
+                  Từ Chối
+                </Button>
+              </div>
+            )}
           </Card>
         </div>
 
@@ -159,26 +176,25 @@ const ReviewDetail: React.FC<ReviewDetailProps> = ({ reviewId, onBack }) => {
           <Card title={RenderBoldTitle("Thông Tin Đánh Giá")} className="mb-6" variant="borderless">
             <Descriptions column={1} bordered>
               <Descriptions.Item label={RenderBoldTitle("Khách Hàng")}>{review.customer}</Descriptions.Item>
+              <Descriptions.Item label={RenderBoldTitle("Tiêu Đề")}>{review.position}</Descriptions.Item>
               <Descriptions.Item label={RenderBoldTitle("Đánh Giá")}>
                 <Rate disabled defaultValue={review.rating} />
               </Descriptions.Item>
               <Descriptions.Item label={RenderBoldTitle("Ngày Đánh Giá")}>{review.date}</Descriptions.Item>
-              <Descriptions.Item label={RenderBoldTitle("Bình Luận")} span={2}>
-                {review.comment}
+              <Descriptions.Item label={RenderBoldTitle("Nội Dung")} span={2}>
+                {review.text}
               </Descriptions.Item>
             </Descriptions>
           </Card>
 
-          <Card title={RenderBoldTitle("Thông Tin Tour")} className="mb-6" variant="borderless">
+          <Card title={RenderBoldTitle("Thông Tin Sản Phẩm")} className="mb-6" variant="borderless">
             <Descriptions column={{ xxl: 2, xl: 2, lg: 2, md: 1, sm: 1, xs: 1 }} bordered>
-              <Descriptions.Item label={RenderBoldTitle("Tên Tour")}>{review.tour}</Descriptions.Item>
-              <Descriptions.Item label={RenderBoldTitle("Mã Tour")}>{review.key}</Descriptions.Item>
-              <Descriptions.Item label={RenderBoldTitle("Thời Gian")}>3 ngày 2 đêm</Descriptions.Item>
-              <Descriptions.Item label={RenderBoldTitle("Giá Tour")}>2,590,000 VND</Descriptions.Item>
-              <Descriptions.Item label={RenderBoldTitle("Điểm Khởi Hành")}>Hồ Chí Minh</Descriptions.Item>
-              <Descriptions.Item label={RenderBoldTitle("Trạng Thái Đặt Tour")}>
-                <Tag color={statusColors[review.status]}>{statusLabels[review.status]}</Tag>
+              <Descriptions.Item label={RenderBoldTitle("Tên Sản Phẩm")}>
+                <ShoppingOutlined className="mr-2" /> Hương Cà Phê
               </Descriptions.Item>
+              <Descriptions.Item label={RenderBoldTitle("Mã Sản Phẩm")}>PRD001</Descriptions.Item>
+              <Descriptions.Item label={RenderBoldTitle("Loại Sản Phẩm")}>Hương Thơm</Descriptions.Item>
+              <Descriptions.Item label={RenderBoldTitle("Giá")}>149,000 VNĐ</Descriptions.Item>
             </Descriptions>
           </Card>
         </div>
