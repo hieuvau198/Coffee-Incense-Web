@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import { Tag, Input, Select, DatePicker, Card, Table, Button, Space } from "antd";
 import { SearchOutlined, EyeOutlined, PrinterOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import RenderBoldTitle from '@/app/components/RenderBoldTitle';
-import ActionButtons from '@/app/components/ActionButton';
-import AdminTable from '@/app/components/AdminTable';
 
 const { RangePicker } = DatePicker;
 
@@ -293,4 +290,4 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
   );
 };
 
-export default PaymentList; 
+export default PaymentList;
