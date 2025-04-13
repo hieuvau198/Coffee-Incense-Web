@@ -53,8 +53,8 @@ const useAuthStore = create<{
           set({
             isAuthenticated: true,
             userId: decoded.userId || 0,
-            email: decoded.email,
-            name: decoded.name || decoded.email,
+            email: decoded.email || "",
+            name: decoded.name || decoded.email || "",
             avatar: decoded.avatar || "",
             role: decoded.role || Role.GUEST,
           });
@@ -78,8 +78,8 @@ const useAuthStore = create<{
       },
       updateAccount: (data: User) => {
         set({
-          name: data.name,
-          avatar: data.avatar,
+          name: data.name || "",
+          avatar: data.avatar || "",
         });
       },
     }),
