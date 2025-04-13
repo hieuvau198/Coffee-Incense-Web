@@ -1,30 +1,28 @@
-import { Table } from 'antd';
-import type { TableProps } from 'antd';
+import React from 'react';
+import { Table, TableProps } from 'antd';
 
-interface AdminTableProps<T> extends Omit<TableProps<T>, 'className' | 'scroll'> {
-  totalItems?: number;
-  itemsName?: string;
+// Extend TableProps with our custom additional props
+interface AdminTableProps<T> extends TableProps<T> {
+  loading?: boolean;
+  showHeader?: boolean;
 }
 
-function AdminTable<T extends object>({ 
-  totalItems, 
-  itemsName = 'mục',
-  pagination,
-  ...props 
+function AdminTable<T extends object>({
+  loading = false,
+  showHeader = true,
+  pagination = { position: ['bottomCenter'] },
+  ...props
 }: AdminTableProps<T>) {
   return (
-    <Table
+    <Table<T>
+      loading={loading}
+      showHeader={showHeader}
+      pagination={pagination}
+      className="coffee-themed-table"
+      rowClassName={(record, index) => 
+        index % 2 === 0 ? 'even-row' : 'odd-row'
+      }
       {...props}
-      pagination={{
-        defaultPageSize: 10,
-        showSizeChanger: true,
-        pageSizeOptions: ['10', '20', '50'],
-        showTotal: (total) => `Tổng số ${total} ${itemsName}`,
-        ...(pagination || {}),
-      }}
-      scroll={{ x: 'max-content' }}
-      className="w-full"
-      size="middle"
     />
   );
 }
