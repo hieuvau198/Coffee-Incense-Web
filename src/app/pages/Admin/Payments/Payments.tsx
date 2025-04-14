@@ -1,58 +1,41 @@
 import React, { useState } from "react";
-import { message } from "antd";
+import { Card } from "antd";
 import PaymentDetail from "./partials/PaymentDetail";
 import PaymentList from "./partials/PaymentList";
 
+// Kiểu chuyển đổi giữa danh sách và chi tiết
 type ViewMode = "list" | "view";
 
 const Payments: React.FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [selectedPaymentId, setSelectedPaymentId] = useState<string | null>(null);
 
+  // Khi bấm xem chi tiết 1 thanh toán
   const handleViewPayment = (id: string) => {
     setSelectedPaymentId(id);
     setViewMode("view");
   };
 
+  // Quay lại danh sách
   const handleBack = () => {
     setViewMode("list");
     setSelectedPaymentId(null);
   };
 
-  const handleDeletePayment = async (id: string) => {
-    try {
-      // TODO: Implement API call to delete payment
-      message.success('Xóa thanh toán thành công');
-    } catch (error) {
-      message.error('Có lỗi xảy ra khi xóa thanh toán');
-    }
-  };
+  return (
+    <Card className="shadow-sm h-full overflow-hidden">
+      {viewMode === "list" && (
+        <PaymentList onViewPayment={handleViewPayment} />
+      )}
 
-  const renderContent = () => {
-    if (viewMode === "view" && !selectedPaymentId) {
-      handleBack();
-      return null;
-    }
-
-    switch (viewMode) {
-      case "view":
-        return (
-          <PaymentDetail
-            paymentId={selectedPaymentId!}
-            onBack={handleBack}
-          />
-        );
-      default:
-        return (
-          <PaymentList
-            onViewPayment={handleViewPayment}
-            handleDeletePayment={handleDeletePayment}
-          />
-        );
-    }
-  };
-
-  return renderContent();
+      {viewMode === "view" && selectedPaymentId && (
+        <PaymentDetail
+          paymentId={selectedPaymentId}
+          onBack={handleBack}
+        />
+      )}
+    </Card>
+  );
 };
 
 export default Payments;

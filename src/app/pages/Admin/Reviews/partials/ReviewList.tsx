@@ -1,10 +1,7 @@
-import React from "react";
-import { Input, Select, Rate, Tooltip, DatePicker, Card } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import { Tag, Input, Select, Card, Table, Rate, Tooltip, Space, Button } from "antd";
+import { SearchOutlined, EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import RenderBoldTitle from "@/app/components/RenderBoldTitle";
-import ActionButtons from "@/app/components/ActionButton";
-import AdminTable from "@/app/components/AdminTable";
 
 interface ReviewData {
   key: string;
@@ -22,72 +19,10 @@ interface ReviewListProps {
 }
 
 const ReviewList: React.FC<ReviewListProps> = ({ onViewReview, handleDeleteReview }) => {
-  const columns: ColumnsType<ReviewData> = [
-    {
-      title: RenderBoldTitle('Khách Hàng'),
-      dataIndex: "customer",
-      key: "customer",
-      width: 150,
-    },
-    {
-      title: RenderBoldTitle('Tiêu Đề'),
-      dataIndex: "position",
-      key: "position",
-      width: 250,
-      ellipsis: {
-        showTitle: false,
-      },
-      render: (position: string) => (
-        <Tooltip placement="topLeft" title={position}>
-          <span>{position}</span>
-        </Tooltip>
-      ),
-    },
-    {
-      title: RenderBoldTitle('Đánh Giá'),
-      dataIndex: "rating",
-      key: "rating",
-      width: 170,
-      render: (rating: number) => <Rate disabled defaultValue={rating} />,
-    },
-    {
-      title: RenderBoldTitle('Nhận Xét'),
-      dataIndex: "text",
-      key: "text",
-      width: 300,
-      ellipsis: {
-        showTitle: false,
-      },
+  const [searchText, setSearchText] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [ratingFilter, setRatingFilter] = useState<string>('');
 
-      render: (text: string) => (
-        <Tooltip placement="topLeft" title={text}>
-          <span>{text}</span>
-        </Tooltip>
-      ),
-    },
-    {
-      title: RenderBoldTitle('Ngày Đánh Giá'),
-      dataIndex: "date",
-      key: "date",
-      width: 150,
-    },
-    {
-      title: RenderBoldTitle('Thao Tác'),
-      key: "actions",
-      width: 150,
-      render: (_, record) => (
-        <ActionButtons
-          onView={() => onViewReview(record.key)}
-          onDelete={() => handleDeleteReview(record.key)}
-          hideEdit
-          deleteTooltip="Xóa đánh giá"
-          deleteDescription="Bạn có chắc chắn muốn xóa đánh giá này?"
-        />
-      ),
-    },
-  ];
-
-  // Sample data
   const reviewData: ReviewData[] = [
     {
       key: "1",
@@ -109,51 +44,167 @@ const ReviewList: React.FC<ReviewListProps> = ({ onViewReview, handleDeleteRevie
     },
   ];
 
+  const columns: ColumnsType<ReviewData> = [
+    {
+      title: "Khách Hàng",
+      dataIndex: "customer",
+      key: "customer",
+      width: 180,
+    },
+    {
+      title: "Tiêu Đề",
+      dataIndex: "position",
+      key: "position",
+      width: 250,
+      ellipsis: true,
+    },
+    {
+      title: "Đánh Giá",
+      dataIndex: "rating",
+      key: "rating",
+      width: 150,
+      render: (rating: number) => <Rate disabled defaultValue={rating} />,
+    },
+    {
+      title: "Nội Dung",
+      dataIndex: "text",
+      key: "text",
+      width: 300,
+      ellipsis: true,
+      render: (text: string) => (
+        <Tooltip placement="topLeft" title={text}>
+          {text}
+        </Tooltip>
+      ),
+    },
+    {
+      title: "Ngày Đánh Giá",
+      dataIndex: "date",
+      key: "date",
+      width: 150,
+    },
+    {
+      title: "Trạng Thái",
+      dataIndex: "status",
+      key: "status",
+      width: 150,
+      render: (status: string) => {
+        const colors: Record<string, string> = {
+          approved: "green",
+          pending: "orange",
+          rejected: "red",
+        };
+        const labels: Record<string, string> = {
+          approved: "ĐÃ DUYỆT",
+          pending: "CHỜ DUYỆT",
+          rejected: "TỪ CHỐI",
+        };
+        return <Tag color={colors[status]}>{labels[status]}</Tag>;
+      },
+      filters: [
+        { text: "Đã duyệt", value: "approved" },
+        { text: "Chờ duyệt", value: "pending" },
+        { text: "Từ chối", value: "rejected" },
+      ],
+      onFilter: (value, record) => record.status === value,
+    },
+    {
+      title: "Thao Tác",
+      key: "action",
+      width: 100,
+      align: "center",
+      render: (_, record) => (
+        <Space size="small">
+          <Button
+            type="text"
+            icon={<EyeOutlined className="text-lg" />}
+            onClick={() => onViewReview(record.key)}
+          />
+          <Button
+            type="text"
+            danger
+            icon={<DeleteOutlined className="text-lg" />}
+            onClick={() => handleDeleteReview(record.key)}
+          />
+        </Space>
+      ),
+    },
+  ];
+
+  const filteredData = reviewData.filter((r) => {
+    const matchSearch =
+      searchText === "" ||
+      r.customer.toLowerCase().includes(searchText.toLowerCase()) ||
+      r.position.toLowerCase().includes(searchText.toLowerCase()) ||
+      r.text.toLowerCase().includes(searchText.toLowerCase());
+
+    const matchStatus = statusFilter === "all" || r.status === statusFilter;
+    const matchRating = ratingFilter === "" || r.rating === parseInt(ratingFilter);
+
+    return matchSearch && matchStatus && matchRating;
+  });
+
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="space-y-4 w-full overflow-x-hidden">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Quản Lý Đánh Giá</h1>
       </div>
 
-      <Card className="shadow-sm">
-        <div className="mb-4 flex gap-4">
+      <Card className="mb-4 shadow-sm">
+        <div className="flex flex-wrap gap-4 max-w-full">
           <Input
             placeholder="Tìm kiếm đánh giá..."
             prefix={<SearchOutlined />}
-            className="max-w-xs"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ width: 250 }}
           />
           <Select
             placeholder="Đánh giá sao"
-            className="min-w-[150px]"
-            options={[
-              { value: "5", label: "5 sao" },
-              { value: "4", label: "4 sao" },
-              { value: "3", label: "3 sao" },
-              { value: "2", label: "2 sao" },
-              { value: "1", label: "1 sao" },
-            ]}
+            style={{ width: 150 }}
+            allowClear
+            value={ratingFilter || undefined}
+            onChange={(value) => setRatingFilter(value)}
+            options={["5", "4", "3", "2", "1"].map((star) => ({
+              value: star,
+              label: `${star} sao`,
+            }))}
           />
           <Select
             placeholder="Trạng thái"
-            className="min-w-[150px]"
+            style={{ width: 200 }}
+            value={statusFilter}
+            onChange={(value) => setStatusFilter(value)}
             options={[
+              { value: "all", label: "Tất Cả" },
               { value: "approved", label: "Đã duyệt" },
               { value: "pending", label: "Chờ duyệt" },
               { value: "rejected", label: "Từ chối" },
             ]}
           />
-          <DatePicker.RangePicker placeholder={["Từ ngày", "Đến ngày"]} />
         </div>
+      </Card>
 
-        <AdminTable
+      <Card className="shadow-sm">
+        <Table
           columns={columns}
-          dataSource={reviewData}
+          dataSource={filteredData}
           rowKey="key"
-          itemsName="đánh giá"
+          pagination={{
+            pageSize: 10,
+            showSizeChanger: true,
+            position: ["bottomRight"],
+            showTotal: (total) => `Tổng ${total} đánh giá`,
+          }}
+          scroll={{ x: 1200 }}
+          className="overflow-x-auto"
+          size="middle"
+          bordered={false}
+          rowClassName={(record, index) => (index % 2 === 0 ? "bg-[#FAFAFA]" : "")}
         />
       </Card>
     </div>
   );
 };
 
-export default ReviewList; 
+export default ReviewList;

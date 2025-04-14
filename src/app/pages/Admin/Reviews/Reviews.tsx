@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { message } from "antd";
+import { Card, message } from "antd";
 import ReviewDetail from "./partials/ReviewDetail";
 import ReviewList from "./partials/ReviewList";
 
@@ -21,38 +21,30 @@ const Reviews: React.FC = () => {
 
   const handleDeleteReview = async (id: string) => {
     try {
-      // TODO: Implement API call to delete review
-      message.success('Xóa đánh giá thành công');
+      // TODO: API xóa đánh giá
+      message.success("Xóa đánh giá thành công");
     } catch (error) {
-      message.error('Có lỗi xảy ra khi xóa đánh giá');
+      message.error("Có lỗi xảy ra khi xóa đánh giá");
     }
   };
 
-  const renderContent = () => {
-    if (viewMode === "view" && !selectedReviewId) {
-      handleBack();
-      return null;
-    }
+  return (
+    <Card className="shadow-sm h-full overflow-hidden">
+      {viewMode === "list" && (
+        <ReviewList
+          onViewReview={handleViewReview}
+          handleDeleteReview={handleDeleteReview}
+        />
+      )}
 
-    switch (viewMode) {
-      case "view":
-        return (
-          <ReviewDetail
-            reviewId={selectedReviewId!}
-            onBack={handleBack}
-          />
-        );
-      default:
-        return (
-          <ReviewList
-            onViewReview={handleViewReview}
-            handleDeleteReview={handleDeleteReview}
-          />
-        );
-    }
-  };
-
-  return renderContent();
+      {viewMode === "view" && selectedReviewId && (
+        <ReviewDetail
+          reviewId={selectedReviewId}
+          onBack={handleBack}
+        />
+      )}
+    </Card>
+  );
 };
 
 export default Reviews;

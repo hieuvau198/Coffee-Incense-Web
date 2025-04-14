@@ -1,10 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Rate, Descriptions, Tag, Button, Avatar, Card, message } from "antd";
-import { UserOutlined, CalendarOutlined, ShoppingOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-import Loading from "@/app/components/Loading";
-import RenderBoldTitle from "@/app/components/RenderBoldTitle";
+import {
+  Typography,
+  Rate,
+  Descriptions,
+  Tag,
+  Button,
+  Avatar,
+  Card,
+  message,
+  Row,
+  Col,
+  Statistic,
+  Tabs,
+  Empty,
+} from "antd";
+import {
+  UserOutlined,
+  ArrowLeftOutlined,
+  ShoppingOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  ClockCircleOutlined,
+  StarOutlined,
+} from "@ant-design/icons";
 
 const { Title, Text } = Typography;
+const { TabPane } = Tabs;
 
 interface ReviewData {
   key: string;
@@ -37,41 +58,24 @@ const ReviewDetail: React.FC<ReviewDetailProps> = ({ reviewId, onBack }) => {
         date: "15/04/2024",
         status: "approved",
       },
-      "2": {
-        key: "2",
-        customer: "Lê Phạm Khánh Hà",
-        position: "Sản phẩm khác biệt, tôi rất thích vì không tạo ra mùi khói",
-        text: "Sản phẩm rất đặc biệt, mình có thể hương thơm hàng giờ mà không có khói.",
-        rating: 5,
-        date: "16/04/2024",
-        status: "approved",
-      },
-      "3": {
-        key: "3",
-        customer: "Đặng Hoàng",
-        position: "Sản phẩm quá tốt nhất",
-        text: "Mình rất thích mùi hương, đặc biệt là hương cà phê rất đặc trưng và dễ chịu.",
-        rating: 5,
-        date: "17/04/2024",
-        status: "approved",
-      },
     };
-
-    // Mock API call with setTimeout
-    const fetchData = setTimeout(() => {
-      if (reviewId && mockData[reviewId]) {
-        setReview(mockData[reviewId]);
-      }
+    const fetch = setTimeout(() => {
+      setReview(mockData[reviewId] || null);
       setLoading(false);
     }, 500);
-
-    return () => clearTimeout(fetchData);
+    return () => clearTimeout(fetch);
   }, [reviewId]);
+
+  const statusMap = {
+    approved: { color: "green", label: "Đã duyệt", icon: <CheckCircleOutlined /> },
+    pending: { color: "orange", label: "Chờ duyệt", icon: <ClockCircleOutlined /> },
+    rejected: { color: "red", label: "Từ chối", icon: <CloseCircleOutlined /> },
+  };
 
   const handleApprove = () => {
     if (review) {
       setReview({ ...review, status: "approved" });
-      message.success("Đã duyệt đánh giá thành công");
+      message.success("Đã duyệt đánh giá");
     }
   };
 
@@ -83,124 +87,106 @@ const ReviewDetail: React.FC<ReviewDetailProps> = ({ reviewId, onBack }) => {
   };
 
   if (loading) {
-    return <Loading />;
+    return <Card className="shadow-sm"><div className="text-center py-10">Đang tải dữ liệu...</div></Card>;
   }
 
   if (!review) {
     return (
-      <div className="text-center p-8">
-        <Title level={4}>Không tìm thấy đánh giá</Title>
-        <Button type="primary" onClick={onBack} className="mt-4">
+      <Card className="shadow-sm">
+        <Button type="primary" icon={<ArrowLeftOutlined />} onClick={onBack}>
           Quay lại danh sách
         </Button>
-      </div>
+        <Empty description="Không tìm thấy đánh giá" className="mt-4" />
+      </Card>
     );
   }
 
-  const statusColors = {
-    approved: "green",
-    pending: "orange",
-    rejected: "red",
-  };
-
-  const statusLabels = {
-    approved: "Đã duyệt",
-    pending: "Đang chờ",
-    rejected: "Từ chối",
-  };
-
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex justify-end">
-        <Button
-          type="link"
-          color="primary"
-          variant="text"
-          icon={<ArrowLeftOutlined />}
-          onClick={onBack}
-        >
+    <div className="space-y-6">
+      <div className="flex justify-end mb-4">
+        <Button type="primary" icon={<ArrowLeftOutlined />} onClick={onBack}>
           Quay lại danh sách
         </Button>
       </div>
 
-      <Title level={3}>Chi Tiết Đánh Giá</Title>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1">
-          <Card variant="borderless" className="shadow-none sticky top-5">
-            <div className="flex flex-col items-center mb-4">
-              <Avatar size={100} icon={<UserOutlined />} />
-              <Title level={4} className="mt-4 mb-0">
-                {review.customer}
-              </Title>
-              <Text type="secondary">
-                <CalendarOutlined className="mr-1" /> {review.date}
-              </Text>
+      <Card className="shadow-sm">
+        <div className="flex items-start">
+          <Avatar size={80} icon={<UserOutlined />} className="mr-6" />
+          <div>
+            <Title level={3}>{review.customer}</Title>
+            <Tag color={statusMap[review.status].color}>
+              {statusMap[review.status].icon} {statusMap[review.status].label}
+            </Tag>
+            <div className="mt-2">
+              <Text type="secondary">Mã Đánh Giá: #{review.key}</Text>
             </div>
-            
-            <Descriptions column={1} className="mt-4">
-              <Descriptions.Item label="Mã Đánh Giá">#{review.key}</Descriptions.Item>
-              <Descriptions.Item label="Đánh Giá">
-                <Rate disabled value={review.rating} /> ({review.rating}/5)
-              </Descriptions.Item>
-              <Descriptions.Item label="Trạng Thái">
-                <Tag color={statusColors[review.status]}>
-                  {statusLabels[review.status]}
-                </Tag>
-              </Descriptions.Item>
-            </Descriptions>
-
-            {review.status === "pending" && (
-              <div className="mt-4 space-y-2">
-                <Button 
-                  type="primary" 
-                  block 
-                  onClick={handleApprove}
-                  className="bg-[#8B7156] hover:bg-[#64503C]"
-                >
-                  Duyệt Đánh Giá
-                </Button>
-                <Button 
-                  danger 
-                  block 
-                  onClick={handleReject}
-                >
-                  Từ Chối
-                </Button>
-              </div>
-            )}
-          </Card>
+          </div>
         </div>
+      </Card>
 
-        <div className="lg:col-span-2">
-          <Card title={RenderBoldTitle("Thông Tin Đánh Giá")} className="mb-6" variant="borderless">
-            <Descriptions column={1} bordered>
-              <Descriptions.Item label={RenderBoldTitle("Khách Hàng")}>{review.customer}</Descriptions.Item>
-              <Descriptions.Item label={RenderBoldTitle("Tiêu Đề")}>{review.position}</Descriptions.Item>
-              <Descriptions.Item label={RenderBoldTitle("Đánh Giá")}>
-                <Rate disabled defaultValue={review.rating} />
-              </Descriptions.Item>
-              <Descriptions.Item label={RenderBoldTitle("Ngày Đánh Giá")}>{review.date}</Descriptions.Item>
-              <Descriptions.Item label={RenderBoldTitle("Nội Dung")} span={2}>
-                {review.text}
-              </Descriptions.Item>
-            </Descriptions>
+      <Row gutter={16}>
+        <Col span={8}>
+          <Card className="shadow-sm">
+            <Statistic
+              title="Điểm Đánh Giá"
+              value={review.rating}
+              prefix={<StarOutlined />}
+              suffix="/5"
+              valueStyle={{ color: "#faad14" }}
+            />
           </Card>
+        </Col>
+        <Col span={8}>
+          <Card className="shadow-sm">
+            <Statistic
+              title="Ngày Đánh Giá"
+              value={review.date}
+              prefix={<ClockCircleOutlined />}
+            />
+          </Card>
+        </Col>
+      </Row>
 
-          <Card title={RenderBoldTitle("Thông Tin Sản Phẩm")} className="mb-6" variant="borderless">
-            <Descriptions column={{ xxl: 2, xl: 2, lg: 2, md: 1, sm: 1, xs: 1 }} bordered>
-              <Descriptions.Item label={RenderBoldTitle("Tên Sản Phẩm")}>
-                <ShoppingOutlined className="mr-2" /> Hương Cà Phê
-              </Descriptions.Item>
-              <Descriptions.Item label={RenderBoldTitle("Mã Sản Phẩm")}>PRD001</Descriptions.Item>
-              <Descriptions.Item label={RenderBoldTitle("Loại Sản Phẩm")}>Hương Thơm</Descriptions.Item>
-              <Descriptions.Item label={RenderBoldTitle("Giá")}>149,000 VNĐ</Descriptions.Item>
+      <Card className="shadow-sm">
+        <Tabs defaultActiveKey="info" type="card">
+          <TabPane tab="Thông Tin Đánh Giá" key="info">
+            <Descriptions bordered column={1}>
+              <Descriptions.Item label="Tiêu Đề">{review.position}</Descriptions.Item>
+              <Descriptions.Item label="Nội Dung">{review.text}</Descriptions.Item>
             </Descriptions>
-          </Card>
-        </div>
-      </div>
+          </TabPane>
+          <TabPane tab="Thông Tin Sản Phẩm" key="product">
+            <Descriptions bordered column={1}>
+              <Descriptions.Item label="Tên Sản Phẩm">
+                <ShoppingOutlined className="mr-2" />
+                Hương Cà Phê
+              </Descriptions.Item>
+              <Descriptions.Item label="Mã Sản Phẩm">PRD001</Descriptions.Item>
+              <Descriptions.Item label="Loại Sản Phẩm">Hương Thơm</Descriptions.Item>
+              <Descriptions.Item label="Giá">149,000 VNĐ</Descriptions.Item>
+            </Descriptions>
+          </TabPane>
+        </Tabs>
+      </Card>
+
+      {review.status === "pending" && (
+        <Card className="shadow-sm">
+          <Row gutter={16} className="justify-end">
+            <Col>
+              <Button type="primary" onClick={handleApprove}>
+                Duyệt Đánh Giá
+              </Button>
+            </Col>
+            <Col>
+              <Button danger onClick={handleReject}>
+                Từ Chối
+              </Button>
+            </Col>
+          </Row>
+        </Card>
+      )}
     </div>
   );
 };
 
-export default ReviewDetail; 
+export default ReviewDetail;

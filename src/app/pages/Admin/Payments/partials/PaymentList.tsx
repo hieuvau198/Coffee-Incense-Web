@@ -1,6 +1,19 @@
 import React, { useState } from "react";
-import { Tag, Input, Select, DatePicker, Card, Table, Button, Space } from "antd";
-import { SearchOutlined, EyeOutlined, PrinterOutlined } from "@ant-design/icons";
+import {
+  Tag,
+  Input,
+  Select,
+  DatePicker,
+  Card,
+  Table,
+  Button,
+  Space,
+} from "antd";
+import {
+  SearchOutlined,
+  EyeOutlined,
+  PrinterOutlined,
+} from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 
 const { RangePicker } = DatePicker;
@@ -22,12 +35,12 @@ interface PaymentListProps {
 
 const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
   const [loading, setLoading] = useState(false);
-  const [searchText, setSearchText] = useState<string>('');
-  const [statusFilter, setStatusFilter] = useState<string>('');
-  const [methodFilter, setMethodFilter] = useState<string>('');
+  const [searchText, setSearchText] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [methodFilter, setMethodFilter] = useState("");
   const [dateRange, setDateRange] = useState<[string, string] | null>(null);
 
-  const [paymentData, setPaymentData] = useState<PaymentData[]>([
+  const paymentData: PaymentData[] = [
     {
       key: "1",
       paymentId: "PAY-001",
@@ -68,67 +81,51 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
       method: "momo",
       status: "refunded",
     },
-  ]);
-
-  const handleSearch = (value: string) => {
-    setSearchText(value);
-  };
-
-  const handleStatusFilter = (value: string) => {
-    setStatusFilter(value);
-  };
-
-  const handleMethodFilter = (value: string) => {
-    setMethodFilter(value);
-  };
-
-  const handleDateRangeChange = (dates: any, dateStrings: [string, string]) => {
-    setDateRange(dateStrings);
-  };
+  ];
 
   const handlePrintReceipt = (id: string) => {
-    // In a real app, this would open a print dialog or generate a PDF
-    console.log(`Đang in biên lai thanh toán #${id}`);
+    console.log(`In biên lai thanh toán #${id}`);
   };
 
   const columns: ColumnsType<PaymentData> = [
     {
-      title: 'Mã Thanh Toán',
-      dataIndex: 'paymentId',
-      key: 'paymentId',
+      title: "Mã Thanh Toán",
+      dataIndex: "paymentId",
+      key: "paymentId",
       width: 150,
     },
     {
-      title: 'Khách Hàng',
-      dataIndex: 'customer',
-      key: 'customer',
+      title: "Khách Hàng",
+      dataIndex: "customer",
+      key: "customer",
       width: 180,
     },
     {
-      title: 'Sản Phẩm',
-      dataIndex: 'products',
-      key: 'products',
+      title: "Sản Phẩm",
+      dataIndex: "products",
+      key: "products",
       width: 250,
       ellipsis: true,
     },
     {
-      title: 'Số Tiền',
-      dataIndex: 'amount',
-      key: 'amount',
+      title: "Số Tiền",
+      dataIndex: "amount",
+      key: "amount",
       width: 150,
-      render: (amount: number) => `${amount.toLocaleString("vi-VN")} VNĐ`,
+      render: (amount: number) =>
+        `${amount.toLocaleString("vi-VN")} VNĐ`,
       sorter: (a, b) => a.amount - b.amount,
     },
     {
-      title: 'Ngày Thanh Toán',
-      dataIndex: 'date',
-      key: 'date',
+      title: "Ngày Thanh Toán",
+      dataIndex: "date",
+      key: "date",
       width: 150,
     },
     {
-      title: 'Phương Thức',
-      dataIndex: 'method',
-      key: 'method',
+      title: "Phương Thức",
+      dataIndex: "method",
+      key: "method",
       width: 150,
       render: (method: string) => {
         const labels: Record<string, string> = {
@@ -148,9 +145,9 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
       onFilter: (value, record) => record.method === value,
     },
     {
-      title: 'Trạng Thái',
-      dataIndex: 'status',
-      key: 'status',
+      title: "Trạng Thái",
+      dataIndex: "status",
+      key: "status",
       width: 150,
       render: (status: string) => {
         const colors: Record<string, string> = {
@@ -180,15 +177,15 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
       onFilter: (value, record) => record.status === value,
     },
     {
-      title: 'Thao Tác',
-      key: 'action',
+      title: "Thao Tác",
+      key: "action",
       width: 120,
-      align: 'center',
+      align: "center",
       render: (_, record) => (
         <Space size="small">
-          <Button 
-            type="text" 
-            icon={<EyeOutlined className="text-lg" />} 
+          <Button
+            type="text"
+            icon={<EyeOutlined className="text-lg" />}
             onClick={() => onViewPayment(record.key)}
           />
           {record.status === "completed" && (
@@ -203,17 +200,16 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
     },
   ];
 
-  const filteredData = paymentData.filter(payment => {
-    const matchSearch = searchText === '' || 
-      payment.paymentId.toLowerCase().includes(searchText.toLowerCase()) ||
-      payment.customer.toLowerCase().includes(searchText.toLowerCase()) ||
-      payment.products.toLowerCase().includes(searchText.toLowerCase());
-    
-    const matchStatus = statusFilter === '' || payment.status === statusFilter;
-    const matchMethod = methodFilter === '' || payment.method === methodFilter;
-    
-    // Date range filter logic would go here
-    
+  const filteredData = paymentData.filter((p) => {
+    const matchSearch =
+      searchText === "" ||
+      p.paymentId.toLowerCase().includes(searchText.toLowerCase()) ||
+      p.customer.toLowerCase().includes(searchText.toLowerCase()) ||
+      p.products.toLowerCase().includes(searchText.toLowerCase());
+
+    const matchStatus = statusFilter === "all" || p.status === statusFilter;
+    const matchMethod = methodFilter === "" || p.method === methodFilter;
+
     return matchSearch && matchStatus && matchMethod;
   });
 
@@ -229,17 +225,16 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
             placeholder="Tìm kiếm thanh toán..."
             prefix={<SearchOutlined />}
             value={searchText}
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={(e) => setSearchText(e.target.value)}
             style={{ width: 250 }}
           />
           <Select
-            placeholder="Trạng thái thanh toán"
+            placeholder="Trạng thái"
             style={{ width: 200 }}
-            allowClear
-            value={statusFilter || undefined}
-            onChange={handleStatusFilter}
+            value={statusFilter}
+            onChange={(value) => setStatusFilter(value)}
             options={[
-              { value: '', label: 'Tất cả trạng thái' },
+              { value: "all", label: "Tất cả" },
               { value: "completed", label: "Hoàn thành" },
               { value: "pending", label: "Đang xử lý" },
               { value: "failed", label: "Thất bại" },
@@ -247,22 +242,21 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
             ]}
           />
           <Select
-            placeholder="Phương thức thanh toán"
+            placeholder="Phương thức"
             style={{ width: 200 }}
             allowClear
             value={methodFilter || undefined}
-            onChange={handleMethodFilter}
+            onChange={(value) => setMethodFilter(value)}
             options={[
-              { value: '', label: 'Tất cả phương thức' },
               { value: "credit_card", label: "Thẻ tín dụng" },
               { value: "paypal", label: "PayPal" },
               { value: "bank_transfer", label: "Chuyển khoản" },
               { value: "momo", label: "Ví MoMo" },
             ]}
           />
-          <RangePicker 
-            placeholder={["Từ ngày", "Đến ngày"]} 
-            onChange={handleDateRangeChange}
+          <RangePicker
+            placeholder={["Từ ngày", "Đến ngày"]}
+            onChange={(dates, dateStrings) => setDateRange(dateStrings)}
           />
         </div>
       </Card>
@@ -273,17 +267,17 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
           dataSource={filteredData}
           rowKey="key"
           loading={loading}
-          pagination={{ 
+          pagination={{
             pageSize: 10,
             showSizeChanger: true,
-            position: ['bottomRight'],
-            showTotal: (total) => `Tổng số ${total} giao dịch`
+            position: ["bottomRight"],
+            showTotal: (total) => `Tổng ${total} giao dịch`,
           }}
           scroll={{ x: 1200 }}
           className="overflow-x-auto"
           size="middle"
           bordered={false}
-          rowClassName={(record, index) => index % 2 === 0 ? 'bg-[#FAFAFA]' : ''}
+          rowClassName={(_, index) => (index % 2 === 0 ? "bg-[#FAFAFA]" : "")}
         />
       </Card>
     </div>
