@@ -15,7 +15,7 @@ const Logo = ({
           collapsed ? "opacity-0" : "opacity-100"
         }`}
       >
-        EBC
+        {/* EBC */}
         <span className="text-green-300">.</span>
       </h1>
     </Link>

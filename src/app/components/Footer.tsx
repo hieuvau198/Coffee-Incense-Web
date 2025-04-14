@@ -15,12 +15,12 @@ const Footer = () => {
   
   // Product names for hover effect
   const productNames = [
-    "Coffee Incense Sticks",
-    "Coffee Bean Aroma Candle",
-    "Handmade Coffee Soap",
-    "Coffee Ground Scrub",
-    "Coffee Table Decoration",
-    "Coffee Bean Art"
+    "Nụ Hương Cà Phê",
+    "Bột Hương Cà Phê",
+    "Hương Cà Phê",
+    "Hương Sào Cà Phê",
+    "Hương Không Tăm Cà Phê",
+    "Nhang Cà Phê"
   ];
 
   return (

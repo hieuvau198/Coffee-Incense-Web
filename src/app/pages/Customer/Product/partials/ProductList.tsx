@@ -20,7 +20,7 @@ const ProductList = () => {
   
   const handleProductClick = (productId: string | number | null | undefined) => {
     if (productId) {
-      navigate(`/products/detail?id=${productId}`);
+      navigate(`/product-detail?id=${productId}`);
     }
   };
 
