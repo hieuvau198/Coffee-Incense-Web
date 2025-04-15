@@ -17,6 +17,7 @@ import Contact from "../pages/Customer/Contact/Contact";
 import Products from "../pages/Admin/Products/Products";
 import Blog from "../pages/Customer/Blog/Blog";
 import AboutUs from "../pages/Customer/AboutUs/AboutUs";
+import ForgetPassword from "../pages/Authentication/ForgetPassword/ForgetPassword";
 
 const MainRoutes = () => {
   return (
@@ -35,6 +36,7 @@ const MainRoutes = () => {
       {/* Authentication routes */}
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
+      <Route path="forget-password" element={<ForgetPassword />} /> 
 
       {/* Admin routes */}
       <Route path="" element={<AdminLayout />}>

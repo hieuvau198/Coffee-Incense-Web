@@ -12,22 +12,22 @@ const Login: React.FC = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center" 
           style={{ 
-            backgroundImage: "url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80')",
+            backgroundImage: "url('https://images.unsplash.com/photo-1610889556528-9a770e32642f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80')",
             filter: "brightness(0.8)"
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-green-600/60 to-green-800/60"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-700/70 to-amber-900/70"></div>
         </div>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-12">
-          <h1 className="text-4xl font-bold mb-6 text-center">Khám phá thế giới cùng chúng tôi</h1>
+          <h1 className="text-4xl font-bold mb-6 text-center">Hương thơm từ tự nhiên</h1>
           <p className="text-xl mb-8 text-center max-w-md">
-            Đăng nhập để truy cập tất cả các tour du lịch tuyệt vời và ưu đãi đặc biệt.
+            Đăng nhập để khám phá thế giới hương thơm từ bã cà phê tái chế và các sản phẩm thanh tịnh.
           </p>
           <div className="bg-white/20 backdrop-blur-sm p-6 rounded-lg max-w-md">
             <p className="text-lg">
-              "Du lịch là thứ duy nhất bạn mua nhưng nó làm bạn giàu có hơn."
+              "Từ những hạt cà phê đã qua sử dụng, chúng tôi tạo ra hương thơm thanh khiết cho không gian sống của bạn."
             </p>
-            <p className="text-right mt-2 font-light">- hoanvngoc</p>
+            <p className="text-right mt-2 font-light">- Eco Incense</p>
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@ const Login: React.FC = () => {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img 
             src="/src/assets/images/logo.svg" 
-            alt="70Tour Logo" 
+            alt="Eco Incense Logo" 
             className="mx-auto h-16 w-auto"
           />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -45,7 +45,7 @@ const Login: React.FC = () => {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Hoặc{" "}
-            <Link to="/register" className="font-medium text-green-600 hover:text-green-500">
+            <Link to="/register" className="font-medium text-amber-700 hover:text-amber-600">
               đăng ký tài khoản mới
             </Link>
           </p>
@@ -101,7 +101,7 @@ const Login: React.FC = () => {
                   <Checkbox>Ghi nhớ đăng nhập</Checkbox>
                 </Form.Item>
 
-                <Link to="/forget-password" className="text-sm text-green-600 hover:text-green-500">
+                <Link to="/forget-password" className="text-sm text-amber-700 hover:text-amber-600">
                   Quên mật khẩu?
                 </Link>
               </div>
@@ -110,7 +110,7 @@ const Login: React.FC = () => {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  className="w-full py-5 bg-green-600 hover:bg-green-700"
+                  className="w-full py-5 bg-amber-700 hover:bg-amber-800"
                   size="large"
                 >
                   Đăng Nhập
