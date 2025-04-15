@@ -8,7 +8,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="bg-white text-[#8B7156] shadow-sm fixed top-0 left-0 w-full z-100">
+    <header className="bg-white text-[#8B7156] shadow-sm fixed top-0 left-0 w-full z-[1000]">
       <div className="container mx-auto px-4 md:px-10 lg:px-16 xl:px-20">
         <div className="flex justify-between items-center h-24">
           {/* Logo */}

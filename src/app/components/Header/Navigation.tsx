@@ -3,7 +3,13 @@ import { Link, useLocation } from "react-router";
 const Navigation = () => {
   const location = useLocation();
 
-    
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   const menuItems = [
     {
       title: "TRANG CHỦ",
@@ -27,13 +33,13 @@ const Navigation = () => {
     },
   ];
 
-
   return (
     <nav className="flex items-center justify-center space-x-8">
       {menuItems.map((item, index) => (
         <Link
           key={index}
           to={item.href}
+          onClick={scrollToTop}
           className={`relative px-2 py-2 text-lg font-medium transition-colors ${
             location.pathname === item.href || 
             (item.href === "/products" && location.pathname.startsWith("/products"))

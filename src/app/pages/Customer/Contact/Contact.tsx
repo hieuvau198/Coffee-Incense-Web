@@ -4,7 +4,7 @@ import ContactInfo from './partials/ContactInfo';
 
 const Contact: React.FC = () => {
   return (
-    <div className="bg-[#FFF5F3] min-h-screen py-8 px-4">
+    <div className="bg-[#FFF5F3] min-h-screen py-8 px-4 pt-24">
       {/* Header */}
       <div className="container mx-auto mb-6">
         <h1 className="text-4xl font-bold text-center uppercase mb-4">

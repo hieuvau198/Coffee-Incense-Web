@@ -101,7 +101,7 @@ const AboutUs: React.FC = () => {
 
         {/* Why We Do Section */}
         <div className="container mx-auto px-24 mt-16">
-          <h2 className="text-4xl font-bold text-center mb-8">
+          <h2 className="text-4xl font-bold text-center mb-8 mt-10">
             Tại Sao Nên Hoạt Động
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
