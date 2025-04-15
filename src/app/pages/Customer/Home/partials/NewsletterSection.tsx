@@ -10,8 +10,8 @@ const NewsletterSection = () => {
               Đăng ký nhận thông tin mới nhất từ chúng tôi
             </h2>
             <p className="mb-8">
-              Nhận thông tin mới nhất về các tour mới, các ưu đãi độc quyền và các
-              mẹo du lịch
+              Nhận thông tin mới nhất về các sản phẩm mới, các ưu đãi độc quyền và các
+              mẹo sử dụng sản phẩm từ chúng tôi. Hãy tham gia cộng đồng Eco Brew Cycle ngay hôm nay!
             </p>
             <form className="flex flex-col sm:flex-row gap-4">
               <input

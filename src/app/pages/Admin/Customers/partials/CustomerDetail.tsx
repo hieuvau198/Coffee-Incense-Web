@@ -1,38 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import {Typography,Descriptions,Tag,Button,Card,Avatar,Table,Tooltip,Tabs,Empty,Statistic,Row,Col} from 'antd';
-import {ArrowLeftOutlined,UserOutlined,DollarOutlined,ShoppingOutlined} from '@ant-design/icons';
+import { Typography, Descriptions, Tag, Button, Card, Avatar, Table, Tooltip, Tabs, Empty, Statistic, Row, Col } from 'antd';
+import { ArrowLeftOutlined, UserOutlined, DollarOutlined, ShoppingOutlined, CalendarOutlined } from '@ant-design/icons';
 import Loading from '@/app/components/Loading';
-import type { ColumnsType } from 'antd/es/table';
 import RenderBoldTitle from '@/app/components/RenderBoldTitle';
+import type { ColumnsType } from 'antd/es/table';
 
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
 
-interface BookingHistory {
-  key: string;
+// Interface cho sản phẩm trong đơn hàng
+interface OrderItem {
   id: string;
-  tourName: string;
-  bookingDate: string;
-  departureDate: string;
-  status: 'confirmed' | 'pending' | 'cancelled' | 'completed';
+  productName: string;
+  unitPrice: number;
+  quantity: number;
+  total: number;
+}
+
+// Interface cho đơn hàng
+interface OrderData {
+  key: string;
+  orderId: string;
+  date: string;
+  status: 'completed' | 'processing' | 'cancelled';
   amount: number;
-  participants: number;
-  paymentMethod: string;
   paymentStatus: 'paid' | 'pending' | 'refunded';
+  items: OrderItem[];
 }
 
-interface ReviewHistory {
-  key: string;
-  id: string;
-  tourName: string;
-  reviewDate: string;
-  rating: number;
-  comment: string;
-}
-
+// Interface cho dữ liệu khách hàng
 interface CustomerData {
   key: string;
-  id: string;
   name: string;
   email: string;
   phone: string;
@@ -40,11 +38,7 @@ interface CustomerData {
   totalBookings: number;
   totalSpent: number;
   lastBooking: string;
-  address?: string;
-  dob?: string;
-  registrationDate: string;
-  bookingHistory: BookingHistory[];
-  reviewHistory: ReviewHistory[];
+  orders: OrderData[];
 }
 
 interface CustomerDetailProps {
@@ -55,246 +49,68 @@ interface CustomerDetailProps {
 const CustomerDetail: React.FC<CustomerDetailProps> = ({ customerId, onBack }) => {
   const [customer, setCustomer] = useState<CustomerData | null>(null);
   const [loading, setLoading] = useState(true);
-  // In a real app, this would be an API call
+
+  // Mock data synced with CustomerList.tsx, with orders added
   useEffect(() => {
     setLoading(true);
 
-    // Mock customer data with booking and review history
     const mockData: Record<string, CustomerData> = {
       '1': {
         key: '1',
-        id: 'CUS001',
         name: 'Nguyễn Văn A',
-        email: 'nguyenvana@example.com',
-        phone: '0123 456 789',
+        email: 'nguyenvana@email.com',
+        phone: '0901234567',
         status: 'active',
-        totalBookings: 3,
-        totalSpent: 3897000,
-        lastBooking: '15/03/2024',
-        address: '123 Nguyễn Huệ, Quận 1, TP.HCM',
-        dob: '15/05/1985',
-        registrationDate: '10/01/2024',
-        bookingHistory: [
+        totalBookings: 5,
+        totalSpent: 2500000,
+        lastBooking: '2024-04-15',
+        orders: [
           {
             key: '1',
-            id: 'BK001',
-            tourName: 'TOUR DU LỊCH ĐÀ LẠT',
-            bookingDate: '10/03/2024',
-            departureDate: '15/03/2024',
+            orderId: 'OR001',
+            date: '2024-04-15',
             status: 'completed',
-            amount: 1599000,
-            participants: 2,
-            paymentMethod: 'Thẻ tín dụng',
-            paymentStatus: 'paid',
-          },
-          {
-            key: '2',
-            id: 'BK005',
-            tourName: 'TOUR DU LỊCH PHÚ QUỐC',
-            bookingDate: '25/02/2024',
-            departureDate: '01/03/2024',
-            status: 'completed',
-            amount: 1799000,
-            participants: 1,
-            paymentMethod: 'Chuyển khoản',
-            paymentStatus: 'paid',
-          },
-          {
-            key: '3',
-            id: 'BK009',
-            tourName: 'TOUR DU LỊCH NHA TRANG',
-            bookingDate: '10/01/2024',
-            departureDate: '15/05/2024',
-            status: 'confirmed',
             amount: 499000,
-            participants: 1,
-            paymentMethod: 'PayPal',
             paymentStatus: 'paid',
-          },
-        ],
-        reviewHistory: [
-          {
-            key: '1',
-            id: 'RV001',
-            tourName: 'TOUR DU LỊCH ĐÀ LẠT',
-            reviewDate: '18/03/2024',
-            rating: 5,
-            comment: 'Tour rất tuyệt vời! Hướng dẫn viên nhiệt tình, chương trình tham quan hợp lý.',
+            items: [
+              { id: '1', productName: 'Hương Cà Phê', unitPrice: 150000, quantity: 2, total: 300000 },
+              { id: '2', productName: 'Nụ Hương Cà Phê', unitPrice: 199000, quantity: 1, total: 199000 },
+            ],
           },
           {
             key: '2',
-            id: 'RV002',
-            tourName: 'TOUR DU LỊCH PHÚ QUỐC',
-            reviewDate: '05/03/2024',
-            rating: 4,
-            comment: 'Cảnh đẹp, đồ ăn ngon. Tuy nhiên thời gian tham quan hơi gấp.',
+            orderId: 'OR002',
+            date: '2024-03-10',
+            status: 'processing',
+            amount: 780000,
+            paymentStatus: 'pending',
+            items: [
+              { id: '3', productName: 'Bột Hương Cà Phê', unitPrice: 120000, quantity: 3, total: 360000 },
+              { id: '4', productName: 'Nhang Vòng Cà Phê', unitPrice: 210000, quantity: 2, total: 420000 },
+            ],
           },
         ],
       },
       '2': {
         key: '2',
-        id: 'CUS002',
         name: 'Trần Thị B',
-        email: 'tranthib@example.com',
-        phone: '0987 654 321',
-        status: 'active',
-        totalBookings: 2,
-        totalSpent: 2998000,
-        lastBooking: '20/02/2024',
-        address: '456 Lê Lợi, Quận 3, TP.HCM',
-        dob: '20/07/1990',
-        registrationDate: '15/01/2024',
-        bookingHistory: [
-          {
-            key: '1',
-            id: 'BK002',
-            tourName: 'TOUR DU LỊCH HẠ LONG',
-            bookingDate: '15/02/2024',
-            departureDate: '20/02/2024',
-            status: 'completed',
-            amount: 1999000,
-            participants: 2,
-            paymentMethod: 'Thẻ tín dụng',
-            paymentStatus: 'paid',
-          },
-          {
-            key: '2',
-            id: 'BK006',
-            tourName: 'TOUR DU LỊCH SÀI GÒN',
-            bookingDate: '05/01/2024',
-            departureDate: '10/01/2024',
-            status: 'completed',
-            amount: 999000,
-            participants: 1,
-            paymentMethod: 'Chuyển khoản',
-            paymentStatus: 'paid',
-          },
-        ],
-        reviewHistory: [
-          {
-            key: '1',
-            id: 'RV003',
-            tourName: 'TOUR DU LỊCH HẠ LONG',
-            reviewDate: '25/02/2024',
-            rating: 5,
-            comment: 'Hạ Long thật đẹp, tour tổ chức rất chu đáo. Nhất định sẽ quay lại!',
-          },
-        ],
-      },
-      '3': {
-        key: '3',
-        id: 'CUS003',
-        name: 'Lê Văn C',
-        email: 'levanc@example.com',
-        phone: '0912 345 678',
+        email: 'tranthib@email.com',
+        phone: '0909876543',
         status: 'inactive',
-        totalBookings: 1,
-        totalSpent: 1499000,
-        lastBooking: '05/01/2024',
-        registrationDate: '01/01/2024',
-        bookingHistory: [
+        totalBookings: 2,
+        totalSpent: 980000,
+        lastBooking: '2024-03-20',
+        orders: [
           {
             key: '1',
-            id: 'BK003',
-            tourName: 'TOUR DU LỊCH ĐÀ NẴNG',
-            bookingDate: '01/01/2024',
-            departureDate: '05/01/2024',
-            status: 'cancelled',
-            amount: 1499000,
-            participants: 1,
-            paymentMethod: 'Thẻ tín dụng',
-            paymentStatus: 'refunded',
-          },
-        ],
-        reviewHistory: [],
-      },
-      '4': {
-        key: '4',
-        id: 'CUS004',
-        name: 'Phạm Thị D',
-        email: 'phamthid@example.com',
-        phone: '0923 456 789',
-        status: 'active',
-        totalBookings: 4,
-        totalSpent: 5297000,
-        lastBooking: '10/04/2024',
-        address: '789 Trần Hưng Đạo, Quận 5, TP.HCM',
-        dob: '10/09/1988',
-        registrationDate: '05/01/2024',
-        bookingHistory: [
-          {
-            key: '1',
-            id: 'BK004',
-            tourName: 'TOUR DU LỊCH NHA TRANG',
-            bookingDate: '05/04/2024',
-            departureDate: '10/04/2024',
+            orderId: 'OR003',
+            date: '2024-03-20',
             status: 'completed',
-            amount: 1799000,
-            participants: 2,
-            paymentMethod: 'PayPal',
+            amount: 600000,
             paymentStatus: 'paid',
-          },
-          {
-            key: '2',
-            id: 'BK007',
-            tourName: 'TOUR DU LỊCH MỸ THO',
-            bookingDate: '25/03/2024',
-            departureDate: '30/03/2024',
-            status: 'completed',
-            amount: 699000,
-            participants: 3,
-            paymentMethod: 'Thẻ tín dụng',
-            paymentStatus: 'paid',
-          },
-          {
-            key: '3',
-            id: 'BK008',
-            tourName: 'TOUR DU LỊCH CẦN THƠ',
-            bookingDate: '15/03/2024',
-            departureDate: '20/03/2024',
-            status: 'completed',
-            amount: 799000,
-            participants: 2,
-            paymentMethod: 'Chuyển khoản',
-            paymentStatus: 'paid',
-          },
-          {
-            key: '4',
-            id: 'BK010',
-            tourName: 'TOUR DU LỊCH ĐÀ LẠT',
-            bookingDate: '20/04/2024',
-            departureDate: '01/05/2024',
-            status: 'pending',
-            amount: 2000000,
-            participants: 2,
-            paymentMethod: 'Chuyển khoản',
-            paymentStatus: 'pending',
-          },
-        ],
-        reviewHistory: [
-          {
-            key: '1',
-            id: 'RV004',
-            tourName: 'TOUR DU LỊCH NHA TRANG',
-            reviewDate: '15/04/2024',
-            rating: 4,
-            comment: 'Biển đẹp, thời tiết tốt. Rất đáng để đi.',
-          },
-          {
-            key: '2',
-            id: 'RV005',
-            tourName: 'TOUR DU LỊCH MỸ THO',
-            reviewDate: '02/04/2024',
-            rating: 5,
-            comment: 'Tour miền Tây rất thú vị, được thưởng thức nhiều món ăn đặc sản.',
-          },
-          {
-            key: '3',
-            id: 'RV006',
-            tourName: 'TOUR DU LỊCH CẦN THƠ',
-            reviewDate: '22/03/2024',
-            rating: 3,
-            comment: 'Tour ổn, nhưng thời gian di chuyển hơi dài.',
+            items: [
+              { id: '5', productName: 'Hương Cà Phê', unitPrice: 150000, quantity: 4, total: 600000 },
+            ],
           },
         ],
       },
@@ -311,70 +127,45 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({ customerId, onBack }) =
     return () => clearTimeout(fetchData);
   }, [customerId]);
 
-  const bookingColumns: ColumnsType<BookingHistory> = [
+  // Cột cho bảng Order History
+  const orderColumns: ColumnsType<OrderData> = [
     {
-      title: RenderBoldTitle('Mã Tour'),
-      dataIndex: 'id',
-      key: 'id',
-      width: 80,
+      title: RenderBoldTitle('Mã Đơn Hàng'),
+      dataIndex: 'orderId',
+      key: 'orderId',
+      width: 120,
+      render: (text: string) => `#${text}`,
     },
     {
-      title: RenderBoldTitle('Tour Du Lịch'),
-      dataIndex: 'tourName',
-      key: 'tourName',
-      width: 200,
-      ellipsis: {
-        showTitle: false,
+      title: RenderBoldTitle('Ngày Đặt Hàng'),
+      dataIndex: 'date',
+      key: 'date',
+      width: 120,
+    },
+    {
+      title: RenderBoldTitle('Trạng Thái'),
+      dataIndex: 'status',
+      key: 'status',
+      width: 120,
+      render: (status: 'completed' | 'processing' | 'cancelled') => {
+        const colors = { completed: 'green', processing: 'orange', cancelled: 'red' };
+        const labels = { completed: 'Hoàn Thành', processing: 'Đang Xử Lý', cancelled: 'Đã Hủy' };
+        return <Tag color={colors[status]}>{labels[status]}</Tag>;
       },
-      render: (tour: string) => (
-        <Tooltip placement="topLeft" title={tour}>
-          <span>{tour}</span>
-        </Tooltip>
-      ),
-    },
-    {
-      title: RenderBoldTitle('Ngày Đặt'),
-      dataIndex: 'bookingDate',
-      key: 'bookingDate',
-      width: 120,
-    },
-    {
-      title: RenderBoldTitle('Ngày Khởi Hành'),
-      dataIndex: 'departureDate',
-      key: 'departureDate',
-      width: 120,
     },
     {
       title: RenderBoldTitle('Thanh Toán'),
       dataIndex: 'paymentStatus',
       key: 'paymentStatus',
       width: 120,
-      render: (status: string) => {
-        const colors = {
-          paid: 'green',
-          pending: 'orange',
-          refunded: 'red',
-        };
-        const labels = {
-          paid: 'Đã thanh toán',
-          pending: 'Chưa thanh toán',
-          refunded: 'Đã hoàn tiền',
-        };
-        return (
-          <Tag color={colors[status as keyof typeof colors]}>
-            {labels[status as keyof typeof labels]}
-          </Tag>
-        );
+      render: (status: 'paid' | 'pending' | 'refunded') => {
+        const colors = { paid: 'green', pending: 'orange', refunded: 'red' };
+        const labels = { paid: 'Đã Thanh Toán', pending: 'Chưa Thanh Toán', refunded: 'Đã Hoàn Tiền' };
+        return <Tag color={colors[status]}>{labels[status]}</Tag>;
       },
     },
     {
-      title: RenderBoldTitle('Số Người'),
-      dataIndex: 'participants',
-      key: 'participants',
-      width: 100,
-    },
-    {
-      title: RenderBoldTitle('Giá Tiền'),
+      title: RenderBoldTitle('Tổng Giá Trị'),
       dataIndex: 'amount',
       key: 'amount',
       width: 140,
@@ -383,9 +174,7 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({ customerId, onBack }) =
   ];
 
   if (loading) {
-    return (
-      <Loading />
-    );
+    return <Loading />;
   }
 
   if (!customer) {
@@ -403,30 +192,30 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({ customerId, onBack }) =
 
   return (
     <div className="space-y-6">
+      {/* Back Button */}
       <div className="flex justify-end mb-4">
-        <Button type="primary" color="primary" variant="text" icon={<ArrowLeftOutlined />} onClick={onBack}>
+        <Button type="primary" icon={<ArrowLeftOutlined />} onClick={onBack}>
           Back to Customers
         </Button>
       </div>
+
+      {/* Customer Info Card */}
       <Card className="shadow-sm">
         <div className="flex items-start">
-          <Avatar
-            size={80}
-            icon={<UserOutlined />}
-            className="mr-6"
-          />
+          <Avatar size={80} icon={<UserOutlined />} className="mr-6" />
           <div>
             <Title level={3}>{customer.name}</Title>
             <Tag color={customer.status === 'active' ? 'green' : 'red'}>
               {customer.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
             </Tag>
             <div className="mt-2">
-              <Text type="secondary">Customer ID: {customer.id}</Text>
+              <Text type="secondary">Customer Key: {customer.key}</Text>
             </div>
           </div>
         </div>
       </Card>
 
+      {/* Statistics */}
       <Row gutter={16}>
         <Col span={8}>
           <Card className="shadow-sm">
@@ -451,14 +240,15 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({ customerId, onBack }) =
         <Col span={8}>
           <Card className="shadow-sm">
             <Statistic
-              title={RenderBoldTitle("Joined Date")}
-              value={customer.registrationDate}
-              prefix={<UserOutlined />}
+              title={RenderBoldTitle("Last Booking")}
+              value={customer.lastBooking}
+              prefix={<CalendarOutlined />}
             />
           </Card>
         </Col>
       </Row>
 
+      {/* Tabs */}
       <Card className="shadow-sm">
         <Tabs defaultActiveKey="info" type="card">
           <TabPane tab="Customer Information" key="info">
@@ -471,15 +261,12 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({ customerId, onBack }) =
                   {customer.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
                 </Tag>
               </Descriptions.Item>
-              <Descriptions.Item label="Address" span={2}>
-                {customer.address || 'Not provided'}
-              </Descriptions.Item>
             </Descriptions>
           </TabPane>
-          <TabPane tab="Booking History" key="bookings">
+          <TabPane tab="Order History" key="orders">
             <Table
-              columns={bookingColumns}
-              dataSource={customer.bookingHistory}
+              columns={orderColumns}
+              dataSource={customer.orders}
               rowKey="key"
               pagination={{ pageSize: 5 }}
             />
@@ -490,4 +277,4 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({ customerId, onBack }) =
   );
 };
 
-export default CustomerDetail; 
+export default CustomerDetail;
