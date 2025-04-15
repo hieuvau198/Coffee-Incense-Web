@@ -36,8 +36,8 @@ const Login: React.FC = () => {
       <div className="w-full lg:w-1/2 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img 
-            src="/src/assets/images/logo.svg" 
-            alt="Eco Incense Logo" 
+            src="/src/assets/images/logo.png" 
+            alt="Eco Brew Cycle Logo" 
             className="mx-auto h-16 w-auto"
           />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">

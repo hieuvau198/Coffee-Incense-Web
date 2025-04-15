@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Tag, Input, Select, DatePicker, Space, Table, Card, message } from 'antd';
-import { SearchOutlined, PlusOutlined, EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Tag, Input, Select, DatePicker, Table, Card } from 'antd';
+import { SearchOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
-import RenderBoldTitle from '@/app/components/RenderBoldTitle';
-import ActionButtons from '@/app/components/ActionButton';
-import AdminTable from '@/app/components/AdminTable';
 
 const { RangePicker } = DatePicker;
 

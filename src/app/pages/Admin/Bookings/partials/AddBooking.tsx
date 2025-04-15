@@ -14,7 +14,6 @@ interface BookingFormData {
   customerName: string;
   phone: string;
   email: string;
-  tourName: string;
   date: any; // Using any to avoid dayjs type issues
   adults: number;
   children: number;
