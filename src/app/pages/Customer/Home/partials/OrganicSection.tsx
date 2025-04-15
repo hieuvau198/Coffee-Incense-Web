@@ -5,10 +5,10 @@ const OrganicSection = () => {
         <div className="mx-0 md:mx-6">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             {/* Left image */}
-            <div className="w-full lg:w-2/5">
+            <div className="w-full lg:w-1/2">
               <div className="rounded-md overflow-hidden">
                 <img
-                  src="/assets/images/coffee-beans-ground.jpg"
+                  src="https://s3-alpha-sig.figma.com/img/5921/d660/10be04c858f5fa2d40d7d41a5f15d6b9?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=WtiFCngKOA6MDFHpGsK4H1pSek-qWz1opmWZJOlrCzOW8idrv5-vKm93c-A8RQR5LaB-7A5r1iuAiRBXEAdVVvWVStqV~fkM-13ah05mXCgz3f1G117zv33KiafQi86BnY8pNBaWLTVjy3uhtIYOgk~Ib~WoaZ2ohwXEm2suvZcfixnh4T6hiaITz0KR4WEYc7MrQvBhlexbGR51MLbLQZNM25GHF-pLfdjxtJe3aDzs1cuGTVUSqipJVAvv~p54~1mDGOC7xjHvYRT8ahewrBwbxEA~59y719AmPgYu30b2WW0Tw3NROVeFLHz8DdopdYylKx7niZo-NTWklgra6A__"
                   alt="Ground coffee beans"
                   className="w-full h-auto object-cover"
                 />
@@ -20,7 +20,7 @@ const OrganicSection = () => {
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm text-[#8B7156] font-medium">100% TỰ CHẾ TỪ BÃ CÀ PHÊ</span>
                 <img 
-                  src="/assets/images/leaf-icon.png" 
+                  src="https://s3-alpha-sig.figma.com/img/996b/93af/37dc3b38980b3e99d231339173173150?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=QRPkuCNEnvkFKL7m2riFgswEKSX5akO9IYxze9drZI4UWgsQF1KV~90-iYz74rt8ohE1cKk3AYzG-RyaJSknQjvET7GBSgh7rPoq4VIBddA~N4mmSkq6oChoEvxCliIWETAYA56eY2uDvv0bi~~ZHxjvV3D-vroQl5qbCxyfrrHpuY0zT7uzT68WIau6nsEiEOV0DdYH~BL48dOouiB6AK-L~NRK~aNavqTKHtEp3jAbARuWBL6XZx5xNuGK4og8IVIa7lYSjSUxy7cmBtNaPDCwNFzerCDeu16hBTNRQeTnmKjT1qMFJtBTZFe9q1~VKtR78~dr~-OFftb5iLphLA__" 
                   alt="Leaf icon" 
                   className="h-6"
                 />

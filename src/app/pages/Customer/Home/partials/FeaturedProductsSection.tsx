@@ -50,7 +50,7 @@ const FeaturedProductsSection = () => {
             <div className="text-center relative">
               <h2 className="text-3xl font-bold text-[#2D2424] mb-6">SẢN PHẨM NỔI BẬT</h2>
               <img 
-                src="/assets/images/star-decoration.png"
+                src="https://s3-alpha-sig.figma.com/img/0eeb/ea18/fec1c45cfb3c69d5b49e5640529ef4cb?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=kFZMNTt0enaGlEbVTFMnBzfCLaXNJtmDYMp6SymMm-0Otx2MfZwwMtnv0b6KkWdOFo2eTjEiZjOwBndk4SKhM5BmN78ScLwfdagYxRem36l-xDG95f9HRrDp9920c6oyU~GoOCwb-uRimkLxHnBlhsmqjm8dODg7jIXaE5tsVhPpXfPvAC~4P6NfwaWDu1xreZ4fgzFDu4lc-0KYmtWZuPiDKmkJYpAulhPhReiLFI6ZBPmZdah3zRdMjI8eRdUFX9iQP~TS~0v99ZDVssZ4OcJQm1G~NOTpA3g4iICvaLU2eH4Yl3vQoNsWi-rtV~-0Nsx~PkzDX-1l3y7-9fo~Xw__"
                 alt="Star decoration" 
                 className="absolute -top-6 -right-10 w-8 h-8"
               />

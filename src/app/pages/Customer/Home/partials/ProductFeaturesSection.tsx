@@ -52,7 +52,7 @@ const ProductFeaturesSection = () => {
             <div className="w-full lg:w-1/2">
               <div className="rounded-lg overflow-hidden shadow-lg">
                 <img
-                  src="/assets/images/coffee-beans-candle.jpg"
+                  src="https://s3-alpha-sig.figma.com/img/593d/97ae/05b47ccb48e09d0b7b2b5c62c8888623?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=XtGjWQoFxHZlWdMBcR-ZDXu1E6zdlbLECn4SCKhrr05O2bLAepMLkAP-iA~yQX~56udxk7QZ4hn2MIm0n38qdeV6wGD-lhGf1jjrQ~SKwzM7VZM0iuSEDt8jVFjX8FsA9~T3fFNJ8~-nlZeJL78NztyuAA3KohFxtEcH1GU6KmgE2bUsVqENe2CIyNEcMIc1gRngtuNgbnBFsmo8hvT~UM8j4oXEzwoMBfyy9MBf2hNgz0IiPfDGk~mZfQNEWjVSvKuM8HcFmdbHv-PnfdgGBEDvXZsOtlgjcJC0NYY260B4rSRlqP86EUn3aIcoyML6zyV-msjyxlUnizvGeklwDQ__"
                   alt="Coffee incense product"
                   className="w-full h-auto object-cover"
                 />

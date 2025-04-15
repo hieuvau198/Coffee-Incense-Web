@@ -15,6 +15,8 @@ import Login from "../pages/Authentication/Login";
 import Register from "../pages/Authentication/Register";
 import Contact from "../pages/Customer/Contact/Contact";
 import Products from "../pages/Admin/Products/Products";
+import Blog from "../pages/Customer/Blog/Blog";
+import AboutUs from "../pages/Customer/AboutUs/AboutUs";
 
 const MainRoutes = () => {
   return (
@@ -25,6 +27,8 @@ const MainRoutes = () => {
           <Route path="products" element={<ProductList />} />
           <Route path="product-detail" element={<ProductDetail />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="blogs" element={<Blog />} />
+          <Route path="about" element={<AboutUs />} />
         </Route>
       </Route>
 

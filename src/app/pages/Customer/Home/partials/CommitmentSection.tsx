@@ -22,7 +22,7 @@ const CommitmentSection = () => {
             {/* Right illustration */}
             <div className="w-full lg:w-2/5">
               <img
-                src="/assets/images/sustainability-illustration.png"
+                src="https://s3-alpha-sig.figma.com/img/f4d5/2a13/8a7d28c6331552c3c806c7a50d7a20e5?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=skDlbYmArQhhsTgYFtBGi7pbvfVL1F9ZmUmeJ1fZ-xYcfmS6IZQL5EHQ7a3tX0pvlUmwPfQDTaaqK606qBShWKpeJyy55pp~dLBpQ3nEVhVxmIQlVwkfORS4qZ-JzsmryWsKVPsGaBTFQbMh-YR3Bjg2PsWvggquTIq9lAFYB3AvBPBEcs-eY-qn1iHDFA6UQKpKYxTXAJL~Nl0fHVjAUQBZGJm81Zh0F1jTu~EgbotgB1n4QA30dLVsfyXg0iRt6nDc-E36zMWnepTvMsHmgpyyvhuTUtSj4fkh9teKh4y3DcVq54Fknh58Y-m~FNzCWEyRM8l-D-KAvRrdgW58Gw__"
                 alt="Sustainability commitment"
                 className="w-full h-auto"
               />
