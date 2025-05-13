@@ -8,7 +8,7 @@ import type { ColumnsType } from 'antd/es/table';
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
 
-// Interface cho sản phẩm trong đơn hàng
+// Interface cho sản phẩm trong đơn hàng của khách hàng
 interface OrderItem {
   id: string;
   productName: string;
