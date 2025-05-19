@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .no-ring {
+    @apply focus-visible:outline-none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    width: 0px;
+  }
+
+  .sm-scrollbar::-webkit-scrollbar {
+    width: 4px !important;
+    height: 10px !important;
+  }
+
+  .md-scrollbar::-webkit-scrollbar {
+    width: 4px !important;
+    height: 10px !important;
+  }
+
+  .input-style {
+    @apply no-ring rounded-md border border-gray-300 dark:border-gray-600 text-base hover:!border-emerald-400 focus-visible:border-emerald-400 bg-white dark:bg-[#141414] dark:text-zinc-200 px-3 w-full outline-none;
+  }
+
+  .sm-input-style {
+    @apply no-ring rounded-md border border-zinc-400 dark:border-zinc-700 text-base hover:!border-emerald-400 focus-visible:border-emerald-400 bg-white dark:bg-[#141414] dark:text-zinc-200 px-3;
+  }
+
+  .input-style input,
+  .sm-input-style input {
+    @apply dark:bg-[#141414];
+  }
+
+  .input-style::-webkit-calendar-picker-indicator {
+    @apply dark:[color-scheme:dark];
+  }
+
+  .input-disable-style {
+    @apply no-ring w-full rounded-md border text-base bg-white;
+  }
+
+  .error-msg {
+    @apply text-red-500 mb-2 mt-1 font-semibold;
+  }
+
+  .info-msg {
+    @apply text-emerald-500 mb-2 mt-1 font-semibold;
+  }
+
+  .confirm-modal {
+    @apply bg-white dark:bg-[#0D1117] dark:!text-white;
+  }
+
+  a {
+    @apply hover:text-green-700;
+  }
+  .mx-container {
+    @apply mx-auto w-[80%];
+  }
+
+  .border,
+  .border-b,
+  .border-t {
+    @apply border-zinc-200;
+  }
+}
+
+.bai-jamjuree {
+  font-family: "Bai Jamjuree", sans-serif;
+}
