@@ -1,3 +1,5 @@
+// src\app\pages\Authentication\Register.tsx
+
 import React, { useState } from "react";
 import { Button, Form, Input, Checkbox, Modal } from "antd";
 import { Link } from "react-router";

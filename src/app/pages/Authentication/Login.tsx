@@ -1,10 +1,17 @@
+// src\app\pages\Authentication\Login.tsx
+
 import React from "react";
 import { Button, Checkbox, Form, Input } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
+import { useGoogleLogin } from "../../hooks/useGoogleLogin";
+
 
 const Login: React.FC = () => {
+
+  const { loginWithGoogle } = useGoogleLogin();
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Left side - image */}
@@ -141,12 +148,14 @@ const Login: React.FC = () => {
                 </div>
 
                 <div>
-                  <a
-                    href="#"
-                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
-                    <FaGoogle className="h-5 w-5 text-red-600" />
-                  </a>
+                  <Button
+  onClick={loginWithGoogle}
+  className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+>
+  <FaGoogle className="h-5 w-5 text-red-600 mr-2" />
+  Google
+</Button>
+
                 </div>
               </div>
             </div>
