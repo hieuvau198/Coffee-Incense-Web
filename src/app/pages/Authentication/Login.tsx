@@ -1,11 +1,11 @@
 // src\app\pages\Authentication\Login.tsx
 
 import React from "react";
-import { Button, Checkbox, Form, Input } from "antd";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Link } from "react-router";
+import { Button } from "antd";
+import { Link } from "react-router-dom";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { useGoogleLogin } from "../../hooks/useGoogleLogin";
+import LoginForm from "./partials/LoginForm";
 
 const Login: React.FC = () => {
   const { loginWithGoogle } = useGoogleLogin();
@@ -66,73 +66,7 @@ const Login: React.FC = () => {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <Form
-              name="login"
-              initialValues={{ remember: true }}
-              className="space-y-6"
-              layout="vertical"
-            >
-              <Form.Item
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập email của bạn!",
-                  },
-                  {
-                    type: "email",
-                    message: "Email không hợp lệ!",
-                  },
-                ]}
-              >
-                <Input
-                  prefix={<UserOutlined className="site-form-item-icon" />}
-                  placeholder="Email"
-                  size="large"
-                />
-              </Form.Item>
-
-              <Form.Item
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập mật khẩu của bạn!",
-                  },
-                ]}
-              >
-                <Input.Password
-                  prefix={<LockOutlined className="site-form-item-icon" />}
-                  type="password"
-                  placeholder="Mật khẩu"
-                  size="large"
-                />
-              </Form.Item>
-
-              <div className="flex items-center justify-between">
-                <Form.Item name="remember" valuePropName="checked" noStyle>
-                  <Checkbox>Ghi nhớ đăng nhập</Checkbox>
-                </Form.Item>
-
-                <Link
-                  to="/forget-password"
-                  className="text-sm text-amber-700 hover:text-amber-600"
-                >
-                  Quên mật khẩu?
-                </Link>
-              </div>
-
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className="w-full py-5 bg-amber-700 hover:bg-amber-800"
-                  size="large"
-                >
-                  Đăng Nhập
-                </Button>
-              </Form.Item>
-            </Form>
+            <LoginForm />
 
             <div className="mt-6">
               <div className="relative">
@@ -175,3 +109,4 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+

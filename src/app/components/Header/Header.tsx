@@ -1,11 +1,39 @@
-import { Button } from "antd";
+// src\app\components\Header\Header.tsx
+
+import { Button, Dropdown, Menu } from "antd";
 import Logo from "../Logo";
 import Navigation from "./Navigation";
 import { FiSearch, FiShoppingCart } from "react-icons/fi";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext"; // ADJUST PATH as needed
+import { doSignOut } from "../../modules/firebase/auth"; // for logout
+import { UserOutlined } from "@ant-design/icons";
+
 
 const Header = () => {
   const navigate = useNavigate();
+  const { user, userData, loading } = useAuth();
+
+  const handleLogout = async () => {
+    await doSignOut();
+    navigate("/login");
+  };
+
+  // You can create a dropdown for user profile actions if desired
+  const menu = (
+    <Menu>
+      <Menu.Item key="profile">
+        <Link to="/profile">Thông tin cá nhân</Link>
+      </Menu.Item>
+      <Menu.Item key="orders">
+        <Link to="/orders">Đơn mua</Link>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="logout" onClick={handleLogout}>
+        Đăng xuất
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <header className="bg-white text-[#8B7156] shadow-sm fixed top-0 left-0 w-full z-[1000]">
@@ -36,19 +64,32 @@ const Header = () => {
               </span>
             </button>
             
-            {/* Sign In Button */}
-            <div className="hidden md:flex items-center space-x-4">
-              <Link to="/login" className="text-[#8B7156] hover:text-[#64503C] transition-colors text-lg font-medium">
-                Sign In
-              </Link>
-              <Button 
-                className="bg-[#8B7156] text-white border-0 hover:bg-[#64503C] rounded-md h-10 text-base font-medium px-4"
-                onClick={() => navigate("/register")}
-              >
-                Sign Up
-              </Button>
-            </div>
-            
+            {/* User Info or Sign In/Sign Up */}
+            {!loading && user ? (
+              <Dropdown overlay={menu} placement="bottomRight">
+                <div className="flex items-center space-x-2 cursor-pointer">
+                  <UserOutlined className="text-lg" />
+                  <span className="font-semibold">
+                    {userData?.firstName
+                      ? `${userData.firstName} ${userData.lastName || ""}`
+                      : user.email}
+                  </span>
+                </div>
+              </Dropdown>
+            ) : (
+              <div className="hidden md:flex items-center space-x-4">
+                <Link to="/login" className="text-[#8B7156] hover:text-[#64503C] transition-colors text-lg font-medium">
+                  Sign In
+                </Link>
+                <Button 
+                  className="bg-[#8B7156] text-white border-0 hover:bg-[#64503C] rounded-md h-10 text-base font-medium px-4"
+                  onClick={() => navigate("/register")}
+                >
+                  Sign Up
+                </Button>
+              </div>
+            )}
+
             {/* Mobile menu button - shown only on mobile */}
             <button className="lg:hidden text-[#8B7156] hover:text-[#64503C]">
               <svg
@@ -71,5 +112,6 @@ const Header = () => {
     </header>
   );
 };
+
 
 export default Header;

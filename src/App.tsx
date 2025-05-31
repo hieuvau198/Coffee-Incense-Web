@@ -1,3 +1,5 @@
+// src\App.tsx
+
 import { BrowserRouter } from "react-router-dom";
 import { App as AntApp, ConfigProvider } from "antd";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
