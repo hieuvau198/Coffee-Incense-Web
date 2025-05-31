@@ -54,13 +54,40 @@ export const doSignInWithGoogle = async (): Promise<{ user: User; role: string }
   const user = result.user;
   const userDocRef = doc(db, "users", user.uid);
   const userDoc = await getDoc(userDocRef);
-  if (userDoc.exists()) {
+
+  if (!userDoc.exists()) {
+    // Parse names from Google displayName
+    let firstName = "";
+    let lastName = "";
+    if (user.displayName) {
+      const nameParts = user.displayName.trim().split(" ");
+      if (nameParts.length === 1) {
+        firstName = nameParts[0];
+      } else if (nameParts.length > 1) {
+        firstName = nameParts.slice(0, -1).join(" "); // All but last
+        lastName = nameParts.slice(-1)[0]; // Last word
+      }
+    }
+
+    await setDoc(userDocRef, {
+      uid: user.uid,
+      email: user.email,
+      firstName,
+      lastName,
+      displayName: user.displayName || "",
+      photoURL: user.photoURL || "",
+      role: "customer",
+      provider: "google",
+      createdAt: new Date().toISOString()
+    });
+    return { user, role: "customer" };
+  } else {
     const userData = userDoc.data();
     return { user, role: userData.role };
-  } else {
-    throw new Error("No such user document!");
   }
 };
+
+
 
 export const doSignOut = () => auth.signOut();
 
