@@ -1,3 +1,5 @@
+// src\app\routes\MainRoutes.tsx
+
 import { Navigate, Route, Routes } from "react-router";
 import MainLayout from "../layouts/MainLayout";
 import Bookings from "../pages/Admin/Bookings/Bookings";
