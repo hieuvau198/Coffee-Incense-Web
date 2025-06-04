@@ -57,7 +57,7 @@ export const products: Product[] = [
     id: 4,
     title: "Hương Sào Cà Phê",
     description: "Hình sự sạch, không tạp chất, mùi hương không gây tồn, nhỏ nhẹ xóa bỏ mùi",
-    image: "https://s3-alpha-sig.figma.com/img/88ce/e11c/741d187d1fe17dc355665781e4b81828?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=E5-OC8v6K6cZDOa8HwKuZMDTdnyRm-xOXDNPX6whuX0ydxo44JyT674FF5Qzs6qbLOdH0ZGH~cqmHe9k~nOdTJYBQjoF2CJta5BdYiF9Yj7GMEJgEsh7CEs1n~K2zCx9sXwtVyloBqgaXjdVoSyuTmjOqGBWkqyvXBWonmWx3IdWYK5R4OF-hOZ3ZATS7UBak3vzZgdYAOJ1QJimtBq-SH9cQHT9u34m1C1pT5vUpblEXp8j5FoaUxcLig2STWGMf2d9HQjI~xB5TwhCvKuu7qzLduautiVhysf8ec9bA6iffGJ4trCKteXwv6m7VgjCiNJ2lC7fxIgsVe4vwJoyDg__",
+    image: "https://i.postimg.cc/T1Zq0x8k/18.jpg",
     category: "incense",
     fullDescription: "Hương Sào Cà Phê là loại hương đặc biệt được làm từ cà phê nguyên chất, được thiết kế để treo hoặc đặt trong không gian. Sản phẩm có khả năng khử mùi hiệu quả và tạo không khí dễ chịu trong phòng.",
     specifications: {
@@ -74,7 +74,7 @@ export const products: Product[] = [
     id: 5,
     title: "Hương Không Tăm Cà Phê",
     description: "Giúp không gian thoải mái, trồng mùi tàn anh, đem không gian sống",
-    image: "https://s3-alpha-sig.figma.com/img/7915/1277/94b25fd2b885d75dc910212612acdcf4?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=Sox9yQjILC0ehtNOQUbPryPQJw8iYMJz0whFdJMqPAVbVZaH6LrbMllskBJpGa~GVs0PhvZu5Fbm~CoW8hWdHbtW~S774e5DFIobfV0ybaVNW8ySkgToo2lMFPOkrf4eE5xUQIkda~7-7u7LPlspOleh4wbDOKZTeJIwl~ee0F9XxNLRZ3zTiZ8hgdjwkzjIcWk2nMXdhsqh9xyjW7ZSlSaa27aWXLNRPtLcno5CSN2FwWsMbA9Xh9ZGP~cKmWv-nN7JuUjKPoQ7mmHvS72mcAk2Ynr9Om5cSP05vtGUDHNyzaixuMDd5zwz87~SfZgbHhGLZPsFFZQEZvKDq0B58w__",
+    image: "https://i.postimg.cc/DfDgnrWq/19.jpg",
     category: "incense",
     fullDescription: "Hương Không Tăm Cà Phê là sản phẩm hương không khói độc đáo, giúp không gian luôn thơm mát mà không gây ám mùi. Đây là lựa chọn tuyệt vời cho những người thích hương thơm cà phê nhưng lại nhạy cảm với khói.",
     specifications: {
@@ -91,7 +91,7 @@ export const products: Product[] = [
     id: 6,
     title: "Bột Hương Cà Phê",
     description: "Bột hương có thể đem sử dụng được đa công năng, kết hợp với nguyên liệu khác",
-    image: "https://s3-alpha-sig.figma.com/img/8220/e6c7/b1a8c58a117061c8987133a3f0594262?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=QfSVdJjktbPkDX80AvMdmr0I8JuXcS47Jq-5syVB3-dKlzM9BhfFgPE~~lsUCbFk1sgWWY6RTzzXmd8tx55chEgFXKHXYP0mrUi869AfVeF6cZ2y9Xu13vlAQ8Q5Ge1IcmILpja-CM8MZYUH~yN1QDosXDUuZMoz1GIgrTcjFalZ85lPtbUc25Hzw8CYSSuC~9FNSeO5MmZMe25hjGPcqrhnKn2bIjVpJcxdCToFwnFj5si6Lcdk3c5tt~sH7LM9jmqm7GWa28e9ws-~T-NO9d2anpEax9OcPSxHB5KmLHrSDzPqn6YOEXB976GaiSEPkcVLxVcA-~7xmqZ1bbYD3Q__",
+    image: "https://i.postimg.cc/28Zx61vg/20.jpg",
     category: "powder",
     fullDescription: "Bột Hương Cà Phê là dạng bột mịn từ hạt cà phê được chế biến đặc biệt để sử dụng trong nhiều mục đích khác nhau như làm hương thơm, nguyên liệu làm đẹp, hoặc kết hợp với các sản phẩm khác để tạo ra các mùi hương độc đáo.",
     specifications: {

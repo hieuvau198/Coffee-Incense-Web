@@ -25,6 +25,7 @@ const Footer = () => {
 
   return (
     <footer className="w-full">
+      <div className="w-full h-1 bg-[#8B7156] mx-auto"></div>
       {/* Follow us section */}
       <div className="bg-[#FFF5F3] py-10 px-4">
         <div className="max-w-7xl mx-auto text-center">

@@ -6,7 +6,7 @@ const blogPosts = [
     title: "Hành Trình Biến Bã Cà Phê Thành Hương",
     description:
       "Bã cà phê, vốn bị bỏ đi sau pha, thực ra là một nguồn tài nguyên quý giá cho hương thơm. ",
-    image: "https://s3-alpha-sig.figma.com/img/fd75/21d2/d4de91d6d5b9db8392087a7cdba8de5d?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=NmLbamGvuwkDcVzGuaD9E2vrwr~HU1emGsruzlUcek76hMGxjlQ7lpIlD4kunGMExHjGH43pA6bCiK8QSIK9LmSIRsnvElIbRQh~tGirYzg7dAVi1ipz~7QQICj833mFOp9Ph~FJA1idZoPNUc~FS4uzNAQP2kbx5EQttYHUZ-zYCfgpkAOugvwUq0Ry~54D0CH-QZhAa3-PvY3-~v-GQtQdUSwhTgcWabxGSxZyqdGpZM1iAhO-d-HxqT~E1IfMyVWhrQrbIwovI72bovzH~6~1r5aDKPM9DOpkjzxFRpq9CnPf6BKAPtR-ZwWHRyWjtgHpoqKzFSjwf-yd0DqMXA__",
+    image: "https://i.postimg.cc/brsfbx8x/21.jpg",
     date: "06/04/2025",
   },
   {
@@ -14,7 +14,7 @@ const blogPosts = [
     title: "Giải Pháp Tự Nhiên Cho Không Gian Sống",
     description:
       "Hương thơm từ bã cà phê mang đến cảm giác dễ chịu, là lựa chọn lý tưởng để thanh lọc không khí trong nhà mà không cần hóa chất.",
-    image: "https://s3-alpha-sig.figma.com/img/f463/3711/4b830637f889a52cb5ea32de5813239d?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=XzHuiGMwb86ps8D4a8M2OeOMmjWwaFnDXv6qC7JiLDwxU~XY~83R4qH0ZexngjmF~ujoPZYDPRmIf4aoTmgl24zOpsQ8LPfwCl63KBkxntmMvfMusyhTtuUq612CCkjNK3GEAuqKdRPjH5szjw~0UWtpKCy8bIinyCZhJT~Zy9EfehBKbS11Xz~BQT4jjfQvw08BiALQziB1~ijirqv-xXUggiZwXPSGUUpKHBSIuFta5G~Hev54AgTxm1Nzr7JxCys9KKcrJReTHRACkHYJDF~lcXSN0c7Kd0ppC7k1LUaKgtlcbJO9ZDZDrZGrFedvUfJkYtEzLeJf4N8t9-l4Tg__",
+    image: "https://i.postimg.cc/SNYpxfgq/22.jpg",
     date: "06/04/2025",
   },
   {
@@ -22,7 +22,7 @@ const blogPosts = [
     title: "Bước Đơn Giản Để Bảo Vệ Sức Khỏe",
     description:
       "Hít thở hương cà phê không chỉ thư giãn mà còn giúp tinh thần tỉnh táo và dễ chịu mỗi ngày.",
-    image: "https://s3-alpha-sig.figma.com/img/857c/bfc8/de427d17712f26e69f278ff9729ffe8f?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=TN9d8l8kmbWXVMN9UQMib2bwl-r2h3ebS9kWLEh96dRqfRV4eN8kIzUAs1grMHauuiiE0Rdl~Xjkwf2rIRi~j-dQTPsXTlxJxHC52wXhWUzxO0Fy900TjtuiYhiEg5vqFIEBRUqtchbe50hpcY3JmrWVqQ-3d2E5vL-bjOMNbwyXbFJ~ECcMs2CKGURejdDUHmk4Yj6qxtOExqToHFhju-s4yg4NZbe0X15zhEr~Fd6dn0fp88rqGookVzUo0mcDKkX0Oi2VA9uPGnI5wjfWHA8xvQadbdq~ysr8rfG9TkRrML-aOgwHk4FPfwL96mRZV4vGduRhNdZY2eSOdcsf2Q__",
+    image: "https://i.postimg.cc/kMpmCpFf/23.jpg",
     date: "06/04/2025",
   },
   {
@@ -30,7 +30,7 @@ const blogPosts = [
     title: "Thư Giãn Với Hương Nhang Từ Bã Cà Phê",
     description:
       "Tận dụng bã cà phê để làm hương nhang là một cách vừa thân thiện với môi trường vừa mang lại trải nghiệm thư giãn độc đáo.",
-    image: "https://s3-alpha-sig.figma.com/img/569a/f919/8a89c6507e2e89c358ad414ffd848c5f?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=ZvcuKDpKF4tfWiTHIILCVV0Sfta5HV-cejxsiIA7opEIqFjMt27Wzq~W0aNYYiSkyL~EV3UsJyEuKorI~CYwn2O1gBMuo14KO7Q~7xjDbF8mR4U9xDzv25HfXUBg0-SxJ7rItJU4BjwiV7CfUsYPDr0PXxP7lZsbSB7utsgEVxhluYMO4~hTrriyDFWrduEkk3mfChoPWMh1FTkMxhZ-JCvv5rO27zlS~sIVhXBcdqZ2E0sYbjKizti-X8Ab9h8~RcBZ6S9T47346Hp9k~QunCFGl9mvIfdN-5Up1rg6O-Jq6errkkzxz2Ur5Om3adagWvey2~NFSi4eU4TgmXJpQQ__",
+    image: "https://i.postimg.cc/T1FMcKYZ/24.jpg",
     date: "06/04/2025",
   },
 ];
@@ -66,7 +66,7 @@ const Blog: React.FC = () => {
           {blogPosts.map((post) => (
             <div
               key={post.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row gap-4"
+              className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row gap-4 mb-6"
             >
               <img
                 src={post.image}
