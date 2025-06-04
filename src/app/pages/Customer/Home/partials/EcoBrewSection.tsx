@@ -53,11 +53,11 @@ const EcoBrewSection = () => {
               </Button>
             </div>
 
-            <div className="pt-6">
+            <div className="pt-4">
               <img 
-                src="https://s3-alpha-sig.figma.com/img/4977/7062/63928f8cfe1a21792739613facf28bf6?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=HpOiYWEkNLB8mLPPBKy39aoh47yuWdkZr~-eHrm9oUwvhhcQM6mTtNfzS5iQFEBHlGtMvrvWTmk~1I9Z1nAVOTF2KIVwFotYbJkKCOWTQTPPla6SMGROCvTdXN37cLRUBZfpn8pifx4RiwWTvytkGSgCsvGpHa97m27yIdrG~0BIduyyFtTQ7-CeTUsoZHJ1NSNwE4NzuLwwyLOYGx1ISuR-TCheXBiGxhR~CU0qEtFH3K~x28ftIfTJ1X2vchNwCL52Fx1ol-TSWIA-qzOd~eYd7KdUIWjmNqTVyrC711Xwph9LTW~HHYVVjOE2U0pJElcrDGJWE2ob0FsaW5MqBA__" 
+                src="https://i.postimg.cc/x8ccqjnx/image-78.png" 
                 alt="Leaf decoration" 
-                className="h-16 opacity-80"
+                className="w-24 mx-0"
               />
             </div>
           </div>
