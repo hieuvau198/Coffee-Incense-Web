@@ -1,3 +1,4 @@
+// src\mocks\product.ts
 import { Product, ProductCategory } from "../app/models/product";
 
 export const products: Product[] = [

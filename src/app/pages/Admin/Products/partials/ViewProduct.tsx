@@ -1,3 +1,4 @@
+// src\app\pages\Admin\Products\partials\ViewProduct.tsx
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Descriptions, Spin, Image, Divider, Tag, Space } from 'antd';
 import { ArrowLeftOutlined, EditOutlined } from '@ant-design/icons';

@@ -1,3 +1,4 @@
+// src\app\models\product.ts
 export interface Product {
   id?: string | number | null;
   title?: string | null;
