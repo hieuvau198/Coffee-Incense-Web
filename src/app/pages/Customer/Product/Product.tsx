@@ -47,7 +47,7 @@ const Product = () => {
 
   return (
     <div className="bg-[#F9F2EA] min-h-screen py-10">
-      <div className="container mx-auto px-4 md:px-8 lg:px-12">
+      <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
         {/* Header Section */}
         <div className="mb-8 text-center">
           <Title level={2} className="text-[#2D2424]">

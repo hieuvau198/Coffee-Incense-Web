@@ -37,9 +37,9 @@ const blogPosts = [
 
 const Blog: React.FC = () => {
   return (
-    <div className="bg-[#FFF5F3] min-h-screen py-10 px-4">
+    <div className="bg-[#FFF5F3] min-h-screen py-10 px-4 pt-10">
       <div className="container mx-auto">
-        <h1 className="text-4xl font-extrabold text-center mb-8 uppercase">
+        <h1 className="text-5xl font-extrabold text-center mb-8 uppercase">
           Blog của chúng tôi
         </h1>
 
@@ -49,7 +49,7 @@ const Blog: React.FC = () => {
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
-                backgroundImage: `url("https://s3-alpha-sig.figma.com/img/8495/a719/bf1631e75bc759158d916ac0a674840f?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=sKGhoth7lPQfnH48S3Lv0l0tMcRDioyDMlabTmqJWN9AsDq1NZqvX9VoSVlAdVRkUeoZryfGzQgixWwLvewQfnNz1zLW74PE3tQFG0DjrD3~tHDVYmovps9vk~4vC4gJ5W3~e-AMpWQ81F2PP8C175SIvbRFhVEpyXVqjQBpcOdcRfmqTpGxA21aBNpB7lCFtJShtj-AQ1oCS3urs0iAti7j~2VoBWvZul3MwiyBioOuNxv69YZWX3TdLQEgPnXHFIVhW3bvvWanzGgdzZh-hrc5Hzayllr1QtnXkQBXGwBV5e821QWIfh-6JfaYMlfBR6jQXqTMd2kKTBcc-h4J~A__")`,
+                backgroundImage: `url("https://i.postimg.cc/7ZSNt3cV/image-89.png")`,
                 filter: "brightness(0.7)",
               }}
             ></div>
@@ -62,7 +62,7 @@ const Blog: React.FC = () => {
         </div>
 
         {/* Blog list */}
-        <div className="container mx-auto px-24 space-y-8">
+        <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
           {blogPosts.map((post) => (
             <div
               key={post.id}

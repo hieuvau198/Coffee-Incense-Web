@@ -31,7 +31,7 @@ const ProductList = () => {
 
   return (
     <div className="bg-[#F9F2EA] min-h-screen pb-10">
-      <div className="mx-auto px-4 md:px-10 lg:px-16 xl:px-20">
+      <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
         <div className="mx-0 md:mx-6">
           {/* Page Title */}
           <div className="pt-10 pb-8 text-center">

@@ -5,7 +5,7 @@ export const products: Product[] = [
     id: 1,
     title: "Hương Cà Phê",
     description: "Hương thơm thư giãn, thanh lọc không khí, mang đến gợi ấn dễ chịu",
-    image: "https://s3-alpha-sig.figma.com/img/0cc8/9137/080d68ea426bc0017e5960253a3c1e40?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=mTTNp0NzDv9AJpwVt6SctdwZSdLX2mN5OYm0AEseQ1Qq0XpSHR7yDZwxOY7Zqbb~pesXX-7tHqc7RrNtZ~ULUyCn6YU6LCQe3SH9h6USBklrQUEI7kGxyZhjggj33cuOTlVVguZ1H-Rxb0MBgzqufnZ7ID84lfQDVCvi0tf4pSJHXPKmS3~cGCXsHc04G2kE~ry4ewqxNu49NKikb3CjTvheKX-iopGA7BHpyQI3p0bPV333u5bn0WNanzIgGXLzOFP6Z4oaSrZ7vZcZ0vobWa7BrMzRJdrMbilX79smzo1blD37Qp4M0igJs-NwWaKxgTodRcftxXzggvLLt0motQ__",
+    image: "https://i.postimg.cc/pTNjZWn9/10.jpg",
     category: "incense",
     fullDescription: "Hương Cà Phê mang đến cho bạn trải nghiệm thư giãn độc đáo với hương thơm đặc trưng của cà phê Việt Nam. Sản phẩm được làm từ nguyên liệu tự nhiên, giúp thanh lọc không khí và tạo không gian ấm cúng cho ngôi nhà của bạn.",
     specifications: {
@@ -22,7 +22,7 @@ export const products: Product[] = [
     id: 2,
     title: "Nụ Hương Cà Phê",
     description: "Tỏa không gian thư thái, thư mãi dụ mùi, giúp giữ hương thơm lâu",
-    image: "https://s3-alpha-sig.figma.com/img/0c64/55ad/fdd285b6682a3748d5c0b6fb8b5f9c0d?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=DKM-6lmk~Vhc66rvBrh2A9y7OwBxu-mQV0bIUk7HaXHH~o8jFz7c5m6IJSai70ys6U-KiYDGm86O106J-~BWK7GpBkR7oWA1inuq9gSYEZNa6O5aWN1g36PeNvZ1pUhCkt3fGJZD7bMshVyUcR320ATLxDykgtcYTACDkasTpN2BwthxMubhXXSJoqYMeA0iCRMzmnyqJ47egsYIukG7Q2ezEnq76-SwKXwqn1KVEyltiLojZaIXtkNZiIiJVc-LLCjGyBjM0hDMx2H7ErT5BIJHc6zjNRV407rxeR3W4mjPVt9KKaE4spkIDtFFWWJ2SSQhMyRl2giM5kc1EdJsHg__",
+    image: "https://i.postimg.cc/sxmZs5HS/11.jpg",
     category: "incense",
     fullDescription: "Nụ Hương Cà Phê được thiết kế đặc biệt để tỏa hương thơm nhẹ nhàng, tinh tế trong không gian sống. Sản phẩm giúp thư giãn tinh thần, tạo cảm giác an yên và giữ hương thơm lâu dài.",
     specifications: {
@@ -39,7 +39,7 @@ export const products: Product[] = [
     id: 3,
     title: "Nhang Vòng Cà Phê",
     description: "Hương thơm dễm khi mở hộp gần tam, bày trí hương thơm lâu dài",
-    image: "https://s3-alpha-sig.figma.com/img/a3e5/9d9d/b8fde31f56bd69812d051bae9398be9c?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=NxSu~xhlm0dRxyEEXT7bHV1eO4cGCnt83TR6-JlpjdW3KJZGq7IUweSEH2ppmi6QijSGDnUGbzOPy40xjKCGKE4YUZ2c7a0HgVghZqc60bfXRLpazPk-rmhVtt1l3ZBQLil~5cnFbXtDZ8EUDpGFXJEQMG7FFOQvsL9955CL74kZz7b73nCis5QPAIPXZKDnWJNdS3VykXQTblpBs4FlAu4dclYahM7tyJMaqUYkRA39sPsojHWdfg2s676cqDo3StCYx6ttytJZS8eN~T9sajhUajUaOc6ay80C-s31Bhlck7Rs3OPc-qNbu8s7IMDq7tzc11hbxT~GsVGE0R64ig__",
+    image: "https://i.postimg.cc/1XsNkvBs/12.jpg",
     category: "incense",
     fullDescription: "Nhang Vòng Cà Phê là sản phẩm nhang hình tròn đặc biệt, dễ dàng đặt trong các không gian nhỏ và tỏa hương thơm đều khắp phòng. Sản phẩm này lý tưởng cho việc thư giãn, thiền định hoặc tạo bầu không khí ấm cúng.",
     specifications: {

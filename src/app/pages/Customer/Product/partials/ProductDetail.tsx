@@ -69,7 +69,7 @@ const ProductDetail = () => {
 
   return (
     <div className="bg-[#F9F2EA] min-h-screen py-10">
-      <div className="mx-auto px-4 md:px-10 lg:px-16 xl:px-20">
+      <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
         <div className="mx-0 md:mx-6">
           <div className="bg-white rounded-xl shadow-sm p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
