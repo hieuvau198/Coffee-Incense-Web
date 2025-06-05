@@ -295,7 +295,7 @@ const Header = () => {
         bodyStyle={{ padding: 0 }}
       >
         <nav className="flex flex-col space-y-2 mt-4">
-          {menuItems.map((item, idx) => (
+          {menuItems.map((item) => (
             <Link
               key={item.href}
               to={item.href}

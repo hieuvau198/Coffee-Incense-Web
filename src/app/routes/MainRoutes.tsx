@@ -11,7 +11,7 @@ import Settings from "../pages/Admin/Settings/Settings";
 import NotFound from "../components/NotFound";
 import AdminLayout from "../layouts/AdminLayout/AdminLayout";
 import Home from "../pages/Customer/Home/Home";
-import ProductList from "../pages/Customer/Product/partials/ProductList";
+import ProductList from "../pages/Customer/Product/ProductList";
 import ProductDetail from "../pages/Customer/Product/partials/ProductDetail";
 import Login from "../pages/Authentication/Login";
 import Register from "../pages/Authentication/Register";
@@ -20,8 +20,8 @@ import Products from "../pages/Admin/Products/Products";
 import Blog from "../pages/Customer/Blog/Blog";
 import AboutUs from "../pages/Customer/AboutUs/AboutUs";
 import ForgetPassword from "../pages/Authentication/ForgetPassword/ForgetPassword";
-
-
+import CartPage from "../pages/Customer/Cart/Cart";
+import Profile from "../pages/Customer/Profile/Profile";
 
 const MainRoutes = () => {
   return (
@@ -34,7 +34,8 @@ const MainRoutes = () => {
           <Route path="contact" element={<Contact />} />
           <Route path="blogs" element={<Blog />} />
           <Route path="about" element={<AboutUs />} />
-          {/* <Route path="cart" element={<CartPage />} /> */}
+          <Route path="cart" element={<CartPage />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Route>
 
