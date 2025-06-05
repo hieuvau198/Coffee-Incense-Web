@@ -28,7 +28,7 @@ const EcoBrewSection = () => {
 
   return (
     <section className="py-16">
-      <div className="container mx-auto px-4 md:px-10 lg:px-16 xl:px-20">
+      <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
         <div className="flex flex-col md:flex-row items-center gap-8 mx-0 md:mx-6">
           {/* Left content */}
           <div className="w-full md:w-1/2 space-y-6">
@@ -47,7 +47,7 @@ const EcoBrewSection = () => {
             <div className="flex gap-4">
               <Button
                 onClick={() => navigate('/products')}
-                className="bg-transparent hover:bg-transparent border-[#8B7156] text-[#8B7156] px-8 rounded-full"
+                className="text-lg bg-transparent hover:bg-transparent border-[#8B7156] text-[#8B7156] px-8 rounded-full"
               >
                 Xem chi tiết
               </Button>
@@ -57,7 +57,7 @@ const EcoBrewSection = () => {
               <img 
                 src="https://i.postimg.cc/x8ccqjnx/image-78.png" 
                 alt="Leaf decoration" 
-                className="w-24 mx-0"
+                className="w-28 ml-16 mt-4"
               />
             </div>
           </div>

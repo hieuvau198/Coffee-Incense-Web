@@ -1,11 +1,11 @@
 import React from "react";
 
-const AboutUs: React.FC = () => {
+const AboutUs = () => {
   return (
-    <div className="bg-[#FFF5F3] min-h-screen py-10 px-4">
+    <div className="bg-[#FFF5F3] min-h-screen py-10 px-4 pt-10">
       <div className="container mx-auto">
         {/* Header */}
-        <h1 className="text-4xl font-extrabold text-center mb-8 uppercase">
+        <h1 className="text-5xl font-extrabold text-center mb-8 uppercase">
           Về Chúng Tôi
         </h1>
 
@@ -15,7 +15,7 @@ const AboutUs: React.FC = () => {
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
-                backgroundImage: `url("https://s3-alpha-sig.figma.com/img/8495/a719/bf1631e75bc759158d916ac0a674840f?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=sKGhoth7lPQfnH48S3Lv0l0tMcRDioyDMlabTmqJWN9AsDq1NZqvX9VoSVlAdVRkUeoZryfGzQgixWwLvewQfnNz1zLW74PE3tQFG0DjrD3~tHDVYmovps9vk~4vC4gJ5W3~e-AMpWQ81F2PP8C175SIvbRFhVEpyXVqjQBpcOdcRfmqTpGxA21aBNpB7lCFtJShtj-AQ1oCS3urs0iAti7j~2VoBWvZul3MwiyBioOuNxv69YZWX3TdLQEgPnXHFIVhW3bvvWanzGgdzZh-hrc5Hzayllr1QtnXkQBXGwBV5e821QWIfh-6JfaYMlfBR6jQXqTMd2kKTBcc-h4J~A__")`,
+                backgroundImage: `url("https://i.postimg.cc/0Q7xbHHS/2.png")`,
                 filter: "brightness(0.7)",
               }}
             ></div>
@@ -27,90 +27,173 @@ const AboutUs: React.FC = () => {
           </div>
         </div>
 
-        {/* Content Sections */}
-        <div className="container mx-auto px-24 space-y-16">
+        {/* Slogan Section */}
+        <div className="container mx-auto mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4 leading-tight">
+            Trao quyền cho chất thải cà phê<br />
+            cho một tương lai bền vững
+          </h2>
+        </div>
+
+        {/* Content Sections - Redesigned */}
+        <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
           {/* Section 1: Hương Thơm Từ Bã Cà Phê */}
-          <div className="flex flex-col lg:flex-row items-center gap-8">
-            <div className="w-full lg:w-1/2">
-              <h2 className="text-2xl font-bold mb-4 relative">
-                Hương Thơm Từ Bã Cà Phê
-                <span className="absolute bottom-0 left-0 w-16 h-1 bg-black"></span>
+          <div className="flex flex-col lg:flex-row items-center gap-16 mb-24">
+            <div className="w-full lg:w-1/2 space-y-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+                Nhang thơm từ bã cà phê
               </h2>
-              <p className="text-gray-600 text-sm">
-                Được làm từ 100% bã cà phê tự nhiên, hương thơm mang hương vị gần gũi, giúp thư giãn, thanh lọc không khí và tạo không gian thiền định, yên tĩnh. Mùi bã cà phê tự nhiên giúp giảm căng thẳng, giảm tan dư nguồn nguyên liệu tự nhiên, bảo vệ môi trường và mang lại chất lượng cuộc sống.
+              <h3 className="text-xl font-semibold text-gray-700">
+                – Hương thơm bền vững
+              </h3>
+              <p className="text-gray-600 leading-relaxed text-base">
+                Được làm từ 100% bã cà phê tái chế, mang lại hương thơm ấm áp,
+                hương thơm tự nhiên, giúp thư giãn, thanh lọc không khí và
+                tạo không gian thiền định, yên tĩnh. Mùi hương cà phê tự nhiên giúp giảm
+                căng thẳng, giảm lo lắng và cải thiện chất lượng cuộc sống.
+                Đây còn là một phần đóng góp trong quá trình tái chế chất thải,
+                từ nguồn nguyên liệu tự nhiên, bảo vệ môi trường và mang lại chất lượng cuộc sống.
               </p>
             </div>
-            <div className="w-full lg:w-1/2">
+            <div className="w-full lg:w-1/2 flex justify-center">
               <div className="relative">
-                <img
-                  src="https://s3-alpha-sig.figma.com/img/569a/f919/8a89c6507e2e89c358ad414ffd848c5f?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=ZvcuKDpKF4tfWiTHIILCVV0Sfta5HV-cejxsiIA7opEIqFjMt27Wzq~W0aNYYiSkyL~EV3UsJyEuKorI~CYwn2O1gBMuo14KO7Q~7xjDbF8mR4U9xDzv25HfXUBg0-SxJ7rItJU4BjwiV7CfUsYPDr0PXxP7lZsbSB7utsgEVxhluYMO4~hTrriyDFWrduEkk3mfChoPWMh1FTkMxhZ-JCvv5rO27zlS~sIVhXBcdqZ2E0sYbjKizti-X8Ab9h8~RcBZ6S9T47346Hp9k~QunCFGl9mvIfdN-5Up1rg6O-Jq6errkkzxz2Ur5Om3adagWvey2~NFSi4eU4TgmXJpQQ__"
-                  alt="Hương Thơm Từ Bã Cà Phê"
-                  className="w-full h-64 object-cover rounded-lg"
-                />
-                <div className="absolute inset-0 bg-yellow-100 opacity-50 rounded-lg transform -rotate-6"></div>
+                {/* Yellow decorative background */}
+                <div className="absolute -top-6 -right-6 w-80 h-80 bg-yellow-200 rounded-[2rem] transform rotate-12 opacity-70"></div>
+                {/* Decorative star elements */}
+                <div className="absolute -top-8 -left-8 text-yellow-400">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                </div>
+                <div className="absolute -bottom-6 -right-10 text-yellow-400">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="12" cy="12" r="4"/>
+                  </svg>
+                </div>
+                {/* Main image */}
+                <div className="relative z-10">
+                  <div className="w-72 h-72 bg-white rounded-[2rem] overflow-hidden shadow-xl transform -rotate-6 border-4 border-white">
+                    <img 
+                      src="https://i.postimg.cc/Qd1pJvdt/15.png" 
+                      alt="Nhang thơm từ bã cà phê"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+          
+        <div className="w-[350px] h-[2px] bg-[#8B7156] rounded-full mx-auto my-12"></div>
 
           {/* Section 2: Nghề Nhẫn Tạo Nhang */}
-          <div className="flex flex-col lg:flex-row-reverse items-center gap-8">
-            <div className="w-full lg:w-1/2">
-              <h2 className="text-2xl font-bold mb-4 relative">
-                Nghề Nhẫn Tạo Nhang Từ Bã Cà Phê
-                <span className="absolute bottom-0 left-0 w-16 h-1 bg-black"></span>
+          <div className="flex flex-col lg:flex-row-reverse items-center gap-16 mb-24">
+            <div className="w-full lg:w-1/2 space-y-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+                Nghề Nhẫn Tạo Nhang<br />
+                Từ Bã Cà Phê
               </h2>
-              <p className="text-gray-600 text-sm">
-                Mỗi que nhang từ bã cà phê không chỉ là một sản phẩm hương thơm mà còn là một tác phẩm nghệ thuật, kết tinh từ tay nghề, trí tuệ và sự kiên nhẫn của những người thợ lành nghề. Xứ lý nguyên liệu, đế táo nhang que nhang chất lượng cao, vừa đẹp vừa mang lại hương thơm tự nhiên.
+              <p className="text-gray-600 leading-relaxed text-base">
+                Mỗi que nhang từ bã cà phê không chỉ là một sản phẩm hương thơm
+                mà còn là một tác phẩm nghệ thuật, kết tinh từ tay nghề của những
+                người thợ lành nghề, kết hợp giữa truyền thống của đồng nghiệp
+                với công nghệ hiện đại. Từ khâu xử lý nguyên liệu đến khâu tạo hình
+                thủ công, tạo ra từng que nhang chất lượng cao,
+                vừa đẹp vừa mang lại hương thơm tự nhiên và bền vững.
               </p>
             </div>
-            <div className="w-full lg:w-1/2">
+            <div className="w-full lg:w-1/2 flex justify-center">
               <div className="relative">
-                <img
-                  src="https://s3-alpha-sig.figma.com/img/f463/3711/4b830637f889a52cb5ea32de5813239d?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=XzHuiGMwb86ps8D4a8M2OeOMmjWwaFnDXv6qC7JiLDwxU~XY~83R4qH0ZexngjmF~ujoPZYDPRmIf4aoTmgl24zOpsQ8LPfwCl63KBkxntmMvfMusyhTtuUq612CCkjNK3GEAuqKdRPjH5szjw~0UWtpKCy8bIinyCZhJT~Zy9EfehBKbS11Xz~BQT4jjfQvw08BiALQziB1~ijirqv-xXUggiZwXPSGUUpKHBSIuFta5G~Hev54AgTxm1Nzr7JxCys9KKcrJReTHRACkHYJDF~lcXSN0c7Kd0ppC7k1LUaKgtlcbJO9ZDZDrZGrFedvUfJkYtEzLeJf4N8t9-l4Tg__"
-                  alt="Nghề Nhẫn Tạo Nhang"
-                  className="w-full h-64 object-cover rounded-lg"
-                />
-                <div className="absolute inset-0 bg-yellow-100 opacity-50 rounded-lg transform rotate-6"></div>
+                {/* Yellow decorative background */}
+                <div className="absolute -top-6 -left-6 w-80 h-80 bg-yellow-200 rounded-[2rem] transform -rotate-12 opacity-70"></div>
+                {/* Decorative star elements */}
+                <div className="absolute -top-8 -right-8 text-yellow-400">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                </div>
+                <div className="absolute -bottom-6 -left-10 text-yellow-400">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="6" y="6" width="12" height="12" rx="3"/>
+                  </svg>
+                </div>
+                {/* Main image */}
+                <div className="relative z-10">
+                  <div className="w-72 h-72 bg-white rounded-[2rem] overflow-hidden shadow-xl transform rotate-6 border-4 border-white">
+                    <img 
+                      src="https://i.postimg.cc/3wZmPppQ/16.png" 
+                      alt="Nghề Nhẫn Tạo Nhang"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Section 3: Nhang Vòng – Giải Pháp Hương Thơm */}
-          <div className="flex flex-col lg:flex-row items-center gap-8">
-            <div className="w-full lg:w-1/2">
-              <h2 className="text-2xl font-bold mb-4 relative">
-                Nhang Vòng – Giải Pháp Hương Thơm Tự Nhiên, Bền Vững
-                <span className="absolute bottom-0 left-0 w-16 h-1 bg-black"></span>
+          
+        <div className="w-[350px] h-[2px] bg-[#8B7156] rounded-full mx-auto my-12"></div>
+
+          {/* Section 3: Nhang Vòng */}
+          <div className="flex flex-col lg:flex-row items-center gap-16 mb-16">
+            <div className="w-full lg:w-1/2 space-y-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+                Nhang Vòng – Giải Pháp Hương<br />
+                Thơm Tự Nhiên, Bền Vững
               </h2>
-              <p className="text-gray-600 text-sm">
-                Nhang vòng là sự kết hợp giữa thiết kế truyền thống và sinh hoạt nghề của người Việt, với mong muốn mang đến một giải pháp an toàn, thân thiện với môi trường, hương thơm tự nhiên để bạn cảm nhận được sự thư giãn, giảm căng thẳng và mang lại hương thơm tự nhiên.
+              <p className="text-gray-600 leading-relaxed text-base">
+                Nhang vòng là một sản phẩm không chỉ mang thiết kế truyền thống mà còn
+                gắn với sinh hoạt hàng ngày của người Việt, với mong muốn
+                mang đến một giải pháp an toàn, thân thiện với môi trường.
+                Sản phẩm có thể sử dụng cho cả không gian trong nhà và ngoài trời,
+                mang lại hương thơm tự nhiên kéo dài và tạo cảm giác thư giãn,
+                phù hợp với lối sống hiện đại nhưng vẫn giữ được nét truyền thống.
               </p>
             </div>
-            <div className="w-full lg:w-1/2">
+            <div className="w-full lg:w-1/2 flex justify-center">
               <div className="relative">
-                <img
-                  src="https://s3-alpha-sig.figma.com/img/857c/bfc8/de427d17712f26e69f278ff9729ffe8f?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=TN9d8l8kmbWXVMN9UQMib2bwl-r2h3ebS9kWLEh96dRqfRV4eN8kIzUAs1grMHauuiiE0Rdl~Xjkwf2rIRi~j-dQTPsXTlxJxHC52wXhWUzxO0Fy900TjtuiYhiEg5vqFIEBRUqtchbe50hpcY3JmrWVqQ-3d2E5vL-bjOMNbwyXbFJ~ECcMs2CKGURejdDUHmk4Yj6qxtOExqToHFhju-s4yg4NZbe0X15zhEr~Fd6dn0fp88rqGookVzUo0mcDKkX0Oi2VA9uPGnI5wjfWHA8xvQadbdq~ysr8rfG9TkRrML-aOgwHk4FPfwL96mRZV4vGduRhNdZY2eSOdcsf2Q__"
-                  alt="Nhang Vòng"
-                  className="w-full h-64 object-cover rounded-lg"
-                />
-                <div className="absolute inset-0 bg-yellow-100 opacity-50 rounded-lg transform -rotate-6"></div>
+                {/* Yellow decorative background */}
+                <div className="absolute -top-6 -right-6 w-80 h-80 bg-yellow-200 rounded-[2rem] transform rotate-12 opacity-70"></div>
+                {/* Decorative star elements */}
+                <div className="absolute -top-8 -left-8 text-yellow-400">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                </div>
+                <div className="absolute -bottom-6 -right-10 text-yellow-400">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                  </svg>
+                </div>
+                {/* Main image */}
+                <div className="relative z-10">
+                  <div className="w-72 h-72 bg-white rounded-[2rem] overflow-hidden shadow-xl transform -rotate-6 border-4 border-white">
+                    <img 
+                      src="https://i.postimg.cc/hGnVyMX0/17.png" 
+                      alt="Nhang Vòng"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
+        <div className="w-[750px] h-[2px] bg-[#8B7156] rounded-full mx-auto my-8"></div>
+
         {/* Why We Do Section */}
-        <div className="container mx-auto px-24 mt-16">
-          <h2 className="text-4xl font-bold text-center mb-8 mt-10">
+        <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
+          <h2 className="text-5xl font-bold text-center mb-16 mt-28">
             Tại Sao Nên Hoạt Động
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Item 1 */}
             <div className="text-center">
               <img
-                src="https://s3-alpha-sig.figma.com/img/3149/39d3/321d35cfacaafb371430e28331ce0512?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=c-FvpqEAJsLgr2GfbdqS12SQp5BuaDvmPM6wUEsryacn9bDdErEFX1WUrSpZtXhVv~iPMXIYpgMkCqleYROEQyPr4leveGGdbpjzxEVSe7n34CT7bxmPdGB6IdinO4afVdhY7HD4fx43b3NKMLeC1HMR6tIUxHseg6vqrk~8xRlNZOx5FDdXV5imRR-ogZttnRppYrjercsz-JySzrlVdo7RGYb~30vICZxCd7P6tiWqQykWDIedyDvIIC5vWUzCrsXpxSSSIZbHMwwdyF-~z7-NSp0DscIa9WL9YSXpRWOkH0NMko-ue6chItaIyHktS6bLL3kGzJ70AWLZ~Ao0-g__"
+                src="https://i.postimg.cc/XqXytzKT/image-90.png"
                 alt="Tác động bền vững"
-                className="w-24 h-24 mx-auto mb-4 rounded-full"
+                className="w-28 h-28 mx-auto mb-4 rounded-full"
               />
               <h3 className="text-lg font-semibold mb-2">Tác động bền vững</h3>
               <p className="text-gray-600 text-sm">
@@ -120,9 +203,9 @@ const AboutUs: React.FC = () => {
             {/* Item 2 */}
             <div className="text-center">
               <img
-                src="https://s3-alpha-sig.figma.com/img/299e/fad6/9f823cd9db8e7249d47958575a1d9334?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=CPZe~qNjEIIqI-cAZDc7g0-I10C~1XNqK6aE6sElQ27VWugNN5VuxxLUV9Ed5ZgUBHogwwnDFLtkuGlWtyjBmktg9CIxp~VMapGPMhy4R~m2NTaGbbrYhYjxSz2db0E0Uc4eVLR57SHGs02ApZU7B6magRe8nxQnbn1iEJlgVQHPB0I-ib10rEFnsF00YC16n8u68AwlVHfttRATXcTIlwY7-tKc5g4rrYiqTOdaQz~m500KBZeDgkfxRKX1bLw6XsatQVYvFa019P1BGP6MYUYi-jrb8YvGuuM-9Kinqhx2VjuneGyRPeHX12eC0ShmESn-gBxYIS~XREWZeNSOKg__"
+                src="https://i.postimg.cc/VvTbwWD5/image-91.png"
                 alt="Đổi mới thiên nhiên"
-                className="w-24 h-24 mx-auto mb-4 rounded-full"
+                className="w-28 h-28 mx-auto mb-4 rounded-full"
               />
               <h3 className="text-lg font-semibold mb-2">Đổi mới thiên nhiên</h3>
               <p className="text-gray-600 text-sm">
@@ -132,11 +215,11 @@ const AboutUs: React.FC = () => {
             {/* Item 3 */}
             <div className="text-center">
               <img
-                src="https://s3-alpha-sig.figma.com/img/a058/76fb/852966e59a68f40415f7de310ebd4d64?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=qi0BEfUQRKsSAKjGtcuyG6tlHKuWMYzK3pfNCGq5d1WGiqg0ua8fC95gzlArI-XIac7JR~Hd2NwofSHdW5H4fcJWtXsu6HqMrDHBftob95URvAbIsEBnwJYe6cd2MikRiFi7K8rbaQ-PBkod6H5o8q-QUz9bgr5eq1dEvRzTMPpztNb2FTjSG2mFwKz~XTdXCpGFky8jMPpI9WkRnLaUESctjwsR7ty0goAuBePK2DGgaGLgLp3TrHW6tuGb1hCq8zrLS8vaEWH-XqGTtzKK0BTQd7ljWBQbqHnREqe4MDb2jFyaJ60Uaro3JTMXqiCBeZxWcZZFAn2fCwjuz-8Zeg__"
+                src="https://i.postimg.cc/05HS79Px/image.png"
                 alt="Cộng đồng & Nhan thức"
-                className="w-24 h-24 mx-auto mb-4 rounded-full"
+                className="w-28 h-28 mx-auto mb-4 rounded-full"
               />
-              <h3 className="text-lg font-semibold mb-2">Cộng đồng & Nhan thức</h3>
+              <h3 className="text-lg font-semibold mb-2">Cộng đồng & Nhận thức</h3>
               <p className="text-gray-600 text-sm">
                 Thông qua các hoạt động tái chế, chúng tôi góp phần nâng cao ý thức bảo vệ môi trường, khuyến khích lối sống xanh.
               </p>
@@ -145,6 +228,7 @@ const AboutUs: React.FC = () => {
         </div>
       </div>
     </div>
+    
   );
 };
 

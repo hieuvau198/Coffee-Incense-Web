@@ -35,7 +35,7 @@ const testimonials: Testimonial[] = [
 const TestimonialsSection = () => {
   return (
     <section className="py-20">
-      <div className="container mx-auto px-4 md:px-10 lg:px-16 xl:px-20">
+      <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
         <div className="mx-0 md:mx-6">
           <h2 className="text-3xl font-bold text-center text-[#2D2424] mb-12">
             CẢM NHẬN CỦA KHÁCH HÀNG

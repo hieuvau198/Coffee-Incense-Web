@@ -3,7 +3,7 @@ import { Button } from "antd";
 const NewsletterSection = () => {
   return (
     <section className="py-20 bg-[#8B7156] text-white">
-      <div className="container mx-auto px-4 md:px-10 lg:px-16 xl:px-20">
+      <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
         <div className="mx-0 md:mx-6">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-4xl font-bold mb-4">

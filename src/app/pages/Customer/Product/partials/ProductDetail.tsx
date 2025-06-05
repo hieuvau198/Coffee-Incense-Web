@@ -69,7 +69,7 @@ const ProductDetail = () => {
 
   return (
     <div className="bg-[#F9F2EA] min-h-screen py-10">
-      <div className="mx-auto px-4 md:px-10 lg:px-16 xl:px-20">
+      <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
         <div className="mx-0 md:mx-6">
           <div className="bg-white rounded-xl shadow-sm p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -79,7 +79,7 @@ const ProductDetail = () => {
                   <img
                     src={product.image || ''}
                     alt={product.title || 'Product image'}
-                    className="w-full h-full object-cover"
+                    className="w-[430px] h-[550px] object-cover rounded-lg border-2 border-[#8B7156] mx-auto"
                   />
                 </div>
               </div>

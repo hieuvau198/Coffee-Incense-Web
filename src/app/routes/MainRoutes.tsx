@@ -21,6 +21,8 @@ import Blog from "../pages/Customer/Blog/Blog";
 import AboutUs from "../pages/Customer/AboutUs/AboutUs";
 import ForgetPassword from "../pages/Authentication/ForgetPassword/ForgetPassword";
 
+
+
 const MainRoutes = () => {
   return (
     <Routes>
@@ -32,6 +34,7 @@ const MainRoutes = () => {
           <Route path="contact" element={<Contact />} />
           <Route path="blogs" element={<Blog />} />
           <Route path="about" element={<AboutUs />} />
+          {/* <Route path="cart" element={<CartPage />} /> */}
         </Route>
       </Route>
 

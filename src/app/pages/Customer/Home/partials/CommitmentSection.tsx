@@ -1,7 +1,7 @@
 const CommitmentSection = () => {
   return (
     <section className="py-20">
-      <div className="container mx-auto px-4 md:px-10 lg:px-16 xl:px-20">
+      <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
         <div className="mx-0 md:mx-6">
           <h2 className="text-3xl font-bold text-[#2D2424] mb-10">
             CAM KẾT CỦA CHÚNG TÔI
@@ -22,7 +22,7 @@ const CommitmentSection = () => {
             {/* Right illustration */}
             <div className="w-full lg:w-2/5">
               <img
-                src="https://s3-alpha-sig.figma.com/img/f4d5/2a13/8a7d28c6331552c3c806c7a50d7a20e5?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=skDlbYmArQhhsTgYFtBGi7pbvfVL1F9ZmUmeJ1fZ-xYcfmS6IZQL5EHQ7a3tX0pvlUmwPfQDTaaqK606qBShWKpeJyy55pp~dLBpQ3nEVhVxmIQlVwkfORS4qZ-JzsmryWsKVPsGaBTFQbMh-YR3Bjg2PsWvggquTIq9lAFYB3AvBPBEcs-eY-qn1iHDFA6UQKpKYxTXAJL~Nl0fHVjAUQBZGJm81Zh0F1jTu~EgbotgB1n4QA30dLVsfyXg0iRt6nDc-E36zMWnepTvMsHmgpyyvhuTUtSj4fkh9teKh4y3DcVq54Fknh58Y-m~FNzCWEyRM8l-D-KAvRrdgW58Gw__"
+                src="https://i.postimg.cc/jSQwNDVC/image-66.png"
                 alt="Sustainability commitment"
                 className="w-full h-auto"
               />

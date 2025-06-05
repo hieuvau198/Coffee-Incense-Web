@@ -4,10 +4,10 @@ import ContactInfo from './partials/ContactInfo';
 
 const Contact: React.FC = () => {
   return (
-    <div className="bg-[#FFF5F3] min-h-screen py-8 px-4 pt-24">
+    <div className="bg-[#FFF5F3] min-h-screen py-10 px-4 pt-10">
       {/* Header */}
-      <div className="container mx-auto mb-6">
-        <h1 className="text-4xl font-bold text-center uppercase mb-4">
+      <div className="container mx-auto">
+        <h1 className="text-5xl font-bold text-center uppercase mb-4">
           Liên hệ với chúng tôi
         </h1>
       </div>
@@ -18,7 +18,7 @@ const Contact: React.FC = () => {
           <div 
             className="absolute inset-0 bg-cover bg-center"
             style={{ 
-              backgroundImage: `url("https://s3-alpha-sig.figma.com/img/f5a4/4413/51b2ab12ce092a1149cd8935f4501190?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=FOI3WzMQQ8-TLSmV2Okw5Z28kt5AZnA2PrGqTzwPWlTZWU5Wg3dOCbctjUv6AwlVT7KZqv8zsH-~94Zsui2SViOSOqmKjQPzusnyDyqYTf7TgTacUBIEDDd356ev0XWA1QccweyUeixALOgvPyzaz9QjGH-pVNv-hQKZwlgosDWZVQZ~SqlDUJoxrWY38ErJ0q~B1tP0Skeh7~1VcuWJo70ib10fsMriTX8Oi8FjMjDhuuluLMojvicVUZ3TnkxRhrJV9lnYrMNx8h1LxeO-aszbsN8dxEI4zwN~r1f3Qe9K1XNxs3oGLP0QKB2bDOq-OubhVTfo6ICV8UB8kbig6Q__")`,
+              backgroundImage: `url("https://i.postimg.cc/XNTdMZ9D/image.png")`,
               filter: "brightness(0.7)" 
             }}
           ></div>
@@ -32,7 +32,7 @@ const Contact: React.FC = () => {
       </div>
       
       {/* Contact Form Section */}
-      <div className="container mx-auto mt-10">
+      <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
         <div className="bg-white rounded-lg shadow-md overflow-hidden px-6 py-8 max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row lg:justify-center lg:gap-10">
             {/* Left column - Contact Info */}

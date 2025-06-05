@@ -16,7 +16,7 @@ const Logo = ({
         }`}
       >
         {/* EBC */}
-        <span className="text-green-300">.</span>
+        {/* <span className="text-green-300">.</span> */}
       </h1>
     </Link>
   );
