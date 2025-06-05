@@ -71,7 +71,7 @@ const Blog: React.FC = () => {
               <img
                 src={post.image}
                 alt={post.title}
-                className="w-full md:w-56 h-40 object-cover rounded-t-md md:rounded-none md:rounded-l-md"
+                className="w-full md:w-56 h-40 object-cover rounded-t-md md:rounded-none md:rounded-l-md transition-transform duration-300 hover:scale-110"
               />
               <div className="p-4 flex flex-col justify-between">
                 <div>
