@@ -2,7 +2,7 @@ import React from "react";
 
 const AboutUs = () => {
   return (
-    <div className="bg-[#FFF5F3] min-h-screen py-10 px-4 pt-10">
+    <div className="bg-[#F9F2EA] min-h-screen py-10 px-4 pt-10">
       <div className="container mx-auto">
         {/* Header */}
         <h1 className="text-5xl font-extrabold text-center mb-8 uppercase">

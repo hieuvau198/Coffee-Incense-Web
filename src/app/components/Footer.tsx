@@ -1,9 +1,11 @@
-import { FaInstagram, FaFacebookF, FaTwitter, FaYoutube } from "react-icons/fa";
+import { FaInstagram, FaFacebookF, FaTiktok, FaYoutube } from "react-icons/fa"; // Replaced FaTwitter with FaTiktok
 import { MdEmail } from "react-icons/md";
 import { Link } from "react-router";
+import { products } from "src/mocks/product";
+import type { Product } from "src/app/models/product";
 
 const Footer = () => {
-  // Coffee product images from Figma
+  // Giữ ảnh cũ, link và tên lấy từ sản phẩm thật
   const galleryImages = [
     "https://i.postimg.cc/MT2W5rpZ/4.jpg",
     "https://i.postimg.cc/Y0ttKGFJ/5.jpg",
@@ -12,16 +14,7 @@ const Footer = () => {
     "https://i.postimg.cc/hPyc6Gt5/8.jpg",
     "https://i.postimg.cc/9QsVXNTP/9.jpg"
   ];
-  
-  // Product names for hover effect
-  const productNames = [
-    "Nụ Hương Cà Phê",
-    "Bột Hương Cà Phê",
-    "Hương Cà Phê",
-    "Hương Sào Cà Phê",
-    "Hương Không Tăm Cà Phê",
-    "Nhang Cà Phê"
-  ];
+  const galleryProducts = products.slice(0, 6);
 
   return (
     <footer className="w-full">
@@ -46,11 +39,11 @@ const Footer = () => {
             <a href="#" className="bg-[#8B7156] text-white p-2 sm:p-3 rounded-full hover:bg-[#6D573D] hover:scale-110 transition-all duration-300">
               <FaInstagram size={18} />
             </a>
-            <a href="#" className="bg-[#8B7156] text-white p-2 sm:p-3 rounded-full hover:bg-[#6D573D] hover:scale-110 transition-all duration-300">
+            <a href="https://www.facebook.com/profile.php?id=61556699531934" className="bg-[#8B7156] text-white p-2 sm:p-3 rounded-full hover:bg-[#6D573D] hover:scale-110 transition-all duration-300">
               <FaFacebookF size={18} />
             </a>
-            <a href="#" className="bg-[#8B7156] text-white p-2 sm:p-3 rounded-full hover:bg-[#6D573D] hover:scale-110 transition-all duration-300">
-              <FaTwitter size={18} />
+            <a href="https://www.tiktok.com/@ecobrewcycle?_t=ZS-8wyAKWXl1Ue&_r=1&fbclid=IwY2xjawKv91dleHRuA2FlbQIxMABicmlkETF0WThpN3ZISmhGSUJRNGFQAR4TDB4ZI9K1rYOxvEb6HkIAItmBgdyaljvyUZbx_YLFqmDmBczVWvqS36Gqzw_aem_hnZUbaA-embblRreK21iVA" className="bg-[#8B7156] text-white p-2 sm:p-3 rounded-full hover:bg-[#6D573D] hover:scale-110 transition-all duration-300">
+              <FaTiktok size={18} />
             </a>
             <a href="#" className="bg-[#8B7156] text-white p-2 sm:p-3 rounded-full hover:bg-[#6D573D] hover:scale-110 transition-all duration-300">
               <FaYoutube size={18} />
@@ -59,20 +52,20 @@ const Footer = () => {
           
           {/* Product images gallery */}
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-1 max-w-6xl mx-auto">
-            {galleryImages.map((image, index) => (
+            {galleryImages.map((image: string, index: number) => (
               <Link 
-                to={`/products/${index + 1}`} 
+                to={`/product-detail?id=${galleryProducts[index]?.id}`} 
                 key={index} 
                 className="h-24 sm:h-28 md:h-40 overflow-hidden group relative"
               >
                 <img 
                   src={image}
-                  alt={productNames[index]} 
+                  alt={galleryProducts[index]?.title || ''}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-[#2D2424]/0 group-hover:bg-[#2D2424]/40 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
                   <span className="text-white text-xs md:text-sm font-medium px-2 py-1 bg-[#8B7156]/80 rounded">
-                    {productNames[index]}
+                    {galleryProducts[index]?.title}
                   </span>
                 </div>
               </Link>
@@ -81,7 +74,6 @@ const Footer = () => {
         </div>
       </div>
 
-      
       {/* Main footer with navigation and contact */}
       <div className="bg-[#8B7156] text-white py-8 px-4">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between">

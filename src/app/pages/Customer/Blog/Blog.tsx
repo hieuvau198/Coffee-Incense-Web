@@ -37,7 +37,7 @@ const blogPosts = [
 
 const Blog: React.FC = () => {
   return (
-    <div className="bg-[#FFF5F3] min-h-screen py-10 px-4 pt-10">
+    <div className="bg-[#F9F2EA] min-h-screen py-10 px-4 pt-10">
       <div className="container mx-auto">
         <h1 className="text-5xl font-extrabold text-center mb-8 uppercase">
           Blog của chúng tôi
