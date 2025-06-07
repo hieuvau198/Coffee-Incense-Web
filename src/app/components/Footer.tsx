@@ -1,4 +1,4 @@
-import { FaInstagram, FaFacebookF, FaTwitter, FaYoutube } from "react-icons/fa";
+import { FaInstagram, FaFacebookF, FaTiktok, FaYoutube } from "react-icons/fa"; // Replaced FaTwitter with FaTiktok
 import { MdEmail } from "react-icons/md";
 import { Link } from "react-router";
 import { products } from "src/mocks/product";
@@ -42,8 +42,8 @@ const Footer = () => {
             <a href="https://www.facebook.com/profile.php?id=61556699531934" className="bg-[#8B7156] text-white p-2 sm:p-3 rounded-full hover:bg-[#6D573D] hover:scale-110 transition-all duration-300">
               <FaFacebookF size={18} />
             </a>
-            <a href="#" className="bg-[#8B7156] text-white p-2 sm:p-3 rounded-full hover:bg-[#6D573D] hover:scale-110 transition-all duration-300">
-              <FaTwitter size={18} />
+            <a href="https://www.tiktok.com/@ecobrewcycle?_t=ZS-8wyAKWXl1Ue&_r=1&fbclid=IwY2xjawKv91dleHRuA2FlbQIxMABicmlkETF0WThpN3ZISmhGSUJRNGFQAR4TDB4ZI9K1rYOxvEb6HkIAItmBgdyaljvyUZbx_YLFqmDmBczVWvqS36Gqzw_aem_hnZUbaA-embblRreK21iVA" className="bg-[#8B7156] text-white p-2 sm:p-3 rounded-full hover:bg-[#6D573D] hover:scale-110 transition-all duration-300">
+              <FaTiktok size={18} />
             </a>
             <a href="#" className="bg-[#8B7156] text-white p-2 sm:p-3 rounded-full hover:bg-[#6D573D] hover:scale-110 transition-all duration-300">
               <FaYoutube size={18} />
@@ -74,7 +74,6 @@ const Footer = () => {
         </div>
       </div>
 
-      
       {/* Main footer with navigation and contact */}
       <div className="bg-[#8B7156] text-white py-8 px-4">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between">
