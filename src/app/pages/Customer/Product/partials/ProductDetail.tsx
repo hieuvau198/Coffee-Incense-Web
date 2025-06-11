@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router";
 import { Tabs, Button, Divider, Spin } from "antd";
-import { products } from "../../../../../mocks/product";
 import { Product } from "../../../../models/product";
+import { useProductCrud } from "../../../../hooks/generalCrud";
 
 const { TabPane } = Tabs;
 
@@ -14,19 +14,18 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<string>("1");
   const [quantity, setQuantity] = useState<number>(1);
+  const { getProduct } = useProductCrud();
 
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchProductDetail();
   }, [productId]);
 
-  const fetchProductDetail = () => {
+  const fetchProductDetail = async () => {
     setLoading(true);
     try {
       if (productId) {
-        // Convert to number if the ID is numeric
-        const id = !isNaN(Number(productId)) ? Number(productId) : productId;
-        const foundProduct = products.find(p => p.id === id);
+        const foundProduct = await getProduct(productId);
         setProduct(foundProduct || null);
       }
     } catch (error) {

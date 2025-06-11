@@ -1,24 +1,51 @@
 import { useState } from "react";
-import { Button, Pagination } from "antd";
+import { Button, Pagination, Spin, Empty } from "antd";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { products } from "../../../../mocks/product";
+import { useProductCrud } from "../../../hooks/generalCrud";
+import { Product } from "../../../models/product";
 
 const ProductList = () => {
   const navigate = useNavigate();
-  
+  const { subscribeToProducts, getAllProducts } = useProductCrud();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [categories, setCategories] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(6); // 6 products per page as per UI
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
 
-  const [activeCategory, setActiveCategory] = useState<string>("all");
+    const unsubscribe = subscribeToProducts((data) => {
+      setProducts(data);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, [subscribeToProducts]);
 
-  const handlePageChange = (page: number, pageSize: number) => {
-    console.log(page, pageSize);
-    window.scrollTo(0, 0);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const allProducts = await getAllProducts();
+        const uniqueCategories = Array.from(new Set(allProducts
+          .map(p => p.category)
+          .filter((cat): cat is string => cat !== null && cat !== undefined)));
+        setCategories(uniqueCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    fetchCategories();
+  }, [getAllProducts]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
-  const handleProductClick = (productId: string | number | null | undefined) => {
+  const handleProductClick = (productId: string | null | undefined) => {
     if (productId) {
       navigate(`/product-detail?id=${productId}`);
     }
@@ -28,6 +55,10 @@ const ProductList = () => {
   const filteredProducts = activeCategory === "all" 
     ? products 
     : products.filter(product => product.category === activeCategory);
+
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
   return (
     <div className="bg-[#F9F2EA] min-h-screen pb-10">
@@ -56,75 +87,81 @@ const ProductList = () => {
               >
                 Tất cả
               </button>
-              <button
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  activeCategory === "incense"
-                    ? "bg-[#8B7156] text-white"
-                    : "bg-white text-[#8B7156] border border-[#8B7156]"
-                }`}
-                onClick={() => setActiveCategory("incense")}
-              >
-                Nhang hương
-              </button>
-              <button
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  activeCategory === "powder"
-                    ? "bg-[#8B7156] text-white"
-                    : "bg-white text-[#8B7156] border border-[#8B7156]"
-                }`}
-                onClick={() => setActiveCategory("powder")}
-              >
-                Bột hương
-              </button>
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    activeCategory === cat
+                      ? "bg-[#8B7156] text-white"
+                      : "bg-white text-[#8B7156] border border-[#8B7156]"
+                  }`}
+                  onClick={() => setActiveCategory(cat)}
+                >
+                  {cat === 'incense' ? 'Nhang hương' : 
+                   cat === 'powder' ? 'Bột hương' : 
+                   cat === 'accessories' ? 'Phụ kiện' : cat}
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Product Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-            {filteredProducts.map((product) => (
-              <div 
-                key={product.id} 
-                className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => handleProductClick(product.id)}
-              >
-                <div className="h-48 overflow-hidden">
-                  <img 
-                    src={product.image || ''} 
-                    alt={product.title || 'Product image'}
-                    className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-4 text-center">
-                  <h3 className="font-bold text-lg text-[#2D2424] mb-1">{product.title}</h3>
-                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">{product.description}</p>
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-[#8B7156]">
-                      {product.price?.toLocaleString('vi-VN')} đ
-                    </span>
-                    <Button 
-                      className="bg-[#C9AC8C] hover:bg-[#8B7156] text-white border-0 rounded-full px-5"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleProductClick(product.id);
-                      }}
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <Spin size="large" />
+            </div>
+          ) : (
+            <>
+              {currentProducts.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                  {currentProducts.map((product) => (
+                    <div 
+                      key={product.id} 
+                      className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                      onClick={() => handleProductClick(product.id?.toString())}
                     >
-                      Chi Tiết
-                    </Button>
-                  </div>
+                      <div className="h-48 overflow-hidden">
+                        <img 
+                          src={product.image || ''} 
+                          alt={product.title || 'Product image'}
+                          className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                      <div className="p-4 text-center">
+                        <h3 className="font-bold text-lg text-[#2D2424] mb-1">{product.title}</h3>
+                        <p className="text-sm text-gray-600 mb-4 line-clamp-2">{product.description}</p>
+                        <div className="flex justify-center">
+                          <Button 
+                            className="border-[#C9AC8C] text-[#C9AC8C] hover:text-[#8B7156] bg-transparent hover:bg-transparent px-5"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleProductClick(product.id?.toString());
+                            }}
+                          >
+                            Đọc Thêm
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            ))}
-          </div>
+              ) : (
+                <Empty description="Không tìm thấy sản phẩm nào" />
+              )}
 
-          {/* Pagination */}
-          <div className="flex justify-center mt-8">
-            <Pagination
-              defaultCurrent={1}
-              total={products.length}
-              onChange={handlePageChange}
-              defaultPageSize={6}
-            />
-          </div>
+              {/* Pagination */}
+              <div className="flex justify-center mt-8">
+                <Pagination
+                  defaultCurrent={1}
+                  total={filteredProducts.length}
+                  onChange={handlePageChange}
+                  defaultPageSize={productsPerPage}
+                  showSizeChanger={false}
+                  showTotal={(total, range) => `${range[0]}-${range[1]} của ${total} sản phẩm`}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
