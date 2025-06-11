@@ -45,9 +45,9 @@ const Orders: React.FC = () => {
     <Card className="shadow-sm h-full overflow-hidden">
       {viewMode === "list" && (
         <OrderList
-          onAddBooking={handleAddClick}
-          onViewBooking={handleViewClick}
-          onEditBooking={handleEditClick}
+          onAddOrder={handleAddClick}
+          onViewOrder={handleViewClick}
+          onEditOrder={handleEditClick}
         />
       )}
 

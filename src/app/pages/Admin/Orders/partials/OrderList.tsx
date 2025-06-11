@@ -9,16 +9,16 @@ import { format } from 'date-fns';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-interface BookingListProps {
-  onAddBooking: () => void;
-  onViewBooking: (orderId: string) => void;
-  onEditBooking: (order: OrderData) => void;
+interface OrderListProps {
+  onAddOrder: () => void;
+  onViewOrder: (orderId: string) => void;
+  onEditOrder: (order: OrderData) => void;
 }
 
-const BookingList: React.FC<BookingListProps> = ({
-  onAddBooking,
-  onViewBooking,
-  onEditBooking,
+const OrderList: React.FC<OrderListProps> = ({
+  onAddOrder,
+  onViewOrder,
+  onEditOrder,
 }) => {
   const [orders, setOrders] = useState<OrderData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -154,12 +154,12 @@ const BookingList: React.FC<BookingListProps> = ({
           <Button 
             type="text" 
             icon={<EyeOutlined className="text-lg" />} 
-            onClick={() => onViewBooking(record.id as string)}
+            onClick={() => onViewOrder(record.id as string)}
           />
           <Button 
             type="text" 
             icon={<EditOutlined className="text-lg" />} 
-            onClick={() => onEditBooking(record)}
+            onClick={() => onEditOrder(record)}
           />
           <Popconfirm
             title="Bạn có chắc chắn muốn xóa đơn hàng này?"
@@ -196,7 +196,7 @@ const BookingList: React.FC<BookingListProps> = ({
         <Button 
           type="primary" 
           icon={<PlusOutlined />}
-          onClick={onAddBooking}
+          onClick={onAddOrder}
           className="bg-[#8B7156] hover:bg-[#64503C]"
         >
           Tạo Đơn Hàng
@@ -258,4 +258,4 @@ const BookingList: React.FC<BookingListProps> = ({
   );
 };
 
-export default BookingList; 
+export default OrderList; 

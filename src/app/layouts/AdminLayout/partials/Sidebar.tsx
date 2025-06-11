@@ -32,8 +32,8 @@ const Sidebar = () => {
       setSelectedKey("/dashboard");
     } else if (path.includes("/product")) {
       setSelectedKey("/product");
-    } else if (path.includes("/bookings")) {
-      setSelectedKey("/bookings");
+    } else if (path.includes("/orders")) {
+      setSelectedKey("/orders");
     } else if (path.includes("/customers")) {
       setSelectedKey("/customers");
     } else if (path.includes("/payments")) {

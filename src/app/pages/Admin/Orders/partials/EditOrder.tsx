@@ -29,14 +29,19 @@ const EditOrder: React.FC<EditOrderProps> = ({ order, onCancel, onSuccess }) => 
           const fetchedOrder = await getOrderById(order.id);
           if (fetchedOrder) {
             form.setFieldsValue({
-              ...fetchedOrder,
-              fullName: fetchedOrder.customerInfo?.fullName,
-              phone: fetchedOrder.customerInfo?.phone,
-              address: fetchedOrder.customerInfo?.address,
-              notes: fetchedOrder.customerInfo?.note,
-              orderDate: fetchedOrder.orderDate ? dayjs(fetchedOrder.orderDate.toDate()) : undefined,
+              id: fetchedOrder.id,
+              userId: fetchedOrder.userId,
+              customerInfo: {
+                fullName: fetchedOrder.customerInfo?.fullName,
+                phone: fetchedOrder.customerInfo?.phone,
+                address: fetchedOrder.customerInfo?.address,
+                note: fetchedOrder.customerInfo?.note,
+              },
+              cartItems: fetchedOrder.cartItems,
               totalPrice: fetchedOrder.totalPrice,
               paymentMethod: fetchedOrder.paymentMethod,
+              orderDate: fetchedOrder.orderDate ? dayjs(fetchedOrder.orderDate.toDate()) : undefined,
+              status: fetchedOrder.status,
             });
           }
         } catch (error) {
@@ -60,7 +65,7 @@ const EditOrder: React.FC<EditOrderProps> = ({ order, onCancel, onSuccess }) => 
             fullName: values.fullName,
             phone: values.phone,
             address: values.address,
-            note: values.notes,
+            note: values.note,
           },
           totalPrice: values.totalPrice,
           paymentMethod: values.paymentMethod,
@@ -158,21 +163,21 @@ const EditOrder: React.FC<EditOrderProps> = ({ order, onCancel, onSuccess }) => 
           <div className="lg:col-span-1 space-y-6">
             <Card title={RenderBoldTitle("Thông Tin Khách Hàng")} className="shadow-sm">
               <Form.Item
-                name="fullName"
+                name={['customerInfo', 'fullName']}
                 label="Họ và Tên"
                 rules={[{ required: true, message: 'Vui lòng nhập tên khách hàng' }]}
               >
                 <Input />
               </Form.Item>
               <Form.Item
-                name="phone"
+                name={['customerInfo', 'phone']}
                 label="Số Điện Thoại"
                 rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
               >
                 <Input />
               </Form.Item>
               <Form.Item
-                name="address"
+                name={['customerInfo', 'address']}
                 label="Địa Chỉ Giao Hàng"
                 rules={[{ required: true, message: 'Vui lòng nhập địa chỉ giao hàng' }]}
               >
@@ -184,7 +189,7 @@ const EditOrder: React.FC<EditOrderProps> = ({ order, onCancel, onSuccess }) => 
 
         <Form.Item
           label="Ghi Chú"
-          name="notes"
+          name={['customerInfo', 'note']}
         >
           <TextArea rows={2} placeholder="Nhập ghi chú nếu có" />
         </Form.Item>

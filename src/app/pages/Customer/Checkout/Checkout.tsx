@@ -15,48 +15,64 @@ const CheckoutPage: React.FC = () => {
   const [form] = Form.useForm();
   const { user, userData, loading: authLoading } = useAuth();
   const [orderPlacedSuccessfully, setOrderPlacedSuccessfully] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('cod');
 
-  console.log("CheckoutPage - user:", user, "userData:", userData, "authLoading:", authLoading);
+  console.log("CheckoutPage - Initial Render: currentStep", currentStep, "selectedPaymentMethod", selectedPaymentMethod);
 
   useEffect(() => {
-    console.log("useEffect in CheckoutPage - user:", user, "userData:", userData);
+    console.log("CheckoutPage - useEffect: user", user, "userData", userData);
     if (user && userData) {
       form.setFieldsValue({
         fullName: `${userData.firstName || ''} ${userData.lastName || ''}`.trim(), 
         phone: userData.phone || '',
         address: userData.address || '',
       });
-      console.log("Form fields set:", form.getFieldsValue());
+      console.log("CheckoutPage - Form fields set in useEffect:", form.getFieldsValue());
     }
   }, [user, userData, form]);
 
   const onNext = async () => {
+    console.log("onNext called. currentStep before validation:", currentStep);
     try {
       if (currentStep === 0) {
         await form.validateFields(['fullName', 'phone', 'address', 'note']);
+        setCurrentStep(currentStep + 1); // Move to next step (step 1)
+        console.log("onNext: Moved to step 1");
+      } else if (currentStep === 1) {
+        await form.validateFields(['paymentMethod']);
+        const values = form.getFieldsValue(); 
+        setSelectedPaymentMethod(values.paymentMethod);
+        console.log("onNext: Validated payment method, selected:", values.paymentMethod);
+        // IMPORTANT: Do NOT advance step here. onFinish will handle final step advancement.
       }
-      setCurrentStep(currentStep + 1);
     } catch (info) {
-      console.error('Validate Failed:', info);
+      console.error('CheckoutPage - Validate Failed in onNext:', info);
       message.error('Vui lòng điền đầy đủ thông tin bắt buộc.');
     }
   };
 
   const onPrev = () => {
+    console.log("onPrev called. currentStep before decrement:", currentStep);
     setCurrentStep(currentStep - 1);
+    console.log("onPrev: Moved to step", currentStep - 1);
   };
 
-  const onFinish = async () => {
-    const allValues = form.getFieldsValue();
-    console.log("onFinish called. All form values:", allValues);
+  const onFinish = async (values: any) => {
+    console.log("onFinish called. All form values:", values, "currentStep:", currentStep);
 
     if (!user || !user.uid) {
       message.error('Vui lòng đăng nhập để đặt hàng.');
+      setOrderPlacedSuccessfully(false);
+      setCurrentStep(steps.length - 1);
+      console.log("onFinish: User not logged in.");
       return;
     }
 
     if (cartItems.length === 0) {
       message.error('Giỏ hàng của bạn đang trống.');
+      setOrderPlacedSuccessfully(false);
+      setCurrentStep(steps.length - 1);
+      console.log("onFinish: Cart is empty.");
       return;
     }
 
@@ -64,10 +80,10 @@ const CheckoutPage: React.FC = () => {
       const orderData = {
         userId: user.uid, 
         customerInfo: {
-          fullName: allValues.fullName,
-          phone: allValues.phone,
-          address: allValues.address,
-          note: allValues.note,
+          fullName: values.fullName,
+          phone: values.phone,
+          address: values.address,
+          note: values.note,
         },
         cartItems: cartItems.map(item => ({
           productId: item.productId,
@@ -77,19 +93,22 @@ const CheckoutPage: React.FC = () => {
           quantity: item.quantity,
         })),
         totalPrice: totalPrice,
-        paymentMethod: allValues.paymentMethod,
+        paymentMethod: values.paymentMethod,
       };
 
-      console.log("Attempting to add order with data:", orderData);
+      console.log("onFinish: Attempting to add order with data:", orderData);
       await orderService.addOrder(orderData as any); 
       message.success('Đặt hàng thành công! Cảm ơn bạn đã mua hàng.');
       clearCart(); 
       setOrderPlacedSuccessfully(true);
       setCurrentStep(steps.length - 1);
+      console.log("onFinish: Order placed successfully. Moving to final step.");
     } catch (error) {
-      console.error("Error placing order:", error);
+      console.error("onFinish: Error placing order:", error);
       message.error("Đặt hàng thất bại. Vui lòng thử lại.");
       setOrderPlacedSuccessfully(false);
+      setCurrentStep(steps.length - 1);
+      console.log("onFinish: Order placement failed. Moving to final step.");
     }
   };
 
@@ -162,7 +181,7 @@ const CheckoutPage: React.FC = () => {
           <Form
             form={form}
             layout="vertical"
-            onFinish={onFinish}
+            onFinish={onFinish} 
             initialValues={{ paymentMethod: 'cod' }}
           >
             <div className="steps-content min-h-[300px]">
@@ -184,13 +203,24 @@ const CheckoutPage: React.FC = () => {
               <div style={{ display: currentStep === 1 ? 'block' : 'none' }}>
                 {steps[1].content}
                 <Form.Item name="paymentMethod" rules={[{ required: true, message: 'Vui lòng chọn phương thức thanh toán!' }]}>
-                  <Radio.Group>
+                  <Radio.Group onChange={(e) => setSelectedPaymentMethod(e.target.value)} value={selectedPaymentMethod}>
                     <Space direction="vertical">
                       <Radio value="cod">Thanh toán khi nhận hàng (COD)</Radio>
                       <Radio value="bank_transfer">Chuyển khoản ngân hàng</Radio>
                     </Space>
                   </Radio.Group>
                 </Form.Item>
+                {selectedPaymentMethod === 'bank_transfer' && (
+                  <div className="mt-4 p-4 border rounded-md bg-gray-50">
+                    <h4 className="font-bold mb-2 text-[#2D2424]">Thông tin chuyển khoản:</h4>
+                    <p className="mb-1">Ngân hàng: MB Bank</p>
+                    <p className="mb-1">Số tài khoản: 07072972779 </p>
+                    <p className="mb-1">Tên tài khoản: CÔNG TY TNHH COFFEE INCENSE (Hoanvngoc) </p>
+                    <p className="mb-1">Nội dung chuyển khoản: [Tên của bạn] - [Số điện thoại] - Thanh toán đơn hàng</p>
+                    <img src="https://i.postimg.cc/fy4PkRsf/QR.jpg" alt="QR Code" className="w-48 h-48 mx-auto mt-4" />
+                    <p className="text-center text-sm text-gray-600 mt-2">Vui lòng chuyển khoản và nhấn "Hoàn tất đơn hàng" để xác nhận.</p>
+                  </div>
+                )}
               </div>
 
               <div style={{ display: currentStep === 2 ? 'block' : 'none' }}>
@@ -200,15 +230,37 @@ const CheckoutPage: React.FC = () => {
 
             <div className="steps-action text-right mt-6">
               {currentStep < steps.length - 1 && (
-                <Button 
-                  type="primary" 
-                  className="bg-[#8B7156] border-[#8B7156] hover:bg-[#64503C] hover:border-[#64503C]"
-                  onClick={currentStep === 0 ? onNext : undefined}
-                  htmlType={currentStep === 1 ? 'submit' : 'button'}
-                  disabled={currentStep === 1 && isSubmitDisabled}
-                >
-                  {currentStep === 0 ? 'Tiếp theo' : 'Xác nhận và đặt hàng'}
-                </Button>
+                <>
+                  {currentStep === 0 && (
+                    <Button 
+                      type="primary" 
+                      className="bg-[#8B7156] border-[#8B7156] hover:bg-[#64503C] hover:border-[#64503C]"
+                      onClick={onNext} // Calls onNext to validate and move to step 1
+                    >
+                      Tiếp theo
+                    </Button>
+                  )}
+                  {currentStep === 1 && selectedPaymentMethod !== 'bank_transfer' && (
+                    <Button 
+                      type="primary" 
+                      className="bg-[#8B7156] border-[#8B7156] hover:bg-[#64503C] hover:border-[#64503C]"
+                      htmlType="submit" // This will trigger the onFinish of the Form
+                      disabled={isSubmitDisabled}
+                    >
+                      Xác nhận và đặt hàng
+                    </Button>
+                  )}
+                  {currentStep === 1 && selectedPaymentMethod === 'bank_transfer' && (
+                    <Button
+                      type="primary"
+                      className="bg-[#8B7156] border-[#8B7156] hover:bg-[#64503C] hover:border-[#64503C] ml-3"
+                      htmlType="submit" // This will also trigger the onFinish of the Form
+                      disabled={isSubmitDisabled}
+                    >
+                      Hoàn tất đơn hàng
+                    </Button>
+                  )}
+                </>
               )}
               {currentStep > 0 && currentStep < steps.length - 1 && (
                 <Button style={{ margin: '0 8px' }} onClick={onPrev}>

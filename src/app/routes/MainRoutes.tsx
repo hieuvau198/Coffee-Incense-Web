@@ -2,7 +2,7 @@
 
 import { Navigate, Route, Routes } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
-import Orders from "../pages/Admin/Bookings/Orders";
+import Orders from "../pages/Admin/Orders/Orders";
 import Customers from "../pages/Admin/Customers/Customers";
 import Dashboard from "../pages/Admin/Dashboard/Dashboard";
 import Payments from "../pages/Admin/Payments/Payments";
