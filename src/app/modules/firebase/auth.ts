@@ -1,5 +1,5 @@
 // src/app/modules/firebase/auth.ts
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, collection } from "firebase/firestore";
 import { auth, db } from "./firebase";
 import {
   createUserWithEmailAndPassword,
@@ -31,6 +31,17 @@ export const signUp = async (
     email,
     role: "customer",
     password,
+  });
+  // Thêm vào collection customers
+  const customerDocRef = doc(db, "customers", user.uid);
+  await setDoc(customerDocRef, {
+    name: (userData.firstName || "") + " " + (userData.lastName || ""),
+    email,
+    phone: userData.phone || "",
+    status: "active",
+    totalBookings: 0,
+    totalSpent: 0,
+    lastBooking: "",
   });
   return user;
 };
@@ -80,14 +91,23 @@ export const doSignInWithGoogle = async (): Promise<{ user: User; role: string }
       provider: "google",
       createdAt: new Date().toISOString()
     });
+    // Thêm vào collection customers
+    const customerDocRef = doc(db, "customers", user.uid);
+    await setDoc(customerDocRef, {
+      name: (firstName || "") + " " + (lastName || ""),
+      email: user.email || "",
+      phone: "",
+      status: "active",
+      totalBookings: 0,
+      totalSpent: 0,
+      lastBooking: "",
+    });
     return { user, role: "customer" };
   } else {
     const userData = userDoc.data();
     return { user, role: userData.role };
   }
 };
-
-
 
 export const doSignOut = () => auth.signOut();
 

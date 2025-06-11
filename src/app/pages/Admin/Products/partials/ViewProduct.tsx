@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Descriptions, Spin, Image, Divider, Tag, Space } from 'antd';
 import { ArrowLeftOutlined, EditOutlined } from '@ant-design/icons';
-import { productService } from '../../../../services/productService';
 import { Product } from '../../../../models/product';
+import { useProductCrud } from '../../../../hooks/generalCrud';
 
 interface ViewProductProps {
   productId: string | number;
   onBack: () => void;
-  onEdit: (productId: string | number) => void;
+  onEdit: (product: Product) => void;
 }
 
 const ViewProduct: React.FC<ViewProductProps> = ({
@@ -18,6 +18,7 @@ const ViewProduct: React.FC<ViewProductProps> = ({
 }) => {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const { getProduct } = useProductCrud();
 
   useEffect(() => {
     fetchProductDetails();
@@ -26,7 +27,7 @@ const ViewProduct: React.FC<ViewProductProps> = ({
   const fetchProductDetails = async () => {
     setLoading(true);
     try {
-      const data = await productService.getProductById(productId);
+      const data = await getProduct(productId.toString());
       setProduct(data || null);
     } catch (error) {
       console.error('Error fetching product details:', error);
@@ -67,7 +68,7 @@ const ViewProduct: React.FC<ViewProductProps> = ({
         <Button 
           type="primary" 
           icon={<EditOutlined />} 
-          onClick={() => onEdit(productId)}
+          onClick={() => onEdit(product)}
           className="bg-[#8B7156] hover:bg-[#64503C]"
         >
           Chỉnh sửa
@@ -86,7 +87,7 @@ const ViewProduct: React.FC<ViewProductProps> = ({
 
           <div className="md:col-span-2">
             <Descriptions title="Thông tin cơ bản" bordered column={1} size="middle">
-              <Descriptions.Item label="ID sản phẩm">{product.id}</Descriptions.Item>
+              {/* <Descriptions.Item label="ID sản phẩm">{product.id}</Descriptions.Item> */}
               <Descriptions.Item label="Tên sản phẩm">{product.title}</Descriptions.Item>
               <Descriptions.Item label="Danh mục">
                 <Tag color={

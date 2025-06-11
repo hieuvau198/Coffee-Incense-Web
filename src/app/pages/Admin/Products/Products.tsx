@@ -1,91 +1,84 @@
-// src\app\pages\Admin\Products\Products.tsx
-import React, { useState } from 'react';
-import { Card } from 'antd';
-import ProductList from './partials/ProductList';
-import AddProduct from './partials/AddProduct';
-import EditProduct from './partials/EditProduct';
-import ViewProduct from './partials/ViewProduct';
-import ViewProductList from './partials/ViewProductList';
+import React, { useState } from "react";
+import { Card } from "antd";
+import ProductList from "./partials/ProductList";
+import AddProduct from "./partials/AddProduct";
+import ViewProduct from "./partials/ViewProduct";
+import { Product } from "../../../models/product";
 
-
-type ViewMode = 'list' | 'add' | 'edit' | 'view' | 'firebase-list';
-
-const Products: React.FC = () => {
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+const ProductsPage: React.FC = () => {
+  const [isAddVisible, setIsAddVisible] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | number | null>(null);
+  const [viewMode, setViewMode] = useState<'list' | 'add' | 'edit' | 'view'>('list');
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const handleAddClick = () => {
+    setSelectedProductId(null);
+    setSelectedProduct(null);
     setViewMode('add');
+    setIsAddVisible(true);
   };
 
-  const handleEditClick = (productId: string | number) => {
-    setSelectedProductId(productId);
+  const handleEdit = (product: Product) => {
+    if (product.id) {
+      setSelectedProductId(product.id);
+    }
+    setSelectedProduct(product);
     setViewMode('edit');
+    setIsAddVisible(true);
   };
 
-  const handleViewClick = (productId: string | number) => {
+  const handleView = (productId: string | number) => {
     setSelectedProductId(productId);
     setViewMode('view');
   };
 
-  const handleBack = () => {
+  const handleAddBack = () => {
+    setIsAddVisible(false);
     setViewMode('list');
-    setSelectedProductId(null);
   };
 
-  const handleShowFirebaseList = () => setViewMode('firebase-list');
+  const handleViewBack = () => {
+    setViewMode('list');
+  };
 
+  // const handleFormSuccess = () => {
+  //   setIsAddVisible(false);
+  //   setViewMode('list');
+  // };
+
+  // const handleFormCancel = () => {
+  //   setIsAddVisible(false);
+  //   setViewMode('list');
+  // };
 
   return (
-    <Card className="shadow-sm h-full">
+    <div className="space-y-6">
       {viewMode === 'list' && (
-  <>
-    <div className="mb-4 flex gap-2">
-      <button
-        className="bg-lime-500 hover:bg-lime-600 text-white px-4 py-2 rounded"
-        onClick={handleShowFirebaseList}
-      >
-        Xem danh sách (Firebase)
-      </button>
-    </div>
-    <ProductList
-      onAddClick={handleAddClick}
-      onEditClick={handleEditClick}
-      onViewClick={handleViewClick}
-    />
-  </>
-)}
-
-
-      {viewMode === 'add' && (
-        <AddProduct onBack={handleBack} />
+        <Card>
+          <ProductList 
+            onAddClick={handleAddClick}
+            onEdit={handleEdit}
+            onView={handleView}
+          />
+        </Card>
       )}
 
-      {viewMode === 'edit' && selectedProductId && (
-        <EditProduct
-          productId={selectedProductId}
-          onBack={handleBack}
+      {isAddVisible && (
+        <AddProduct
+          product={selectedProduct || undefined}
+          onBack={handleAddBack}
         />
       )}
 
       {viewMode === 'view' && selectedProductId && (
         <ViewProduct
           productId={selectedProductId}
-          onBack={handleBack}
-          onEdit={handleEditClick}
+          onBack={handleViewBack}
+          onEdit={handleEdit}
         />
       )}
-
-      {viewMode === 'firebase-list' && (
-  <ViewProductList
-    onBack={handleBack}
-    onViewClick={handleViewClick}
-    onEditClick={handleEditClick}
-  />
-)}
-
-    </Card>
+    </div>
   );
 };
 
-export default Products;
+export default ProductsPage; 

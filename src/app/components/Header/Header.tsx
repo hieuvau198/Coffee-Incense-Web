@@ -54,7 +54,7 @@ const Header = () => {
         <Link to="/profile">Thông tin cá nhân</Link>
       </Menu.Item>
       <Menu.Item key="orders">
-        <Link to="/orders">Đơn mua</Link>
+        <Link to="/cart">Đơn mua</Link>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout" onClick={handleLogout}>

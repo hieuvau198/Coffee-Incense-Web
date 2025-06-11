@@ -1,11 +1,24 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Checkbox, Modal } from "antd";
-import { Link } from "react-router";
+import { Button, Form, Input, Checkbox, Modal, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
+import { signUp } from "../../modules/firebase/auth";
 
 const Register: React.FC = () => {
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const onFinish = async (values: any) => {
+    try {
+      const { email, password, firstName, lastName, phone } = values;
+      await signUp(email, password, { firstName, lastName, phone });
+      message.success("Đăng ký thành công! Vui lòng đăng nhập.");
+      navigate("/login");
+    } catch (error: any) {
+      message.error(error.message || "Đăng ký thất bại!");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -60,6 +73,7 @@ const Register: React.FC = () => {
               name="register"
               layout="vertical"
               scrollToFirstError
+              onFinish={onFinish}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Form.Item

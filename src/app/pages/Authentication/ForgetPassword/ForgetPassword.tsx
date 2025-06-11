@@ -1,15 +1,21 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Alert } from "antd";
+import { Button, Form, Input, Alert, message } from "antd";
 import { Link } from "react-router";
 import { MailOutlined } from "@ant-design/icons";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../../../modules/firebase/firebase";
 
 const ForgetPassword: React.FC = () => {
   const [form] = Form.useForm();
   const [submitted, setSubmitted] = useState(false);
 
-  const onFinish = (values: any) => {
-    console.log("Received values:", values);
-    setSubmitted(true);
+  const onFinish = async (values: any) => {
+    try {
+      await sendPasswordResetEmail(auth, values.email);
+      setSubmitted(true);
+    } catch (error: any) {
+      message.error(error.message || "Không thể gửi email đặt lại mật khẩu!");
+    }
   };
 
   return (

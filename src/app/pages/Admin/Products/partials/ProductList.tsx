@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Input, Select, Space, Table, Tag, message, Card } from 'antd';
-import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { Input, Select, Space, Table, Tag, message, Card, Popconfirm, Image, Button } from 'antd';
+import { DeleteOutlined, EditOutlined, EyeOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { Product } from '../../../../models/product';
 import { productService } from '../../../../services/productService';
+import { useProductCrud } from '../../../../hooks/generalCrud';
 
 interface ProductListProps {
   onAddClick: () => void;
-  onEditClick: (productId: string | number) => void;
-  onViewClick: (productId: string | number) => void;
+  onEdit: (product: Product) => void;
+  onView: (productId: string) => void;
 }
 
-const ProductList: React.FC<ProductListProps> = ({ onAddClick, onEditClick, onViewClick }) => {
+const ProductList: React.FC<ProductListProps> = ({ onAddClick, onEdit, onView }) => {
+  const { deleteProduct, subscribeToProducts } = useProductCrud();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>('');
@@ -19,22 +21,12 @@ const ProductList: React.FC<ProductListProps> = ({ onAddClick, onEditClick, onVi
   const [categories, setCategories] = useState<{ value: string | number; label: string }[]>([]);
 
   useEffect(() => {
-    fetchProducts();
-    fetchCategories();
-  }, []);
-
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      const data = await productService.getAllProducts();
-      setProducts(data);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      message.error('Không thể tải danh sách sản phẩm');
-    } finally {
+    const unsubscribe = subscribeToProducts((updatedProducts) => {
+      setProducts(updatedProducts);
       setLoading(false);
-    }
-  };
+    });
+    return () => unsubscribe();
+  }, [subscribeToProducts]);
 
   const fetchCategories = async () => {
     try {
@@ -50,13 +42,10 @@ const ProductList: React.FC<ProductListProps> = ({ onAddClick, onEditClick, onVi
     }
   };
 
-  const handleDelete = async (id: string | number) => {
+  const handleDelete = async (id: string) => {
     try {
-      // Simulate API call
-      // In a real app, you would call an API endpoint
+      await deleteProduct(id);
       message.success('Xóa sản phẩm thành công');
-      // Refresh the product list after deletion
-      fetchProducts();
     } catch (error) {
       message.error('Có lỗi xảy ra khi xóa sản phẩm');
     }
@@ -74,9 +63,7 @@ const ProductList: React.FC<ProductListProps> = ({ onAddClick, onEditClick, onVi
     const matchSearch = !searchText 
       || product.title?.toLowerCase().includes(searchText.toLowerCase())
       || product.description?.toLowerCase().includes(searchText.toLowerCase());
-    
     const matchCategory = !categoryFilter || product.category === categoryFilter;
-    
     return matchSearch && matchCategory;
   });
 
@@ -87,10 +74,12 @@ const ProductList: React.FC<ProductListProps> = ({ onAddClick, onEditClick, onVi
       key: 'image',
       width: 120,
       render: (image: string) => (
-        <img 
-          src={image || 'https://placehold.co/80x80?text=No+Image'} 
-          alt="Product" 
-          className="w-20 h-20 object-cover rounded"
+        <Image
+          src={image || 'https://placehold.co/80x80?text=No+Image'}
+          alt="Product"
+          width={50}
+          height={50}
+          style={{ objectFit: 'cover' }}
           onError={(e) => {
             (e.target as HTMLImageElement).src = 'https://placehold.co/80x80?text=Error';
           }}
@@ -158,31 +147,37 @@ const ProductList: React.FC<ProductListProps> = ({ onAddClick, onEditClick, onVi
     {
       title: 'Thao tác',
       key: 'action',
-      width: 200,
+      width: 160,
+      align: 'center',
       render: (_, record) => (
-        <Space size="small">
+        <Space size="middle">
           <Button
-            icon={<EyeOutlined />}
-            onClick={() => onViewClick(record.id || 0)}
+            type="text"
+            icon={<EyeOutlined className="text-lg" />}
+            onClick={() => onView(record.id?.toString() || '')}
           />
           <Button
-            icon={<EditOutlined />}
-            onClick={() => onEditClick(record.id || 0)}
+            type="text"
+            icon={<EditOutlined className="text-lg" />}
+            onClick={() => onEdit(record)}
           />
-          <Button
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.id || 0)}
-          />
+          <Popconfirm
+            title="Bạn có chắc chắn muốn xóa sản phẩm này?"
+            onConfirm={() => handleDelete(record.id?.toString() || '')}
+            okText="Có"
+            cancelText="Không"
+          >
+            <Button type="text" danger icon={<DeleteOutlined className="text-lg" />} />
+          </Popconfirm>
         </Space>
       ),
     },
   ];
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Danh sách sản phẩm</h1>
+    <div className="space-y-4 w-full overflow-x-hidden">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Quản Lý Sản Phẩm</h1>
         <Button
           type="primary"
           icon={<PlusOutlined />}
@@ -192,9 +187,8 @@ const ProductList: React.FC<ProductListProps> = ({ onAddClick, onEditClick, onVi
           Thêm sản phẩm
         </Button>
       </div>
-      
-      <Card className="mb-4">
-        <div className="flex flex-wrap gap-4">
+      <Card className="mb-4 shadow-sm">
+        <div className="flex flex-wrap gap-4 max-w-full">
           <Input
             placeholder="Tìm kiếm sản phẩm..."
             prefix={<SearchOutlined />}
@@ -202,7 +196,6 @@ const ProductList: React.FC<ProductListProps> = ({ onAddClick, onEditClick, onVi
             onChange={(e) => handleSearch(e.target.value)}
             style={{ width: 250 }}
           />
-          
           <Select
             placeholder="Lọc theo danh mục"
             style={{ width: 200 }}
@@ -216,14 +209,25 @@ const ProductList: React.FC<ProductListProps> = ({ onAddClick, onEditClick, onVi
           />
         </div>
       </Card>
-      
-      <Table
-        columns={columns}
-        dataSource={filteredProducts}
-        rowKey="id"
-        loading={loading}
-        pagination={{ pageSize: 10, showSizeChanger: true }}
-      />
+      <Card className="shadow-sm">
+        <Table
+          columns={columns}
+          dataSource={filteredProducts}
+          rowKey="id"
+          loading={loading}
+          pagination={{ 
+            pageSize: 10,
+            showSizeChanger: true,
+            position: ['bottomRight'],
+            showTotal: (total) => `Tổng số ${total} sản phẩm`
+          }}
+          scroll={{ x: 1200 }}
+          className="overflow-x-auto"
+          size="middle"
+          bordered={false}
+          rowClassName={(record, index) => index % 2 === 0 ? 'bg-[#FAFAFA]' : ''}
+        />
+      </Card>
     </div>
   );
 };

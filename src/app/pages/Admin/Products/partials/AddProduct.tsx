@@ -12,27 +12,41 @@ import {
 } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { productService } from "../../../../services/productService";
-import { ProductCategory } from "../../../../models/product";
+import { Product, ProductCategory } from "../../../../models/product";
 import { useProductCrud } from "../../../../hooks/generalCrud";
 import { parseSpecifications } from "../../../../utils/parseSpecifications";
-
 
 const { Option } = Select;
 const { TextArea } = Input;
 
 interface AddProductProps {
   onBack: () => void;
+  product?: Product;
 }
 
-const AddProduct: React.FC<AddProductProps> = ({ onBack }) => {
+const AddProduct: React.FC<AddProductProps> = ({ onBack, product }) => {
   const [form] = Form.useForm();
   const [categories, setCategories] = useState<ProductCategory[]>([]);
   const [submitting, setSubmitting] = useState<boolean>(false);
-const { createProduct } = useProductCrud();
+  const { createProduct, updateProduct } = useProductCrud();
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+    if (product) {
+      // Fill form when editing
+      form.setFieldsValue({
+        ...product,
+        specifications: product.specifications
+          ? Object.entries(product.specifications)
+              .map(([key, value]) => `${key}: ${value}`)
+              .join("\n")
+          : undefined,
+      });
+    } else {
+      form.resetFields();
+    }
+    // eslint-disable-next-line
+  }, [product]);
 
   const fetchCategories = async () => {
     try {
@@ -45,24 +59,28 @@ const { createProduct } = useProductCrud();
   };
 
   const handleSubmit = async (values: any) => {
-  setSubmitting(true);
-  try {
-    const product = {
-      ...values,
-      specifications: parseSpecifications(values.specifications),
-    };
-    await createProduct(product);
-    message.success("Thêm sản phẩm thành công");
-    form.resetFields();
-    onBack();
-  } catch (error: any) {
-    console.error("Error adding product:", error);
-    message.error("Không thể thêm sản phẩm");
-  } finally {
-    setSubmitting(false);
-  }
-};
-
+    setSubmitting(true);
+    try {
+      const productData = {
+        ...values,
+        specifications: parseSpecifications(values.specifications),
+      };
+      if (product && product.id) {
+        await updateProduct(product.id as string, productData);
+        message.success("Cập nhật sản phẩm thành công");
+      } else {
+        await createProduct(productData);
+        message.success("Thêm sản phẩm thành công");
+      }
+      form.resetFields();
+      onBack();
+    } catch (error: any) {
+      console.error("Error saving product:", error);
+      message.error(product ? "Không thể cập nhật sản phẩm" : "Không thể thêm sản phẩm");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -70,7 +88,7 @@ const { createProduct } = useProductCrud();
         <Button icon={<ArrowLeftOutlined />} onClick={onBack}>
           Quay lại
         </Button>
-        <h1 className="text-2xl font-bold">Thêm sản phẩm mới</h1>
+        <h1 className="text-2xl font-bold">{product ? "Sửa sản phẩm" : "Thêm sản phẩm mới"}</h1>
       </div>
 
       <Card className="shadow-sm">
@@ -184,9 +202,7 @@ const { createProduct } = useProductCrud();
                 extra="Nhập theo định dạng: Tên thông số: Giá trị (mỗi thông số trên một dòng)"
               >
                 <TextArea
-                  placeholder="Ví dụ:
-Xuất xứ: Việt Nam
-Thành phần: Cà phê nguyên chất, hương liệu tự nhiên"
+                  placeholder={`Ví dụ:\nXuất xứ: Việt Nam\nThành phần: Cà phê nguyên chất, hương liệu tự nhiên`}
                   autoSize={{ minRows: 4, maxRows: 8 }}
                 />
               </Form.Item>
@@ -201,7 +217,7 @@ Thành phần: Cà phê nguyên chất, hương liệu tự nhiên"
               loading={submitting}
               className="bg-[#8B7156] hover:bg-[#64503C]"
             >
-              Thêm sản phẩm
+              {product ? "Cập nhật sản phẩm" : "Thêm sản phẩm"}
             </Button>
           </div>
         </Form>

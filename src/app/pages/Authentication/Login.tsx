@@ -1,10 +1,19 @@
 import React from "react";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, message } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router";
-import { FaGoogle, FaFacebook } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
+import { useEmailLogin } from "../../hooks/useEmailLogin";
+import { useGoogleLogin } from "../../hooks/useGoogleLogin";
 
 const Login: React.FC = () => {
+  const { loginWithEmail } = useEmailLogin();
+  const { loginWithGoogle } = useGoogleLogin();
+
+  const onFinish = (values: any) => {
+    loginWithEmail(values.email, values.password);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Left side - image */}
@@ -58,6 +67,7 @@ const Login: React.FC = () => {
               initialValues={{ remember: true }}
               className="space-y-6"
               layout="vertical"
+              onFinish={onFinish}
             >
               <Form.Item
                 name="email"
@@ -116,6 +126,12 @@ const Login: React.FC = () => {
                   Đăng Nhập
                 </Button>
               </Form.Item>
+              <div className="text-center mt-4">
+                <span>Bạn chưa có tài khoản? </span>
+                <Link to="/register" className="font-medium text-amber-700 hover:text-amber-600">
+                  Đăng ký ngay
+                </Link>
+              </div>
             </Form>
 
             <div className="mt-6">
@@ -130,24 +146,14 @@ const Login: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                <div>
-                  <a
-                    href="#"
-                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
-                    <FaFacebook className="h-5 w-5 text-blue-600" />
-                  </a>
-                </div>
-
-                <div>
-                  <a
-                    href="#"
-                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
-                    <FaGoogle className="h-5 w-5 text-red-600" />
-                  </a>
-                </div>
+              <div className="mt-6 grid grid-cols-1 gap-3">
+                <Button
+                  onClick={loginWithGoogle}
+                  className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                  icon={<FaGoogle className="h-5 w-5 text-red-600" />}
+                >
+                  Đăng nhập với Google
+                </Button>
               </div>
             </div>
           </div>
