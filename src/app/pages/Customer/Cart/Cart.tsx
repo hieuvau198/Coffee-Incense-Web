@@ -24,68 +24,24 @@ import {
   SafetyOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-
-// Define types for cart items
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-  description: string;
-  inStock: boolean;
-}
+import { useCart } from '../../../context/CartContext';
+import { CartItem } from '../../../models/cart';
 
 const CartPage: React.FC = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "Nhang Hương Cà Phê Robusta",
-      price: 45000,
-      quantity: 2,
-      image: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=400&fit=crop",
-      description: "Nhang hương tự nhiên từ bã cà phê Robusta - Hương thơm dịu nhẹ",
-      inStock: true
-    },
-    {
-      id: 2,
-      name: "Nhang Hương Cà Phê Arabica",
-      price: 65000,
-      quantity: 1,
-      image: "https://images.unsplash.com/photo-1587734195503-904fca47e0d9?w=400&h=400&fit=crop",
-      description: "Nhang hương cao cấp từ bã cà phê Arabica - Hương thơm tinh tế",
-      inStock: true
-    },
-    {
-      id: 3,
-      name: "Combo Nhang Hương Tết",
-      price: 120000,
-      quantity: 1,
-      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
-      description: "Bộ combo đặc biệt cho dịp Tết - Gồm 3 loại hương khác nhau",
-      inStock: true
-    }
-  ]);
+  const { cartItems, updateQuantity: updateCartQuantity, removeFromCart } = useCart();
 
   const [promoCode, setPromoCode] = useState<string>('');
   const [shippingMethod, setShippingMethod] = useState<string>('standard');
   const navigate = useNavigate();
 
-  const updateQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      removeItem(id);
-    } else {
-      setCartItems(items =>
-        items.map(item =>
-          item.id === id ? { ...item, quantity: newQuantity } : item
-        )
-      );
+  const handleUpdateQuantity = (productId: string, newQuantity: number | null) => {
+    if (newQuantity !== null) {
+      updateCartQuantity(productId, newQuantity);
     }
   };
 
-  const removeItem = (id: number) => {
-    setCartItems(items => items.filter(item => item.id !== id));
-    message.success('Đã xóa sản phẩm khỏi giỏ hàng');
+  const handleRemoveItem = (productId: string) => {
+    removeFromCart(productId);
   };
 
   const applyPromoCode = () => {
@@ -158,16 +114,16 @@ const CartPage: React.FC = () => {
           <div className="lg:col-span-2 space-y-6">
             {cartItems.map((item) => (
               <Card 
-                key={item.id}
+                key={item.productId}
                 className="bg-white shadow-md border-0 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300"
-                bodyStyle={{ background: '#fff' }}
+                styles={{ body: { background: '#fff' } }}
               >
                 <div className="flex items-center space-x-4 p-4">
                   {/* Product Image */}
                   <div className="flex-shrink-0">
                     <img
-                      src={item.image}
-                      alt={item.name}
+                      src={item.productImage}
+                      alt={item.productTitle}
                       className="w-24 h-24 object-cover rounded-lg border border-[#8B7156]/10"
                     />
                   </div>
@@ -177,23 +133,19 @@ const CartPage: React.FC = () => {
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <h3 className="text-lg font-semibold text-[#2D2424] mb-1">
-                          {item.name}
+                          {item.productTitle}
                         </h3>
-                        <p className="text-[#8B7156]/80 text-sm mb-2 line-clamp-2">
-                          {item.description}
-                        </p>
-                        {item.inStock ? (
-                          <Tag color="green">Còn hàng</Tag>
-                        ) : (
-                          <Tag color="red">Hết hàng</Tag>
-                        )}
+                        {/* <p className="text-[#8B7156]/80 text-sm mb-2 line-clamp-2"> */}
+                        {/* Description is not in CartItem model, remove if not needed */}
+                        {/* </p> */}
+                        {/* <Tag color="green">Còn hàng</Tag> */}
                       </div>
                       <Tooltip title="Xóa sản phẩm">
                         <Button
                           type="text"
                           danger
                           icon={<DeleteOutlined />}
-                          onClick={() => removeItem(item.id)}
+                          onClick={() => handleRemoveItem(item.productId)}
                           className="hover:bg-red-50 p-2"
                         />
                       </Tooltip>
@@ -207,7 +159,7 @@ const CartPage: React.FC = () => {
                           min={1}
                           max={99}
                           value={item.quantity}
-                          onChange={(value) => updateQuantity(item.id, value || 1)}
+                          onChange={(value) => handleUpdateQuantity(item.productId, value)}
                           className="w-20"
                           size="small"
                         />
@@ -237,7 +189,7 @@ const CartPage: React.FC = () => {
                 </div>
               }
               className="bg-white shadow-md border-0 rounded-xl"
-              bodyStyle={{ background: '#fff' }}
+              styles={{ body: { background: '#fff' } }}
             >
               <Radio.Group 
                 value={shippingMethod} 
@@ -281,7 +233,7 @@ const CartPage: React.FC = () => {
                   </span>
                 }
                 className="bg-white shadow-md border-0 rounded-xl"
-                bodyStyle={{ background: '#fff' }}
+                styles={{ body: { background: '#fff' } }}
               >
                 <div className="space-y-4">
                   {/* Order Details */}
@@ -350,6 +302,7 @@ const CartPage: React.FC = () => {
                     icon={<CreditCardOutlined />}
                     className="w-full h-12 bg-[#8B7156] border-[#8B7156] hover:bg-[#64503C] hover:border-[#64503C] text-lg font-semibold rounded-xl"
                     disabled={total === 0}
+                    onClick={() => navigate('/checkout')}
                   >
                     Tiến hành thanh toán
                   </Button>
@@ -370,7 +323,7 @@ const CartPage: React.FC = () => {
                   <span className="text-[#2D2424]">Khách hàng nói gì</span>
                 }
                 className="bg-white shadow-md border-0 rounded-xl"
-                bodyStyle={{ background: '#fff' }}
+                styles={{ body: { background: '#fff' } }}
               >
                 <div className="space-y-4">
                   <div className="border-l-4 border-[#8B7156] pl-4">

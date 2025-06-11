@@ -1,8 +1,8 @@
 // src\app\routes\MainRoutes.tsx
 
-import { Navigate, Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
-import Bookings from "../pages/Admin/Bookings/Bookings";
+import Orders from "../pages/Admin/Bookings/Orders";
 import Customers from "../pages/Admin/Customers/Customers";
 import Dashboard from "../pages/Admin/Dashboard/Dashboard";
 import Payments from "../pages/Admin/Payments/Payments";
@@ -22,21 +22,26 @@ import AboutUs from "../pages/Customer/AboutUs/AboutUs";
 import ForgetPassword from "../pages/Authentication/ForgetPassword/ForgetPassword";
 import CartPage from "../pages/Customer/Cart/Cart";
 import Profile from "../pages/Customer/Profile/Profile";
+import CheckoutPage from "../pages/Customer/Checkout/Checkout";
+import OrderConfirmation from "../pages/Customer/Checkout/OrderConfirmation";
+import OrderSuccess from '../pages/Customer/Checkout/OrderSuccess';
 
 const MainRoutes = () => {
   return (
     <Routes>
-      <Route path="/">
-        <Route path="/" element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="products" element={<ProductList />} />
-          <Route path="product-detail" element={<ProductDetail />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="blogs" element={<Blog />} />
-          <Route path="about" element={<AboutUs />} />
-          <Route path="cart" element={<CartPage />} />
-          <Route path="profile" element={<Profile />} />
-        </Route>
+      {/* Customer routes */}
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="products" element={<ProductList />} />
+        <Route path="product-detail" element={<ProductDetail />} />
+        <Route path="contact" element={<Contact />} />
+        <Route path="blogs" element={<Blog />} />
+        <Route path="about" element={<AboutUs />} />
+        <Route path="cart" element={<CartPage />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path="checkout" element={<CheckoutPage />} />
+        <Route path="order-confirmation" element={<OrderConfirmation />} />
+        <Route path="/order-success" element={<OrderSuccess />} /> 
       </Route>
 
       {/* Authentication routes */}
@@ -48,14 +53,15 @@ const MainRoutes = () => {
       <Route path="" element={<AdminLayout />}>
         <Route path="" element={<Navigate to="/dashboard" />} />
         <Route path="dashboard" element={<Dashboard />} />
-        <Route path="bookings" element={<Bookings />} />
+        <Route path="orders" element={<Orders />} />
         <Route path="product" element={<Products />} />
         <Route path="customers" element={<Customers />} />
         <Route path="payments" element={<Payments />} />
         <Route path="reviews" element={<Reviews />} />
         <Route path="settings" element={<Settings />} />
       </Route>
-      
+
+      {/* 404 route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

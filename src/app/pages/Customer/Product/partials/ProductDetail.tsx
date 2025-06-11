@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router";
 import { Tabs, Button, Divider, Spin } from "antd";
 import { Product } from "../../../../models/product";
 import { useProductCrud } from "../../../../hooks/generalCrud";
+import { useCart } from "../../../../context/CartContext";
 
 const { TabPane } = Tabs;
 
@@ -15,6 +16,7 @@ const ProductDetail = () => {
   const [activeTab, setActiveTab] = useState<string>("1");
   const [quantity, setQuantity] = useState<number>(1);
   const { getProduct } = useProductCrud();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -46,8 +48,15 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    console.log("Added to cart:", product?.title, "Quantity:", quantity);
-    // Add your cart logic here
+    if (product) {
+      addToCart({
+        productId: product.id?.toString() || '',
+        productTitle: product.title || '',
+        productImage: product.image || '',
+        price: product.price || 0,
+        quantity: quantity,
+      });
+    }
   };
 
   if (loading) {

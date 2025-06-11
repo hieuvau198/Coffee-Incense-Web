@@ -64,9 +64,9 @@ const Sidebar = () => {
     },
     {
       label: "Quản Lý Đơn Hàng",
-      key: "/bookings",
-      path: "/bookings",
-      className: selectedKey === "/bookings" ? activeItemStyle : itemStyle,
+      key: "/orders",
+      path: "/orders",
+      className: selectedKey === "/orders" ? activeItemStyle : itemStyle,
       icon: <ShoppingCartOutlined />,
     },
     {

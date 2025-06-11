@@ -9,13 +9,15 @@ import { useAuth } from "../../context/AuthContext"; // ADJUST PATH as needed
 import { doSignOut } from "../../modules/firebase/auth"; // for logout
 import { UserOutlined } from "@ant-design/icons";
 import { useState, useRef, useEffect } from "react";
-import { productService } from "../../services/productService";
-import { Product } from "../../models/product";
+import { Product } from "../../models/product"; // Re-add Product import
+import { useProductCrud } from "../../hooks/generalCrud";
+import { useCart } from "../../context/CartContext"; // Import useCart
 
 
 const Header = () => {
   const navigate = useNavigate();
   const { user, userData, loading } = useAuth();
+  const { totalItems } = useCart(); // Get totalItems from useCart
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -24,6 +26,7 @@ const Header = () => {
   const [showResults, setShowResults] = useState(false);
   const searchInputRef = useRef<any>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+  const { getAllProducts } = useProductCrud(); // Destructure getAllProducts
 
   const handleLogout = async () => {
     await doSignOut();
@@ -83,7 +86,7 @@ const Header = () => {
     
     setSearchLoading(true);
     setShowResults(true);
-    const allProducts = await productService.getAllProducts();
+    const allProducts = await getAllProducts(); // Use getAllProducts from useProductCrud
     const filtered = allProducts.filter(
       (p) =>
         (p.title?.toLowerCase().includes(value.toLowerCase()) ||
@@ -113,9 +116,7 @@ const Header = () => {
         <div className="flex justify-between items-center h-24">
           {/* Logo */}
           <div className="flex-shrink-0 ml-0 md:ml-6 w-28 md:w-40">
-            <Link to="/">
-              <Logo className="text-[#8B7156] w-full" />
-            </Link>
+            <Logo className="text-[#8B7156] w-full" />
           </div>
           
           {/* Navigation - Center */}
@@ -229,7 +230,7 @@ const Header = () => {
             >
               <FiShoppingCart className="w-6 h-6" />
               <span className="absolute -top-2 -right-2 bg-[#8B7156] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                0
+                {totalItems}
               </span>
             </button>
             
@@ -285,14 +286,14 @@ const Header = () => {
       
       {/* Mobile Drawer Menu */}
       <Drawer
-        title={<Link to="/"><Logo className="text-[#8B7156] w-32" /></Link>}
+        title={<Logo className="text-[#8B7156] w-32" />}
         placement="left"
         closable={true}
         onClose={() => setMobileMenuOpen(false)}
         open={mobileMenuOpen}
         width={260}
         className="lg:hidden"
-        bodyStyle={{ padding: 0 }}
+        styles={{ body: { padding: 0 } }}
       >
         <nav className="flex flex-col space-y-2 mt-4">
           {menuItems.map((item) => (
