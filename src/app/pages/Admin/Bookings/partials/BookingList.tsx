@@ -1,153 +1,125 @@
-import React, { useState } from 'react';
-import { Button, Tag, Input, Select, DatePicker, Table, Card } from 'antd';
-import { SearchOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
+import { Button, Tag, Input, Select, DatePicker, Table, Card, Popconfirm, Space, message } from 'antd';
+import { SearchOutlined, PlusOutlined, EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
+import { Booking, BookingStatus } from '../../../../models/booking';
+import { useBookingCrud } from '../../../../hooks/useBookingCrud';
 
 const { RangePicker } = DatePicker;
 
-interface BookingData {
-  key: string;
-  orderId: string;
-  customerName: string;
-  products: string;
-  date: string;
-  status: 'completed' | 'processing' | 'cancelled';
-  amount: number;
-  paymentStatus: 'paid' | 'pending' | 'refunded';
-}
-
 interface BookingListProps {
-  onAddOrder: () => void;
-  onViewOrder: (id: string) => void;
-  onEditOrder: (id: string) => void;
-  handleDelete: (id: string) => void;
+  onAddBooking: () => void;
+  onViewBooking: (bookingId: string) => void;
+  onEditBooking: (booking: Booking) => void;
 }
 
-const BookingList: React.FC<BookingListProps> = ({ 
-  onAddOrder, 
-  onViewOrder, 
-  onEditOrder,
-  handleDelete
+const BookingList: React.FC<BookingListProps> = ({
+  onAddBooking,
+  onViewBooking,
+  onEditBooking,
 }) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const { bookings, loading, error, subscribeToBookings, deleteBooking } = useBookingCrud();
   const [searchText, setSearchText] = useState<string>('');
-  const [statusFilter, setStatusFilter] = useState<string>('');
-  const [paymentFilter, setPaymentFilter] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<BookingStatus | '' | undefined>('');
   const [dateRange, setDateRange] = useState<[string, string] | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToBookings((updatedBookings) => {
+    });
+    return () => unsubscribe();
+  }, [subscribeToBookings]);
 
   const handleSearch = (value: string) => {
     setSearchText(value);
   };
 
-  const handleStatusFilter = (value: string) => {
+  const handleStatusFilter = (value: BookingStatus | '' | undefined) => {
     setStatusFilter(value);
-  };
-
-  const handlePaymentFilter = (value: string) => {
-    setPaymentFilter(value);
   };
 
   const handleDateRangeChange = (dates: any, dateStrings: [string, string]) => {
     setDateRange(dateStrings);
   };
 
-  const confirmDelete = (id: string) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')) {
-      handleDelete(id);
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteBooking(id);
+      message.success("Xóa đặt chỗ thành công");
+    } catch (err) {
+      message.error("Có lỗi xảy ra khi xóa đặt chỗ");
+      console.error(err);
     }
   };
 
-  const columns: ColumnsType<BookingData> = [
+  const filteredBookings = bookings.filter(booking => {
+    const matchSearch = !searchText 
+      || booking.userName.toLowerCase().includes(searchText.toLowerCase())
+      || booking.userEmail.toLowerCase().includes(searchText.toLowerCase())
+      || booking.notes?.toLowerCase().includes(searchText.toLowerCase());
+    
+    const matchStatus = !statusFilter || booking.status === statusFilter;
+    
+    const matchDate = !dateRange || (
+      booking.bookingDate >= dateRange[0] && booking.bookingDate <= dateRange[1]
+    );
+    
+    return matchSearch && matchStatus && matchDate;
+  });
+
+  const columns: ColumnsType<Booking> = [
     {
-      title: 'Mã Đơn Hàng',
-      dataIndex: 'orderId',
-      key: 'orderId',
-      width: 150,
+      title: 'ID Đặt Chỗ',
+      dataIndex: 'id',
+      key: 'id',
+      width: 120,
     },
     {
-      title: 'Khách Hàng',
-      dataIndex: 'customerName',
-      key: 'customerName',
+      title: 'Tên Khách Hàng',
+      dataIndex: 'userName',
+      key: 'userName',
       width: 180,
     },
     {
-      title: 'Sản Phẩm',
-      dataIndex: 'products',
-      key: 'products',
-      width: 250,
-      ellipsis: true,
+      title: 'Email Khách Hàng',
+      dataIndex: 'userEmail',
+      key: 'userEmail',
+      width: 200,
     },
     {
       title: 'Ngày Đặt',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'bookingDate',
+      key: 'bookingDate',
       width: 120,
+      sorter: (a, b) => a.bookingDate.localeCompare(b.bookingDate),
+    },
+    {
+      title: 'Ghi Chú',
+      dataIndex: 'notes',
+      key: 'notes',
+      width: 250,
+      ellipsis: true,
+      render: (text) => text || 'Không có ghi chú',
     },
     {
       title: 'Trạng Thái',
       dataIndex: 'status',
       key: 'status',
       width: 150,
-      render: (status: 'completed' | 'processing' | 'cancelled') => {
-        const colors = {
-          completed: 'green',
-          processing: 'orange',
-          cancelled: 'red',
-        };
-        const labels = {
-          completed: 'HOÀN THÀNH',
-          processing: 'ĐANG XỬ LÝ',
-          cancelled: 'ĐÃ HỦY',
+      render: (status: BookingStatus) => {
+        const colors: Record<BookingStatus, string> = {
+          [BookingStatus.Pending]: 'orange',
+          [BookingStatus.Confirmed]: 'green',
+          [BookingStatus.Cancelled]: 'red',
+          [BookingStatus.Completed]: 'blue',
         };
         return (
           <Tag color={colors[status]} className="text-center">
-            {labels[status]}
+            {status}
           </Tag>
         );
       },
-      filters: [
-        { text: 'Hoàn Thành', value: 'completed' },
-        { text: 'Đang Xử Lý', value: 'processing' },
-        { text: 'Đã Hủy', value: 'cancelled' },
-      ],
+      filters: Object.values(BookingStatus).map(status => ({ text: status, value: status })),
       onFilter: (value, record) => record.status === value,
-    },
-    {
-      title: 'Giá Tiền',
-      dataIndex: 'amount',
-      key: 'amount',
-      width: 140,
-      render: (amount: number) => `${amount.toLocaleString('vi-VN')} VNĐ`,
-      sorter: (a, b) => a.amount - b.amount,
-    },
-    {
-      title: 'Thanh Toán',
-      dataIndex: 'paymentStatus',
-      key: 'paymentStatus',
-      width: 130,
-      render: (status: 'paid' | 'pending' | 'refunded') => {
-        const colors = {
-          paid: 'green',
-          pending: 'orange',
-          refunded: 'blue',
-        };
-        const labels = {
-          paid: 'ĐÃ THANH TOÁN',
-          pending: 'CHƯA THANH TOÁN',
-          refunded: 'ĐÃ HOÀN TIỀN',
-        };
-        return (
-          <Tag color={colors[status]}>
-            {labels[status]}
-          </Tag>
-        );
-      },
-      filters: [
-        { text: 'Đã Thanh Toán', value: 'paid' },
-        { text: 'Chưa Thanh Toán', value: 'pending' },
-        { text: 'Đã Hoàn Tiền', value: 'refunded' },
-      ],
-      onFilter: (value, record) => record.paymentStatus === value,
     },
     {
       title: 'Thao Tác',
@@ -155,71 +127,48 @@ const BookingList: React.FC<BookingListProps> = ({
       width: 120,
       align: 'center',
       render: (_, record) => (
-        <Button 
-          type="text" 
-          icon={<EyeOutlined className="text-lg" />} 
-          onClick={() => onViewOrder(record.orderId)}
-        />
+        <Space size="middle">
+          <Button 
+            type="text" 
+            icon={<EyeOutlined className="text-lg" />} 
+            onClick={() => onViewBooking(record.id as string)}
+          />
+          <Button 
+            type="text" 
+            icon={<EditOutlined className="text-lg" />} 
+            onClick={() => onEditBooking(record)}
+          />
+          <Popconfirm
+            title="Bạn có chắc chắn muốn xóa đặt chỗ này?"
+            onConfirm={() => handleDelete(record.id as string)}
+            okText="Có"
+            cancelText="Không"
+          >
+            <Button type="text" danger icon={<DeleteOutlined className="text-lg" />} />
+          </Popconfirm>
+        </Space>
       ),
     },
   ];
 
-  const data: BookingData[] = [
-    {
-      key: '1',
-      orderId: 'OR001',
-      customerName: 'Nguyễn Văn A',
-      products: 'Hương Cà Phê (2), Nụ Hương Cà Phê (1)',
-      date: '2024-04-15',
-      status: 'completed',
-      amount: 499000,
-      paymentStatus: 'paid',
-    },
-    {
-      key: '2',
-      orderId: 'OR002',
-      customerName: 'Trần Thị B',
-      products: 'Bột Hương Cà Phê (3), Nhang Vòng Cà Phê (2)',
-      date: '2024-05-20',
-      status: 'processing',
-      amount: 780000,
-      paymentStatus: 'pending',
-    }
-  ];
-
-  // Filter data based on search and filters
-  const filteredData = data.filter(item => {
-    const matchSearch = searchText === '' || 
-      item.orderId.toLowerCase().includes(searchText.toLowerCase()) ||
-      item.customerName.toLowerCase().includes(searchText.toLowerCase()) ||
-      item.products.toLowerCase().includes(searchText.toLowerCase());
-    
-    const matchStatus = statusFilter === '' || item.status === statusFilter;
-    const matchPayment = paymentFilter === '' || item.paymentStatus === paymentFilter;
-    
-    // Date range filter logic would go here
-    
-    return matchSearch && matchStatus && matchPayment;
-  });
-
   return (
     <div className="space-y-4 w-full overflow-x-hidden">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Quản Lý Đơn Hàng</h1>
+        <h1 className="text-2xl font-bold">Quản Lý Đặt Chỗ</h1>
         <Button 
           type="primary" 
           icon={<PlusOutlined />}
-          onClick={onAddOrder}
+          onClick={onAddBooking}
           className="bg-[#8B7156] hover:bg-[#64503C]"
         >
-          Tạo Đơn Hàng
+          Tạo Đặt Chỗ
         </Button>
       </div>
 
       <Card className="mb-4 shadow-sm">
         <div className="flex flex-wrap gap-4 max-w-full">
           <Input
-            placeholder="Tìm kiếm đơn hàng..."
+            placeholder="Tìm kiếm đặt chỗ..."
             prefix={<SearchOutlined />}
             value={searchText}
             onChange={(e) => handleSearch(e.target.value)}
@@ -227,51 +176,36 @@ const BookingList: React.FC<BookingListProps> = ({
           />
           
           <Select
-            placeholder="Trạng Thái Đơn Hàng"
+            placeholder="Trạng Thái Đặt Chỗ"
             style={{ width: 200 }}
             allowClear
-            value={statusFilter || undefined}
+            value={statusFilter}
             onChange={handleStatusFilter}
             options={[
               { value: '', label: 'Tất cả trạng thái' },
-              { value: 'completed', label: 'Hoàn Thành' },
-              { value: 'processing', label: 'Đang Xử Lý' },
-              { value: 'cancelled', label: 'Đã Hủy' },
+              ...Object.values(BookingStatus).map(status => ({ value: status, label: status }))
             ]}
           />
           
-          <Select
-            placeholder="Trạng Thái Thanh Toán"
-            style={{ width: 200 }}
-            allowClear
-            value={paymentFilter || undefined}
-            onChange={handlePaymentFilter}
-            options={[
-              { value: '', label: 'Tất cả thanh toán' },
-              { value: 'paid', label: 'Đã Thanh Toán' },
-              { value: 'pending', label: 'Chưa Thanh Toán' },
-              { value: 'refunded', label: 'Đã Hoàn Tiền' },
-            ]}
-          />
-          
-          <RangePicker 
-            placeholder={['Từ Ngày', 'Đến Ngày']}
+          <RangePicker
+            style={{ width: 250 }}
             onChange={handleDateRangeChange}
+            format="YYYY-MM-DD"
           />
         </div>
       </Card>
-      
+
       <Card className="shadow-sm">
         <Table
           columns={columns}
-          dataSource={filteredData}
-          rowKey="key"
+          dataSource={filteredBookings}
+          rowKey="id"
           loading={loading}
           pagination={{ 
             pageSize: 10,
             showSizeChanger: true,
             position: ['bottomRight'],
-            showTotal: (total) => `Tổng số ${total} đơn hàng`
+            showTotal: (total) => `Tổng số ${total} đặt chỗ`
           }}
           scroll={{ x: 1200 }}
           className="overflow-x-auto"
