@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Tag,
   Input,
@@ -8,209 +8,191 @@ import {
   Table,
   Button,
   Space,
+  message,
 } from "antd";
 import {
   SearchOutlined,
   EyeOutlined,
-  PrinterOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
+import { PaymentData } from '@/app/services/paymentService';
+import { paymentService } from '@/app/services/paymentService';
+import { format } from 'date-fns';
 
 const { RangePicker } = DatePicker;
 
-interface PaymentData {
-  key: string;
-  paymentId: string;
-  customer: string;
-  products: string;
-  amount: number;
-  date: string;
-  method: "credit_card" | "paypal" | "bank_transfer" | "momo";
-  status: "completed" | "pending" | "failed" | "refunded";
-}
-
 interface PaymentListProps {
-  onViewPayment: (id: string) => void;
+  onViewPayment: (paymentId: string) => void;
 }
 
 const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
-  const [loading, setLoading] = useState(false);
-  const [searchText, setSearchText] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [methodFilter, setMethodFilter] = useState("");
+  const [payments, setPayments] = useState<PaymentData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchText, setSearchText] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [dateRange, setDateRange] = useState<[string, string] | null>(null);
 
-  const paymentData: PaymentData[] = [
-    {
-      key: "1",
-      paymentId: "PAY-001",
-      customer: "Nguyễn Văn A",
-      products: "Hương Cà Phê (2), Nụ Hương Cà Phê (1)",
-      amount: 499000,
-      date: "15/04/2024",
-      method: "credit_card",
-      status: "completed",
-    },
-    {
-      key: "2",
-      paymentId: "PAY-002",
-      customer: "Trần Thị B",
-      products: "Bột Hương Cà Phê (3), Nhang Vòng Cà Phê (2)",
-      amount: 780000,
-      date: "16/04/2024",
-      method: "paypal",
-      status: "pending",
-    },
-    {
-      key: "3",
-      paymentId: "PAY-003",
-      customer: "Lê Văn C",
-      products: "Hương Sào Cà Phê (4), Hương Khoanh Cà Phê (2)",
-      amount: 650000,
-      date: "17/04/2024",
-      method: "bank_transfer",
-      status: "failed",
-    },
-    {
-      key: "4",
-      paymentId: "PAY-004",
-      customer: "Phạm Thị D",
-      products: "Nhang Vòng Cà Phê (3), Hương Cà Phê (2)",
-      amount: 529000,
-      date: "18/04/2024",
-      method: "momo",
-      status: "refunded",
-    },
-  ];
+  const fetchPayments = async () => {
+    setLoading(true);
+    try {
+      const fetchedPayments = await paymentService.getPayments();
+      console.log("PaymentList.tsx - fetchedPayments:", fetchedPayments);
+      setPayments(fetchedPayments);
+    } catch (error) {
+      console.error('Error fetching payments:', error);
+      message.error('Không thể tải danh sách thanh toán');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handlePrintReceipt = (id: string) => {
-    console.log(`In biên lai thanh toán #${id}`);
+  useEffect(() => {
+    fetchPayments();
+  }, []);
+
+  const handleSearch = (value: string) => {
+    setSearchText(value);
+  };
+
+  const handleStatusFilter = (value: string) => {
+    setStatusFilter(value);
+  };
+
+  const handleDateRangeChange = (dates: any, dateStrings: [string, string]) => {
+    setDateRange(dateStrings);
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'orange';
+      case 'completed':
+        return 'green';
+      case 'failed':
+        return 'red';
+      default:
+        return 'default';
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'Đang chờ';
+      case 'completed':
+        return 'Hoàn thành';
+      case 'failed':
+        return 'Thất bại';
+      default:
+        return status;
+    }
   };
 
   const columns: ColumnsType<PaymentData> = [
     {
-      title: "Mã Thanh Toán",
-      dataIndex: "paymentId",
-      key: "paymentId",
-      width: 150,
+      title: 'ID Thanh Toán',
+      dataIndex: 'id',
+      key: 'id',
+      width: 120,
+      render: (text: string) => `#${text}`,
     },
     {
-      title: "Khách Hàng",
-      dataIndex: "customer",
-      key: "customer",
+      title: 'ID Đơn Hàng',
+      dataIndex: 'orderId',
+      key: 'orderId',
+      width: 120,
+      render: (text: string) => `#${text}`,
+    },
+    {
+      title: 'Tên Khách Hàng',
+      dataIndex: ['customerInfo', 'fullName'],
+      key: 'fullName',
       width: 180,
     },
     {
-      title: "Sản Phẩm",
-      dataIndex: "products",
-      key: "products",
-      width: 250,
-      ellipsis: true,
-    },
-    {
-      title: "Số Tiền",
-      dataIndex: "amount",
-      key: "amount",
-      width: 150,
-      render: (amount: number) =>
-        `${amount.toLocaleString("vi-VN")} VNĐ`,
-      sorter: (a, b) => a.amount - b.amount,
-    },
-    {
-      title: "Ngày Thanh Toán",
-      dataIndex: "date",
-      key: "date",
+      title: 'Số Điện Thoại',
+      dataIndex: ['customerInfo', 'phone'],
+      key: 'phone',
       width: 150,
     },
     {
-      title: "Phương Thức",
-      dataIndex: "method",
-      key: "method",
+      title: 'Số Tiền',
+      dataIndex: 'amount',
+      key: 'amount',
       width: 150,
-      render: (method: string) => {
-        const labels: Record<string, string> = {
-          credit_card: "Thẻ tín dụng",
-          paypal: "PayPal",
-          bank_transfer: "Chuyển khoản",
-          momo: "Ví MoMo",
-        };
-        return labels[method] || method;
-      },
+      render: (amount: number) => `${amount.toLocaleString('vi-VN')} VNĐ`,
+    },
+    {
+      title: 'Ngân Hàng',
+      dataIndex: 'bankName',
+      key: 'bankName',
+      width: 150,
+    },
+    {
+      title: 'Số Tài Khoản',
+      dataIndex: 'accountNumber',
+      key: 'accountNumber',
+      width: 150,
+    },
+    {
+      title: 'Ngày Thanh Toán',
+      dataIndex: 'paymentDate',
+      key: 'paymentDate',
+      width: 150,
+      render: (date: any) => date ? format(date.toDate(), 'dd/MM/yyyy HH:mm') : 'N/A',
+      sorter: (a, b) => (a.paymentDate?.toDate()?.getTime() || 0) - (b.paymentDate?.toDate()?.getTime() || 0),
+    },
+    {
+      title: 'Trạng Thái',
+      dataIndex: 'status',
+      key: 'status',
+      width: 150,
+      render: (status: string) => (
+        <Tag color={getStatusColor(status)}>
+          {getStatusText(status)}
+        </Tag>
+      ),
       filters: [
-        { text: "Thẻ tín dụng", value: "credit_card" },
-        { text: "PayPal", value: "paypal" },
-        { text: "Chuyển khoản", value: "bank_transfer" },
-        { text: "Ví MoMo", value: "momo" },
-      ],
-      onFilter: (value, record) => record.method === value,
-    },
-    {
-      title: "Trạng Thái",
-      dataIndex: "status",
-      key: "status",
-      width: 150,
-      render: (status: string) => {
-        const colors: Record<string, string> = {
-          completed: "green",
-          pending: "orange",
-          failed: "red",
-          refunded: "blue",
-        };
-        const labels: Record<string, string> = {
-          completed: "HOÀN THÀNH",
-          pending: "ĐANG XỬ LÝ",
-          failed: "THẤT BẠI",
-          refunded: "HOÀN TIỀN",
-        };
-        return (
-          <Tag color={colors[status]} className="text-center">
-            {labels[status]}
-          </Tag>
-        );
-      },
-      filters: [
-        { text: "Hoàn thành", value: "completed" },
-        { text: "Đang xử lý", value: "pending" },
-        { text: "Thất bại", value: "failed" },
-        { text: "Hoàn tiền", value: "refunded" },
+        { text: 'Đang chờ', value: 'pending' },
+        { text: 'Hoàn thành', value: 'completed' },
+        { text: 'Thất bại', value: 'failed' },
       ],
       onFilter: (value, record) => record.status === value,
     },
     {
-      title: "Thao Tác",
-      key: "action",
+      title: 'Thao Tác',
+      key: 'action',
       width: 120,
-      align: "center",
-      render: (_, record) => (
-        <Space size="small">
-          <Button
-            type="text"
-            icon={<EyeOutlined className="text-lg" />}
-            onClick={() => onViewPayment(record.key)}
-          />
-          {record.status === "completed" && (
-            <Button
-              type="text"
-              icon={<PrinterOutlined className="text-lg" />}
-              onClick={() => handlePrintReceipt(record.paymentId)}
+      align: 'center',
+      render: (_text: any, record: PaymentData) => {
+        console.log("PaymentList.tsx - Action column render: Full record object:", record);
+        console.log("PaymentList.tsx - Action column render: record.id", record.id);
+        return (
+          <Space size="middle">
+            <Button 
+              type="text" 
+              icon={<EyeOutlined className="text-lg" />} 
+              onClick={() => onViewPayment(record.id as string)}
             />
-          )}
-        </Space>
-      ),
+          </Space>
+        );
+      },
     },
   ];
 
-  const filteredData = paymentData.filter((p) => {
-    const matchSearch =
-      searchText === "" ||
-      p.paymentId.toLowerCase().includes(searchText.toLowerCase()) ||
-      p.customer.toLowerCase().includes(searchText.toLowerCase()) ||
-      p.products.toLowerCase().includes(searchText.toLowerCase());
-
-    const matchStatus = statusFilter === "all" || p.status === statusFilter;
-    const matchMethod = methodFilter === "" || p.method === methodFilter;
-
-    return matchSearch && matchStatus && matchMethod;
+  const filteredPayments = payments.filter(payment => {
+    const matchSearch = !searchText 
+      || payment.customerInfo.fullName.toLowerCase().includes(searchText.toLowerCase())
+      || payment.customerInfo.phone.toLowerCase().includes(searchText.toLowerCase())
+      || payment.orderId.toLowerCase().includes(searchText.toLowerCase());
+    
+    const matchStatus = statusFilter === 'all' || payment.status === statusFilter;
+    
+    const matchDate = !dateRange || (
+      (payment.paymentDate?.toDate() >= new Date(dateRange[0]) && payment.paymentDate?.toDate() <= new Date(dateRange[1]))
+    );
+    
+    return matchSearch && matchStatus && matchDate;
   });
 
   return (
@@ -225,38 +207,28 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
             placeholder="Tìm kiếm thanh toán..."
             prefix={<SearchOutlined />}
             value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
             style={{ width: 250 }}
           />
+          
           <Select
-            placeholder="Trạng thái"
-            style={{ width: 200 }}
-            value={statusFilter}
-            onChange={(value) => setStatusFilter(value)}
-            options={[
-              { value: "all", label: "Tất cả" },
-              { value: "completed", label: "Hoàn thành" },
-              { value: "pending", label: "Đang xử lý" },
-              { value: "failed", label: "Thất bại" },
-              { value: "refunded", label: "Hoàn tiền" },
-            ]}
-          />
-          <Select
-            placeholder="Phương thức"
+            placeholder="Trạng Thái Thanh Toán"
             style={{ width: 200 }}
             allowClear
-            value={methodFilter || undefined}
-            onChange={(value) => setMethodFilter(value)}
+            value={statusFilter}
+            onChange={handleStatusFilter}
             options={[
-              { value: "credit_card", label: "Thẻ tín dụng" },
-              { value: "paypal", label: "PayPal" },
-              { value: "bank_transfer", label: "Chuyển khoản" },
-              { value: "momo", label: "Ví MoMo" },
+              { value: 'all', label: 'Tất cả trạng thái' },
+              { value: 'pending', label: 'Đang chờ' },
+              { value: 'completed', label: 'Hoàn thành' },
+              { value: 'failed', label: 'Thất bại' },
             ]}
           />
+          
           <RangePicker
-            placeholder={["Từ ngày", "Đến ngày"]}
-            onChange={(dates, dateStrings) => setDateRange(dateStrings)}
+            style={{ width: 250 }}
+            onChange={handleDateRangeChange}
+            format="YYYY-MM-DD"
           />
         </div>
       </Card>
@@ -264,20 +236,20 @@ const PaymentList: React.FC<PaymentListProps> = ({ onViewPayment }) => {
       <Card className="shadow-sm">
         <Table
           columns={columns}
-          dataSource={filteredData}
-          rowKey="key"
+          dataSource={filteredPayments}
+          rowKey="id"
           loading={loading}
-          pagination={{
+          pagination={{ 
             pageSize: 10,
             showSizeChanger: true,
-            position: ["bottomRight"],
-            showTotal: (total) => `Tổng ${total} giao dịch`,
+            position: ['bottomRight'],
+            showTotal: (total) => `Tổng số ${total} thanh toán`
           }}
           scroll={{ x: 1200 }}
           className="overflow-x-auto"
           size="middle"
           bordered={false}
-          rowClassName={(_, index) => (index % 2 === 0 ? "bg-[#FAFAFA]" : "")}
+          rowClassName={(record, index) => index % 2 === 0 ? 'bg-[#FAFAFA]' : ''}
         />
       </Card>
     </div>

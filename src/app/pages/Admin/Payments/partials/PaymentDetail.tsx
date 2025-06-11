@@ -1,48 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Typography, Descriptions, Tag, Button, Card, Space, message, Steps, Divider,Row,Col,Statistic,Tabs} from "antd";
-import {ArrowLeftOutlined,CreditCardOutlined,BankOutlined,DollarOutlined,CheckCircleOutlined,ClockCircleOutlined,CloseCircleOutlined,PrinterOutlined,UserOutlined, ShoppingOutlined,ShoppingCartOutlined} from "@ant-design/icons";
+import React, { useState, useEffect } from "react";
+import { Typography, Descriptions, Tag, Button, Card, Space, message, Steps, Divider, Row, Col, Statistic, Select } from "antd";
+import { ArrowLeftOutlined, PrinterOutlined, UserOutlined, BankOutlined, CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import Loading from "@/app/components/Loading";
 import RenderBoldTitle from '@/app/components/RenderBoldTitle';
+import { PaymentData } from '@/app/services/paymentService';
+import { paymentService } from '@/app/services/paymentService';
+import { format } from 'date-fns';
 
 const { Title } = Typography;
-
-interface PaymentData {
-  key: string;
-  paymentId: string;
-  customer: string;
-  customerEmail: string;
-  customerPhone: string;
-  products: {
-    id: string;
-    name: string;
-    quantity: number;
-    price: number;
-  }[];
-  amount: number;
-  date: string;
-  method: "credit_card" | "paypal" | "bank_transfer" | "momo";
-  status: "completed" | "pending" | "failed" | "refunded";
-  cardInfo?: {
-    cardType: string;
-    lastFourDigits: string;
-  };
-  bankInfo?: {
-    bankName: string;
-    accountNumber: string;
-  };
-  transactionId: string;
-  orderDetails: {
-    orderId: string;
-    orderDate: string;
-    shippingAddress: string;
-    note?: string;
-  };
-  refundInfo?: {
-    refundDate: string;
-    refundAmount: number;
-    reason: string;
-  };
-}
 
 interface PaymentDetailProps {
   paymentId: string;
@@ -50,178 +15,85 @@ interface PaymentDetailProps {
 }
 
 const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
+  console.log("PaymentDetail.tsx - Component rendered with paymentId:", paymentId);
   const [payment, setPayment] = useState<PaymentData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
 
-  // In a real app, this would be an API call
   useEffect(() => {
-    setLoading(true);
-    // Simulating API fetch
-    const mockData: Record<string, PaymentData> = {
-      "1": {
-        key: "1",
-        paymentId: "PAY-001",
-        customer: "Nguyễn Văn A",
-        customerEmail: "nguyenvana@example.com",
-        customerPhone: "0901234567",
-        products: [
-          {
-            id: "PRD-001",
-            name: "Hương Cà Phê",
-            quantity: 2,
-            price: 149000
-          },
-          {
-            id: "PRD-002",
-            name: "Nụ Hương Cà Phê",
-            quantity: 1,
-            price: 199000
-          }
-        ],
-        amount: 499000,
-        date: "15/04/2024",
-        method: "credit_card",
-        status: "completed",
-        cardInfo: {
-          cardType: "Visa",
-          lastFourDigits: "4567",
-        },
-        transactionId: "TXN123456789",
-        orderDetails: {
-          orderId: "ORD001",
-          orderDate: "10/04/2024",
-          shippingAddress: "123 Nguyễn Văn Linh, Quận 7, TP.HCM",
-        },
-      },
-      "2": {
-        key: "2",
-        paymentId: "PAY-002",
-        customer: "Trần Thị B",
-        customerEmail: "tranthib@example.com",
-        customerPhone: "0912345678",
-        products: [
-          {
-            id: "PRD-003",
-            name: "Bột Hương Cà Phê",
-            quantity: 3,
-            price: 180000
-          },
-          {
-            id: "PRD-004",
-            name: "Nhang Vòng Cà Phê",
-            quantity: 2,
-            price: 120000
-          }
-        ],
-        amount: 780000,
-        date: "16/04/2024",
-        method: "momo",
-        status: "pending",
-        transactionId: "TXN234567890",
-        orderDetails: {
-          orderId: "ORD002",
-          orderDate: "12/04/2024",
-          shippingAddress: "456 Lê Văn Việt, Quận 9, TP.HCM",
-          note: "Giao hàng giờ hành chính"
-        },
-      },
-      "3": {
-        key: "3",
-        paymentId: "PAY-003",
-        customer: "Lê Văn C",
-        customerEmail: "levanc@example.com",
-        customerPhone: "0923456789",
-        products: [],
-        amount: 6500000,
-        date: "17/04/2024",
-        method: "bank_transfer",
-        status: "failed",
-        bankInfo: {
-          bankName: "Vietcombank",
-          accountNumber: "****7890",
-        },
-        transactionId: "TXN345678901",
-        orderDetails: {
-          orderId: "ORD003",
-          orderDate: "14/04/2024",
-          shippingAddress: "789 Nguyễn Văn Linh, Quận 7, TP.HCM",
-        },
-      },
-      "4": {
-        key: "4",
-        paymentId: "PAY-004",
-        customer: "Phạm Thị D",
-        customerEmail: "phamthid@example.com",
-        customerPhone: "0934567890",
-        products: [],
-        amount: 5290000,
-        date: "18/04/2024",
-        method: "credit_card",
-        status: "refunded",
-        cardInfo: {
-          cardType: "Mastercard",
-          lastFourDigits: "1234",
-        },
-        transactionId: "TXN456789012",
-        orderDetails: {
-          orderId: "ORD004",
-          orderDate: "15/04/2024",
-          shippingAddress: "101 Nguyễn Văn Linh, Quận 7, TP.HCM",
-        },
-        refundInfo: {
-          refundDate: "20/04/2024",
-          refundAmount: 5290000,
-          reason: "Hủy đơn hàng do khách không thể tham gia",
-        },
-      },
-    };
-
-    // Mock API call with setTimeout
-    const fetchData = setTimeout(() => {
-      if (paymentId && mockData[paymentId]) {
-        setPayment(mockData[paymentId]);
-      }
-      setLoading(false);
-    }, 500);
-
-    return () => clearTimeout(fetchData);
+    console.log("PaymentDetail.tsx - useEffect triggered. paymentId:", paymentId);
+    fetchPaymentDetails();
   }, [paymentId]);
 
+  const fetchPaymentDetails = async () => {
+    console.log("PaymentDetail.tsx - fetchPaymentDetails called for paymentId:", paymentId);
+    setLoading(true);
+    try {
+      const paymentData = await paymentService.getPaymentById(paymentId);
+      setPayment(paymentData);
+      console.log("PaymentDetail.tsx - fetchPaymentDetails: Fetched data:", paymentData);
+    } catch (error) {
+      console.error('PaymentDetail.tsx - Error fetching payment details:', error);
+      message.error('Không thể tải thông tin thanh toán');
+    } finally {
+      setLoading(false);
+      console.log("PaymentDetail.tsx - fetchPaymentDetails: Loading set to false.");
+    }
+  };
+
+  const handleStatusChange = async (newStatus: 'pending' | 'completed' | 'failed') => {
+    if (!payment) return;
+
+    setUpdating(true);
+    try {
+      await paymentService.updatePaymentStatus(paymentId, newStatus);
+      message.success('Cập nhật trạng thái thanh toán thành công');
+      fetchPaymentDetails();
+    } catch (error) {
+      console.error('Error updating payment status:', error);
+      message.error('Không thể cập nhật trạng thái thanh toán');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   const handlePrintReceipt = () => {
-    if (payment) {
-      message.success(`Đang in biên lai thanh toán #${payment.paymentId}`);
-      // In a real app, this would open a print dialog or generate a PDF
+    window.print();
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'orange';
+      case 'completed':
+        return 'green';
+      case 'failed':
+        return 'red';
+      default:
+        return 'default';
     }
   };
 
-  const handleApprovePayment = () => {
-    if (payment && payment.status === "pending") {
-      setPayment({ ...payment, status: "completed" });
-      message.success("Thanh toán đã được xác nhận thành công");
-    }
-  };
-
-  const handleRefundPayment = () => {
-    if (payment && payment.status === "completed") {
-      const refundDate = new Date().toLocaleDateString("vi-VN");
-      setPayment({
-        ...payment,
-        status: "refunded",
-        refundInfo: {
-          refundDate,
-          refundAmount: payment.amount,
-          reason: "Hoàn tiền theo yêu cầu của quản trị viên",
-        },
-      });
-      message.success("Đã hoàn tiền thành công");
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'Đang chờ';
+      case 'completed':
+        return 'Hoàn thành';
+      case 'failed':
+        return 'Thất bại';
+      default:
+        return status;
     }
   };
 
   if (loading) {
+    console.log("PaymentDetail.tsx - Displaying Loading component.");
     return <Loading />;
   }
 
   if (!payment) {
+    console.log("PaymentDetail.tsx - Payment data is null. Displaying 'Not found' message.");
     return (
       <div className="text-center p-8">
         <Title level={4}>Không tìm thấy thanh toán</Title>
@@ -232,19 +104,8 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
     );
   }
 
-  const getPaymentMethodIcon = (method: string) => {
-    switch (method) {
-      case "credit_card":
-        return <CreditCardOutlined />;
-      case "bank_transfer":
-        return <BankOutlined />;
-      case "paypal":
-        return <DollarOutlined />;
-      case "momo":
-        return <DollarOutlined />;
-      default:
-        return <DollarOutlined />;
-    }
+  const getPaymentMethodIcon = () => {
+    return <BankOutlined />;
   };
 
   const getPaymentStatusIcon = (status: string) => {
@@ -255,8 +116,6 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
         return <ClockCircleOutlined />;
       case "failed":
         return <CloseCircleOutlined />;
-      case "refunded":
-        return <DollarOutlined />;
       default:
         return <ClockCircleOutlined />;
     }
@@ -270,8 +129,6 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
         return "process";
       case "failed":
         return "error";
-      case "refunded":
-        return "finish";
       default:
         return "wait";
     }
@@ -281,22 +138,15 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
     completed: "green",
     pending: "orange",
     failed: "red",
-    refunded: "blue",
   };
 
   const statusLabels = {
     completed: "Hoàn thành",
     pending: "Đang xử lý",
     failed: "Thất bại",
-    refunded: "Hoàn tiền",
   };
 
-  const methodLabels = {
-    credit_card: "Thẻ tín dụng",
-    paypal: "PayPal",
-    bank_transfer: "Chuyển khoản",
-    momo: "MoMo",
-  };
+  const methodLabel = "Chuyển khoản ngân hàng";
 
   return (
     <div className="space-y-6 p-6">
@@ -319,14 +169,14 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
           <Card variant="borderless" className="sticky top-5">
             <div className="flex flex-col items-center mb-4">
               <div className="bg-blue-50 p-4 rounded-full mb-4">
-                {getPaymentMethodIcon(payment.method)}
+                {getPaymentMethodIcon()} 
               </div>
               <Title level={4} className="mb-0 text-center">
-                {payment.paymentId}
+                #{payment.id}
               </Title>
               <div className="mt-2">
-                <Tag color={statusColors[payment.status as keyof typeof statusColors]} className="px-3 py-1">
-                  {getPaymentStatusIcon(payment.status)} {statusLabels[payment.status as keyof typeof statusLabels]}
+                <Tag color={getStatusColor(payment.status)} className="px-3 py-1">
+                  {getPaymentStatusIcon(payment.status)} {getStatusText(payment.status)}
                 </Tag>
               </div>
             </div>
@@ -350,13 +200,13 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
 
             <Descriptions column={1} size="small">
               <Descriptions.Item label="Phương thức">
-                {methodLabels[payment.method as keyof typeof methodLabels]}
+                {methodLabel}
               </Descriptions.Item>
-              <Descriptions.Item label="Mã giao dịch">
-                {payment.transactionId}
+              <Descriptions.Item label="Mã Đơn Hàng">
+                #{payment.orderId}
               </Descriptions.Item>
-              <Descriptions.Item label="Ngày giao dịch">
-                {payment.date}
+              <Descriptions.Item label="Ngày Thanh Toán">
+                {payment.paymentDate ? format(payment.paymentDate.toDate(), 'dd/MM/yyyy HH:mm') : 'N/A'}
               </Descriptions.Item>
             </Descriptions>
 
@@ -376,7 +226,7 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
                   <Button 
                     type="primary" 
                     icon={<CheckCircleOutlined />} 
-                    onClick={handleApprovePayment}
+                    onClick={() => handleStatusChange("completed")}
                     block
                   >
                     Xác Nhận Thanh Toán
@@ -385,11 +235,21 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
                 {payment.status === "completed" && (
                   <Button 
                     danger 
-                    icon={<DollarOutlined />} 
-                    onClick={handleRefundPayment}
+                    icon={<BankOutlined />} 
+                    onClick={() => handleStatusChange("failed")}
                     block
                   >
-                    Hoàn Tiền
+                    Hủy Thanh Toán
+                  </Button>
+                )}
+                {payment.status === "failed" && (
+                  <Button 
+                    type="primary" 
+                    icon={<ClockCircleOutlined />} 
+                    onClick={() => handleStatusChange("pending")}
+                    block
+                  >
+                    Đánh dấu chờ xử lý
                   </Button>
                 )}
               </Space>
@@ -398,147 +258,105 @@ const PaymentDetail: React.FC<PaymentDetailProps> = ({ paymentId, onBack }) => {
         </div>
 
         <div className="lg:col-span-2">
-          <Card title={RenderBoldTitle("Thông Tin Giao Dịch")} className="mb-6" variant="borderless">
-            <Tabs
-              defaultActiveKey="order"
-              items={[
-                {
-                  key: 'order',
-                  label: RenderBoldTitle('Đơn Hàng'),
-                  children: (
-                    <Descriptions column={1} bordered>
-                      <Descriptions.Item label="Mã đơn hàng">
-                        {payment.orderDetails.orderId}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Sản phẩm">
-                        {payment.products.map((product, index) => (
-                          <div key={product.id} className="flex items-center justify-between mb-2">
-                            <div className="flex items-center">
-                              <ShoppingOutlined className="mr-2" /> 
-                              {product.name} x{product.quantity}
-                            </div>
-                            <div>
-                              {(product.price * product.quantity).toLocaleString("vi-VN")} VNĐ
-                            </div>
-                          </div>
-                        ))}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Địa chỉ giao hàng">
-                        {payment.orderDetails.shippingAddress}
-                      </Descriptions.Item>
-                      {payment.orderDetails.note && (
-                        <Descriptions.Item label="Ghi chú">
-                          {payment.orderDetails.note}
-                        </Descriptions.Item>
-                      )}
-                    </Descriptions>
-                  ),
-                },
-                {
-                  key: 'payment',
-                  label: RenderBoldTitle('Thanh Toán'),
-                  children: (
-                    <Steps
-                      direction="horizontal"
-                      current={payment.status === "failed" ? 1 : 2}
-                      status={getStepStatus(payment.status)}
-                      items={[
-                        {
-                          title: 'Đặt Hàng',
-                          description: payment.orderDetails.orderDate,
-                        },
-                        {
-                          title: 'Thanh Toán',
-                          description: payment.date,
-                          status: payment.status === "failed" ? "error" : "finish",
-                        },
-                        {
-                          title: payment.status === "refunded" ? "Hoàn Tiền" : "Hoàn Tất",
-                          description: payment.status === "refunded" 
-                            ? payment.refundInfo?.refundDate 
-                            : (payment.status === "completed" ? "Giao dịch thành công" : "Chờ xử lý"),
-                          status: payment.status === "pending" ? "wait" : 
-                                  payment.status === "failed" ? "wait" : "finish",
-                        },
-                      ]}
-                    />
-                  ),
-                },
-              ]}
-            />
-
-            <Divider />
-
-            <Title level={5}>Thông Tin Chi Tiết</Title>
+          <Card title={RenderBoldTitle("Thông Tin Chuyển Khoản")} className="mb-6" variant="borderless">
             <Descriptions column={1} bordered>
-              {payment.cardInfo && (
-                <Descriptions.Item label="Thông Tin Thẻ">
-                  {payment.cardInfo.cardType} **** **** **** {payment.cardInfo.lastFourDigits}
-                </Descriptions.Item>
-              )}
-              {payment.bankInfo && (
-                <Descriptions.Item label="Thông Tin Ngân Hàng">
-                  {payment.bankInfo.bankName} - Tài khoản: {payment.bankInfo.accountNumber}
-                </Descriptions.Item>
-              )}
-              {payment.refundInfo && (
-                <>
-                  <Descriptions.Item label="Ngày Hoàn Tiền">
-                    {payment.refundInfo.refundDate}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Số Tiền Hoàn">
-                    {payment.refundInfo.refundAmount.toLocaleString("vi-VN")} VNĐ
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Lý Do Hoàn Tiền">
-                    {payment.refundInfo.reason}
-                  </Descriptions.Item>
-                </>
-              )}
-            </Descriptions>
-          </Card>
-
-          <Card title={RenderBoldTitle("Thông Tin Đơn Hàng")} className="mb-6" variant="borderless">
-            <Descriptions column={1} bordered>
-              <Descriptions.Item label="Mã đơn hàng">
-                {payment.orderDetails.orderId}
+              <Descriptions.Item label="Ngân Hàng">
+                {payment.bankName}
               </Descriptions.Item>
-              <Descriptions.Item label="Sản phẩm">
-                {payment.products.map((product, index) => (
-                  <div key={product.id} className="flex items-center justify-between mb-2">
-                    <div className="flex items-center">
-                      <ShoppingCartOutlined className="mr-2" /> 
-                      {product.name}
-                    </div>
-                    <div>
-                      Số lượng: {product.quantity} | Đơn giá: {product.price.toLocaleString("vi-VN")} VNĐ
-                    </div>
-                  </div>
-                ))}
+              <Descriptions.Item label="Số Tài Khoản">
+                {payment.accountNumber}
               </Descriptions.Item>
-              <Descriptions.Item label="Địa chỉ giao hàng">
-                {payment.orderDetails.shippingAddress}
+              <Descriptions.Item label="Tên Tài Khoản">
+                {payment.accountName}
               </Descriptions.Item>
-              {payment.orderDetails.note && (
-                <Descriptions.Item label="Ghi chú">
-                  {payment.orderDetails.note}
-                </Descriptions.Item>
-              )}
+              <Descriptions.Item label="Nội Dung Chuyển Khoản">
+                {payment.transferContent}
+              </Descriptions.Item>
             </Descriptions>
           </Card>
 
           <Card title={RenderBoldTitle("Thông Tin Khách Hàng")} className="mb-6" variant="borderless">
             <Descriptions column={1} bordered>
               <Descriptions.Item label="Họ và tên">
-                <UserOutlined className="mr-2" /> {payment.customer}
+                <UserOutlined className="mr-2" /> {payment.customerInfo.fullName}
               </Descriptions.Item>
               <Descriptions.Item label="Email">
-                {payment.customerEmail}
+                {payment.customerInfo.email}
               </Descriptions.Item>
               <Descriptions.Item label="Số điện thoại">
-                {payment.customerPhone}
+                {payment.customerInfo.phone}
+              </Descriptions.Item>
+              <Descriptions.Item label="Địa chỉ">
+                {payment.customerInfo.address}
               </Descriptions.Item>
             </Descriptions>
           </Card>
+
+          <Card title={RenderBoldTitle("Tiến Trình Thanh Toán")} className="mb-6" variant="borderless">
+            <Steps
+              direction="horizontal"
+              current={payment.status === "failed" ? 1 : (payment.status === "pending" ? 1 : 2)}
+              status={getStepStatus(payment.status)}
+              items={[
+                {
+                  title: 'Khởi Tạo',
+                  description: payment.paymentDate ? format(payment.paymentDate.toDate(), 'dd/MM/yyyy HH:mm') : 'N/A',
+                  icon: <ClockCircleOutlined />
+                },
+                {
+                  title: 'Xử Lý',
+                  description: payment.status === "pending" ? "Đang chờ xác nhận" : "Đã xử lý",
+                  icon: <ClockCircleOutlined />
+                },
+                {
+                  title: 'Hoàn Thành',
+                  description: payment.status === "completed" ? "Thành công" : (payment.status === "failed" ? "Thất bại" : "Chờ xử lý"),
+                  icon: payment.status === "completed" ? <CheckCircleOutlined /> : <CloseCircleOutlined />
+                },
+              ]}
+            />
+          </Card>
+
+          <Card className="shadow-sm">
+            <Descriptions title="Thông Tin Chuyển Khoản" bordered>
+              <Descriptions.Item label="Ngân Hàng" span={3}>
+                {payment.bankName}
+              </Descriptions.Item>
+              <Descriptions.Item label="Số Tài Khoản" span={3}>
+                {payment.accountNumber}
+              </Descriptions.Item>
+              <Descriptions.Item label="Tên Tài Khoản" span={3}>
+                {payment.accountName}
+              </Descriptions.Item>
+              <Descriptions.Item label="Nội Dung Chuyển Khoản" span={3}>
+                {payment.transferContent}
+              </Descriptions.Item>
+            </Descriptions>
+          </Card>
+
+          <div className="print-only">
+            <Divider />
+            <div className="text-center">
+              <h2>BIÊN LAI THANH TOÁN</h2>
+              <p>Ngày: {payment.paymentDate ? format(payment.paymentDate.toDate(), 'dd/MM/yyyy HH:mm') : 'N/A'}</p>
+              <p>Mã thanh toán: #{payment.id}</p>
+              <p>Mã đơn hàng: #{payment.orderId}</p>
+              <p>Số tiền: {payment.amount.toLocaleString('vi-VN')} VNĐ</p>
+              <p>Trạng thái: {getStatusText(payment.status)}</p>
+              <Divider />
+              <p>Thông tin khách hàng:</p>
+              <p>Họ và tên: {payment.customerInfo.fullName}</p>
+              <p>Số điện thoại: {payment.customerInfo.phone}</p>
+              <p>Email: {payment.customerInfo.email}</p>
+              <p>Địa chỉ: {payment.customerInfo.address}</p>
+              <Divider />
+              <p>Thông tin chuyển khoản:</p>
+              <p>Ngân hàng: {payment.bankName}</p>
+              <p>Số tài khoản: {payment.accountNumber}</p>
+              <p>Tên tài khoản: {payment.accountName}</p>
+              <p>Nội dung: {payment.transferContent}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

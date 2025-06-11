@@ -5,6 +5,8 @@ import { useCart } from '../../../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { orderService } from '../../../services/orderService';
 import { useAuth } from '../../../context/AuthContext';
+import { paymentService, PaymentData } from '../../../services/paymentService';
+import { Timestamp } from 'firebase/firestore';
 
 const { Option } = Select;
 
@@ -97,7 +99,34 @@ const CheckoutPage: React.FC = () => {
       };
 
       console.log("onFinish: Attempting to add order with data:", orderData);
-      await orderService.addOrder(orderData as any); 
+      const orderId = await orderService.addOrder(orderData as any); // Get the ID of the newly added order
+      console.log("onFinish: Order added successfully with ID:", orderId);
+
+      // If payment method is bank transfer, save payment details to payments collection
+      if (values.paymentMethod === 'bank_transfer') {
+        console.log("onFinish: Payment method is bank_transfer. Preparing payment details.");
+        const paymentDetails: PaymentData = {
+          id: '', // This will be set by Firestore
+          orderId: orderId,
+          amount: totalPrice,
+          status: 'pending',
+          paymentDate: Timestamp.now(),
+          customerInfo: {
+            fullName: values.fullName,
+            phone: values.phone,
+            email: userData?.email || '', // Assuming email is available in userData
+            address: values.address,
+          },
+          bankName: 'MB Bank',
+          accountNumber: '07072972779',
+          accountName: 'CÔNG TY TNHH COFFEE INCENSE (Hoanvngoc)',
+          transferContent: `${values.fullName} - ${values.phone} - Thanh toán đơn hàng`,
+        };
+        console.log("onFinish: Attempting to add payment with data:", paymentDetails);
+        await paymentService.addPayment(paymentDetails);
+        console.log("onFinish: Payment details added successfully.");
+      }
+
       message.success('Đặt hàng thành công! Cảm ơn bạn đã mua hàng.');
       clearCart(); 
       setOrderPlacedSuccessfully(true);
