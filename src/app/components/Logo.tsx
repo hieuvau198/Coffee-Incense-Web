@@ -1,3 +1,4 @@
+// src\app\components\Logo.tsx
 import { Link } from "react-router";
 
 const Logo = ({
@@ -9,7 +10,7 @@ const Logo = ({
 }) => {
   return (
     <Link className="flex items-center" to="/">
-      <img src={import.meta.env.VITE_CLIENT_URL + "/favicon.ico"} alt="logo" />
+<img src="/favicon.ico" alt="logo" />
       <h1
         className={`text-2xl font-bold tracking-wider ml-2 text-white transition-opacity duration-300 ${className} ${
           collapsed ? "opacity-0" : "opacity-100"
