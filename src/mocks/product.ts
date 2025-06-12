@@ -3,7 +3,7 @@ import { Product, ProductCategory } from "../app/models/product";
 
 export const products: Product[] = [
   {
-    id: 1,
+    id: '1s0ntm9tgR34aawL',
     title: "Hương Cà Phê",
     description: "Hương thơm thư giãn, thanh lọc không khí, mang đến gợi ấn dễ chịu",
     image: "https://i.postimg.cc/pTNjZWn9/10.jpg",
@@ -20,7 +20,7 @@ export const products: Product[] = [
     featured: true
   },
   {
-    id: 2,
+    id: 'wcS8Oh4YU4qwzdFa',
     title: "Nụ Hương Cà Phê",
     description: "Tỏa không gian thư thái, thư mãi dụ mùi, giúp giữ hương thơm lâu",
     image: "https://i.postimg.cc/sxmZs5HS/11.jpg",
@@ -37,7 +37,7 @@ export const products: Product[] = [
     featured: true
   },
   {
-    id: 3,
+    id: 'XF58b5d4KyoNrnHp',
     title: "Nhang Vòng Cà Phê",
     description: "Hương thơm dễm khi mở hộp gần tam, bày trí hương thơm lâu dài",
     image: "https://i.postimg.cc/1XsNkvBs/12.jpg",
