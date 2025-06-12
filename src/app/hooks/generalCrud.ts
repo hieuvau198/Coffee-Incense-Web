@@ -11,8 +11,8 @@ import {
 } from "../modules/firebase/store";
 import { Product } from "../models/product";
 
-// Change: now points to the products sub-collection under document "ebcapp"
-const PRODUCT_COLLECTION = "ebcapp/products";
+// The collection name in Firestore for products
+const PRODUCT_COLLECTION = "products";
 
 export const useProductCrud = () => {
   // Create a new product
