@@ -128,13 +128,13 @@ const ForgetPassword: React.FC = () => {
               </Form>
             )}
 
-            <div className="mt-6 text-center">
+            {/* <div className="mt-6 text-center">
               <div className="flex items-center justify-center">
                 <Link to="/login" className="text-amber-700 hover:text-amber-600">
                   Quay lại trang đăng nhập
                 </Link>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

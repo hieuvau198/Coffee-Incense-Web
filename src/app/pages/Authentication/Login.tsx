@@ -134,6 +134,12 @@ const Login: React.FC = () => {
               </div>
             </Form>
 
+            <div className="mt-6 text-center">
+              <Link to="/" className="text-sm text-amber-700 hover:text-amber-600">
+                Quay lại trang chủ
+              </Link>
+            </div>
+
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
