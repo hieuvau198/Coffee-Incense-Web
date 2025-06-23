@@ -46,7 +46,7 @@ const EcoBrewSection = () => {
             
             <div className="flex gap-4">
               <Button
-                onClick={() => navigate('/products')}
+                onClick={() => navigate('/about')}
                 className="text-lg bg-transparent hover:bg-transparent border-[#8B7156] text-[#8B7156] px-8 rounded-full"
               >
                 Xem chi tiết
