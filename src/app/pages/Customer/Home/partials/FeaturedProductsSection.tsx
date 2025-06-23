@@ -49,11 +49,11 @@ const FeaturedProductsSection = () => {
           <div className="flex justify-center mb-12">
             <div className="text-center relative">
               <h2 className="text-4xl font-bold text-[#2D2424] mb-0">SẢN PHẨM NỔI BẬT</h2>
-              <img 
+              {/* <img 
                 src="https://i.postimg.cc/MTyQ3Cy9/image-81.png"
                 alt="Star decoration" 
                 className="absolute -top-16 -right-16 w-16"
-              />
+              /> */}
             </div>
           </div>
 
