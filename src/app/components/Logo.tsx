@@ -10,7 +10,7 @@ const Logo = ({
 }) => {
   return (
     <Link className="flex items-center" to="/">
-<img src="/favicon.ico" alt="logo" />
+<img src="/favicon.ico" alt="logo" />  {/* fix logo / brand image here */}
       <h1
         className={`text-2xl font-bold tracking-wider ml-2 text-white transition-opacity duration-300 ${className} ${
           collapsed ? "opacity-0" : "opacity-100"

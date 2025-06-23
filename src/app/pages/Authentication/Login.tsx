@@ -1,3 +1,4 @@
+// src\app\pages\Authentication\Login.tsx
 import React from "react";
 import { Button, Checkbox, Form, Input, message } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
@@ -45,7 +46,7 @@ const Login: React.FC = () => {
       <div className="w-full lg:w-1/2 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img 
-            src="/src/assets/images/logo.png" 
+            src="/favicon.svg" 
             alt="Eco Brew Cycle Logo" 
             className="mx-auto h-16 w-auto"
           />
