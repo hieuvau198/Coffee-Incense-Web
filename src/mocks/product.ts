@@ -54,7 +54,7 @@ export const products: Product[] = [
     featured: true
   },
   {
-    id: 4,
+    id: 'BsQJ3kMByrPcmbNP',
     title: "Hương Sào Cà Phê",
     description: "Hình sự sạch, không tạp chất, mùi hương không gây tồn, nhỏ nhẹ xóa bỏ mùi",
     image: "https://i.postimg.cc/T1Zq0x8k/18.jpg",
@@ -71,7 +71,7 @@ export const products: Product[] = [
     featured: false
   },
   {
-    id: 5,
+    id: 'RwtuctOuX3IMvWh5',
     title: "Hương Không Tăm Cà Phê",
     description: "Giúp không gian thoải mái, trồng mùi tàn anh, đem không gian sống",
     image: "https://i.postimg.cc/DfDgnrWq/19.jpg",
@@ -88,7 +88,7 @@ export const products: Product[] = [
     featured: false
   },
   {
-    id: 6,
+    id: 'DYpYzWAz53Q3Oblz',
     title: "Bột Hương Cà Phê",
     description: "Bột hương có thể đem sử dụng được đa công năng, kết hợp với nguyên liệu khác",
     image: "https://i.postimg.cc/28Zx61vg/20.jpg",
