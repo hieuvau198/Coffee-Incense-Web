@@ -59,7 +59,7 @@ const FeaturedProductsSection = () => {
 
           <div className="mb-8 max-w-3xl mx-auto text-center">
             <p className="text-gray-700">
-              EcoBrewCycle là quy trình cà phê thơm ngon, sạch và trách nhiệm với môi trường. Thụ quân tái sử dụng các phế phẩm từ lý trình chế biến không bỏ chất, tận dụng mọng lại hương thơm nhu mịn, giúp thư giãn và giảm căng thẳng, cho sự khâng phí trong nên xanh đẹp, phổi bạn thoát mảt cỏn tắm đều là sống xanh.
+              Mỗi que nhang EBC là lựa chọn tinh tế giúp thanh lọc không gian, mang lại sự tịnh tâm và đồng thời góp phần giảm thiểu rác thải cà phê, bảo vệ môi trường sống. Hãy để EcoBrewCycle đồng hành cùng bạn trên hành trình sống xanh và an lành mỗi ngày!
             </p>
           </div>
 

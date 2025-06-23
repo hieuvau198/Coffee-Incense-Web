@@ -41,7 +41,7 @@ const EcoBrewSection = () => {
             </div>
             
             <p className="text-gray-700 leading-relaxed">
-              EcoBrewCycle là quy trình cà phê thơm ngon, sạch và trách nhiệm với môi trường. Thụ quân tái sử dụng các phế phẩm từ lý trình chế biến không bỏ chất, tận dụng mọng lại hương thơm nhu mịn, giúp thư giãn và giảm căng thẳng, cho sự khâng phí trong nên xanh đẹp, phổi bạn thoát mảt cỏn tắm đều là sống xanh, trở lại môi trong hành trình dạo về môi trường.
+              EcoBrewCycle là dự án khởi nghiệp xanh, tiên phong trong việc tái chế bã cà phê thành nhang sạch, an toàn cho sức khỏe và thân thiện với môi trường. Chúng tôi thu gom bã cà phê từ các quán cà phê địa phương, sau đó xử lý theo quy trình tự nhiên, không sử dụng hóa chất, mang đến sản phẩm nhang với hương thơm dịu nhẹ, dễ chịu, tinh khiết giúp thư giãn tinh thần, tạo không gian an lành và góp phần giảm thiểu lượng rác thải ra môi trường. Với mỗi que nhang được thắp lên, bạn không chỉ tận hưởng mùi hương tinh khiết mà còn cùng chúng tôi lan tỏa lối sống xanh, bền vững và ý nghĩa hơn cho cộng đồng.
             </p>
             
             <div className="flex gap-4">

@@ -5,7 +5,7 @@ export const products: Product[] = [
   {
     id: '1s0ntm9tgR34aawL',
     title: "Hương Cà Phê",
-    description: "Hương thơm thư giãn, thanh lọc không khí, mang đến gợi ấn dễ chịu",
+    description: "Hương thơm thư giãn, Thanh lọc không khí, Mang đến cảm giác ấm áp và dễ chịu",
     image: "https://i.postimg.cc/pTNjZWn9/10.jpg",
     category: "incense",
     fullDescription: "Hương Cà Phê mang đến cho bạn trải nghiệm thư giãn độc đáo với hương thơm đặc trưng của cà phê Việt Nam. Sản phẩm được làm từ nguyên liệu tự nhiên, giúp thanh lọc không khí và tạo không gian ấm cúng cho ngôi nhà của bạn.",
@@ -22,7 +22,7 @@ export const products: Product[] = [
   {
     id: 'wcS8Oh4YU4qwzdFa',
     title: "Nụ Hương Cà Phê",
-    description: "Tỏa không gian thư thái, thư mãi dụ mùi, giúp giữ hương thơm lâu",
+    description: "Tạo không gian thư giãn, Khử mùi tự nhiên, Giúp cân bằng năng lượng",
     image: "https://i.postimg.cc/sxmZs5HS/11.jpg",
     category: "incense",
     fullDescription: "Nụ Hương Cà Phê được thiết kế đặc biệt để tỏa hương thơm nhẹ nhàng, tinh tế trong không gian sống. Sản phẩm giúp thư giãn tinh thần, tạo cảm giác an yên và giữ hương thơm lâu dài.",
@@ -39,7 +39,7 @@ export const products: Product[] = [
   {
     id: 'XF58b5d4KyoNrnHp',
     title: "Nhang Vòng Cà Phê",
-    description: "Hương thơm dễm khi mở hộp gần tam, bày trí hương thơm lâu dài",
+    description: "Tỏa hương cà phê dịu nhẹ, Kéo dài thời gian thư giãn, Góp phần làm sạch không khí sống",
     image: "https://i.postimg.cc/1XsNkvBs/12.jpg",
     category: "incense",
     fullDescription: "Nhang Vòng Cà Phê là sản phẩm nhang hình tròn đặc biệt, dễ dàng đặt trong các không gian nhỏ và tỏa hương thơm đều khắp phòng. Sản phẩm này lý tưởng cho việc thư giãn, thiền định hoặc tạo bầu không khí ấm cúng.",
