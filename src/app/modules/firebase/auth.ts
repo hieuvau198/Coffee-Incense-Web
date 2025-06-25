@@ -8,6 +8,7 @@ import {
   GoogleAuthProvider,
   User,
 } from "firebase/auth";
+import Cookies from "js-cookie";
 
 export const doCreateUserWithEmailAndPassword = (email: string, password: string) => {
   return createUserWithEmailAndPassword(auth, email, password);
@@ -109,11 +110,16 @@ export const doSignInWithGoogle = async (): Promise<{ user: User; role: string }
   }
 };
 
-export const doSignOut = () => auth.signOut();
+export const doSignOut = async () => {
+  auth.signOut();
+  Cookies.remove("user");
+}
+  
 
 export const logout = async (): Promise<void | unknown> => {
   try {
     await auth.signOut();
+    Cookies.remove("user");
   } catch (error) {
     return error;
   }

@@ -1,3 +1,4 @@
+// src\app\modules\cookie.ts
 export function getCookie(cookieName: string) {
   const name = cookieName + "=";
   const decodedCookie = decodeURIComponent(document.cookie);

@@ -1,14 +1,18 @@
-import { db } from './firebase';
+// src\app\modules\firebase\user.ts
+import { db, storage } from './firebase';
 import {
   collection,
   getDocs,
   getDoc,
+  updateDoc,
   doc,
   onSnapshot,
   QuerySnapshot,
   DocumentData
 } from 'firebase/firestore';
 import { User } from '../../models/user';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+
 
 const usersCollection = collection(db, 'users');
 
@@ -32,3 +36,19 @@ export const subscribeToUsers = (callback: (users: User[]) => void) => {
     callback(users);
   });
 }; 
+
+export const updateUser = async (id: string, data: Partial<User>): Promise<void> => {
+  const userDocRef = doc(usersCollection, id);
+  await updateDoc(userDocRef, data);
+};
+
+export const uploadProfileImage = async (userId: string, file: File): Promise<string> => {
+  const storageRef = ref(storage, `avatars/${userId}`);
+  await uploadBytes(storageRef, file);
+  return await getDownloadURL(storageRef);
+};
+
+export const deleteProfileImage = async (userId: string): Promise<void> => {
+  const storageRef = ref(storage, `avatars/${userId}`);
+  await deleteObject(storageRef).catch(() => {}); // ignore if file doesn't exist
+};

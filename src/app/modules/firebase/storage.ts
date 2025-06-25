@@ -1,3 +1,4 @@
+// src\app\modules\firebase\storage.ts
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export const uploadImage = async (file: File, folder: string): Promise<string> => {
