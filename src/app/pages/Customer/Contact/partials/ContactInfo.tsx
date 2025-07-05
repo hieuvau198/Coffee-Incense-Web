@@ -1,3 +1,4 @@
+// src\app\pages\Customer\Contact\partials\ContactInfo.tsx
 import React from 'react';
 
 const ContactInfo: React.FC = () => {

@@ -1,6 +1,8 @@
+// src\app\pages\Customer\Contact\Contact.tsx
 import React from 'react';
 import ContactForm from './partials/ContactForm';
 import ContactInfo from './partials/ContactInfo';
+import ReturnPolicy from './partials/ReturnPolicy';
 
 const Contact: React.FC = () => {
   return (
@@ -32,7 +34,7 @@ const Contact: React.FC = () => {
       </div>
       
       {/* Contact Form Section */}
-      <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
+      <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48 mb-12">
         <div className="bg-white rounded-lg shadow-md overflow-hidden px-6 py-8 max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row lg:justify-center lg:gap-10">
             {/* Left column - Contact Info */}
@@ -46,6 +48,11 @@ const Contact: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Return Policy Section */}
+      <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
+        <ReturnPolicy />
       </div>
     </div>
   );
