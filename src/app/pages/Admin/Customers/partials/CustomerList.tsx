@@ -1,3 +1,5 @@
+// src\app\pages\Admin\Customers\partials\CustomerList.tsx
+
 import { MailOutlined, PhoneOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { Input, Select, Space, Tag, Card, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';

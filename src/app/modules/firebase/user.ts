@@ -8,7 +8,8 @@ import {
   doc,
   onSnapshot,
   QuerySnapshot,
-  DocumentData
+  DocumentData,
+  deleteDoc
 } from 'firebase/firestore';
 import { User } from '../../models/user';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
@@ -41,6 +42,12 @@ export const updateUser = async (id: string, data: Partial<User>): Promise<void>
   const userDocRef = doc(usersCollection, id);
   await updateDoc(userDocRef, data);
 };
+
+export const deleteUser = async (id: string): Promise<void> => {
+  const userDocRef = doc(usersCollection, id);
+  await deleteDoc(userDocRef);
+};
+
 
 export const uploadProfileImage = async (userId: string, file: File): Promise<string> => {
   const storageRef = ref(storage, `avatars/${userId}`);

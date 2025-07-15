@@ -1,3 +1,5 @@
+// src\app\pages\Admin\Customers\Customers.tsx
+
 import React, { useState } from 'react';
 import { Card } from 'antd';
 import CustomerList from './partials/CustomerList';
