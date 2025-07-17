@@ -1,3 +1,4 @@
+// src\app\pages\Admin\Orders\partials\EditOrder.tsx
 import React, { useEffect, useState } from 'react';
 import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Card, Form, Input, Select, DatePicker, Typography, Spin, Space, message, InputNumber } from 'antd';
@@ -56,33 +57,34 @@ const EditOrder: React.FC<EditOrderProps> = ({ order, onCancel, onSuccess }) => 
   }, [order, form, getOrderById]);
 
   const handleFinish = async (values: any) => {
-    setSubmitting(true);
-    try {
-      if (order.id) {
-        const updatedOrder: OrderData = {
-          ...order,
-          customerInfo: {
-            fullName: values.fullName,
-            phone: values.phone,
-            address: values.address,
-            note: values.note,
-          },
-          totalPrice: values.totalPrice,
-          paymentMethod: values.paymentMethod,
-          orderDate: values.orderDate.toDate(),
-          status: values.status,
-        };
-        await updateOrder(order.id, updatedOrder);
-        message.success("Cập nhật đơn hàng thành công!");
-        onSuccess();
-      }
-    } catch (error) {
-      console.error("Error updating order:", error);
-      message.error("Không thể cập nhật đơn hàng.");
-    } finally {
-      setSubmitting(false);
+  setSubmitting(true);
+  try {
+    if (order.id) {
+      const updatedOrder: OrderData = {
+        ...order,
+        customerInfo: {
+          fullName: values.customerInfo?.fullName || '',
+          phone: values.customerInfo?.phone || '',
+          address: values.customerInfo?.address || '',
+          note: values.customerInfo?.note || '',
+        },
+        totalPrice: values.totalPrice,
+        paymentMethod: values.paymentMethod,
+        orderDate: values.orderDate.toDate(),
+        status: values.status,
+      };
+      await updateOrder(order.id, updatedOrder);
+      message.success("Cập nhật đơn hàng thành công!");
+      onSuccess();
     }
-  };
+  } catch (error) {
+    console.error("Error updating order:", error);
+    message.error("Không thể cập nhật đơn hàng.");
+  } finally {
+    setSubmitting(false);
+  }
+};
+
 
   if (loading) {
     return (
