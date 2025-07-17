@@ -16,7 +16,12 @@ const Register: React.FC = () => {
       message.success("Đăng ký thành công! Vui lòng đăng nhập.");
       navigate("/login");
     } catch (error: any) {
-      message.error(error.message || "Đăng ký thất bại!");
+      if (error.code === "auth/email-already-in-use") {
+        message.error("Email này đã được sử dụng! Vui lòng đăng nhập.");
+        navigate("/login");
+      } else {
+        message.error(error.message || "Đăng ký thất bại!");
+      }
     }
   };
 
@@ -59,9 +64,9 @@ const Register: React.FC = () => {
             Đăng Ký Tài Khoản
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Đã có tài khoản?{" "}
+            Bạn đã có tài Khoản?{" "}
             <Link to="/login" className="font-medium text-amber-700 hover:text-amber-600">
-              đăng nhập
+              Đăng nhập ngay
             </Link>
           </p>
         </div>
@@ -238,6 +243,12 @@ const Register: React.FC = () => {
                 </Button>
               </Form.Item>
             </Form>
+
+            <div className="mt-6 text-center">
+              <Link to="/" className="text-sm text-amber-700 hover:text-amber-600">
+                Quay lại trang chủ
+              </Link>
+            </div>
           </div>
         </div>
       </div>
