@@ -1,8 +1,8 @@
 // src/app/pages/Customer/Blog/partials/BlogDetail.tsx
 import React, {useEffect} from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Calendar, User, Share2, Heart, MessageCircle } from "lucide-react";
-import { blogPosts, relatedPosts, BlogPost } from "../../../../../mocks/blog";
+import {  Calendar, User, Share2, Heart, MessageCircle } from "lucide-react";
+import { blogPosts, relatedPosts } from "../../../../../mocks/blog";
 
 const BlogDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,12 +20,6 @@ const BlogDetail: React.FC = () => {
       <div className="bg-[#F9F2EA] min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Bài viết không tồn tại</h2>
-          <button
-            onClick={() => navigate("/blogs")}
-            className="bg-amber-600 text-white px-6 py-2 rounded-lg hover:bg-amber-700 transition-colors"
-          >
-            Quay lại Blog
-          </button>
         </div>
       </div>
     );
@@ -35,13 +29,7 @@ const BlogDetail: React.FC = () => {
     <div className="bg-[#F9F2EA] min-h-screen">
       {/* Header */}
       <div className="container mx-auto px-4 pt-8">
-        <button
-          onClick={() => navigate("/blogs")}
-          className="flex items-center gap-2 text-amber-700 hover:text-amber-800 transition-colors mb-6"
-        >
-          <ArrowLeft size={20} />
-          Quay lại Blog
-        </button>
+
       </div>
 
       {/* Hero Image */}
