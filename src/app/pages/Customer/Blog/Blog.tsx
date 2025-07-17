@@ -1,3 +1,4 @@
+// src\app\pages\Customer\Blog\Blog.tsx
 import React from "react";
 
 const blogPosts = [

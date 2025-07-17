@@ -26,6 +26,9 @@ import CheckoutPage from "../pages/Customer/Checkout/Checkout";
 import OrderConfirmation from "../pages/Customer/Checkout/OrderConfirmation";
 import OrderSuccess from '../pages/Customer/Checkout/OrderSuccess';
 
+import EditCustomer from "../pages/Admin/Customers/partials/EditCustomer";
+
+
 const MainRoutes = () => {
   return (
     <Routes>
@@ -56,6 +59,9 @@ const MainRoutes = () => {
         <Route path="orders" element={<Orders />} />
         <Route path="product" element={<Products />} />
         <Route path="customers" element={<Customers />} />
+        
+        <Route path="customers/edit/:id" element={<EditCustomer />} />
+
         <Route path="payments" element={<Payments />} />
         <Route path="reviews" element={<Reviews />} />
         <Route path="settings" element={<Settings />} />
