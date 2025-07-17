@@ -1,42 +1,18 @@
-// src\app\pages\Customer\Blog\Blog.tsx
+// src/app/pages/Customer/Blog/Blog.tsx
 import React from "react";
-
-const blogPosts = [
-  {
-    id: 1,
-    title: "Hành Trình Biến Bã Cà Phê Thành Hương",
-    description:
-      "Bã cà phê, vốn bị bỏ đi sau pha, thực ra là một nguồn tài nguyên quý giá cho hương thơm. ",
-    image: "https://i.postimg.cc/brsfbx8x/21.jpg",
-    date: "06/04/2025",
-  },
-  {
-    id: 2,
-    title: "Giải Pháp Tự Nhiên Cho Không Gian Sống",
-    description:
-      "Hương thơm từ bã cà phê mang đến cảm giác dễ chịu, là lựa chọn lý tưởng để thanh lọc không khí trong nhà mà không cần hóa chất.",
-    image: "https://i.postimg.cc/SNYpxfgq/22.jpg",
-    date: "06/04/2025",
-  },
-  {
-    id: 3,
-    title: "Bước Đơn Giản Để Bảo Vệ Sức Khỏe",
-    description:
-      "Hít thở hương cà phê không chỉ thư giãn mà còn giúp tinh thần tỉnh táo và dễ chịu mỗi ngày.",
-    image: "https://i.postimg.cc/kMpmCpFf/23.jpg",
-    date: "06/04/2025",
-  },
-  {
-    id: 4,
-    title: "Thư Giãn Với Hương Nhang Từ Bã Cà Phê",
-    description:
-      "Tận dụng bã cà phê để làm hương nhang là một cách vừa thân thiện với môi trường vừa mang lại trải nghiệm thư giãn độc đáo.",
-    image: "https://i.postimg.cc/T1FMcKYZ/24.jpg",
-    date: "06/04/2025",
-  },
-];
+import { useNavigate } from "react-router-dom";
+import { blogPosts } from "../../../../mocks/blog";
 
 const Blog: React.FC = () => {
+  const navigate = useNavigate();
+
+  // Lấy 4 bài viết đầu tiên
+  const limitedPosts = blogPosts.slice(0, 4);
+
+  const handlePostClick = (postId: number) => {
+    navigate(`/blogs/${postId}`);
+  };
+
   return (
     <div className="bg-[#F9F2EA] min-h-screen py-10 px-4 pt-10">
       <div className="container mx-auto">
@@ -64,10 +40,11 @@ const Blog: React.FC = () => {
 
         {/* Blog list */}
         <div className="container mx-auto px-4 md:px-6 lg:px-28 xl:px-48">
-          {blogPosts.map((post) => (
+          {limitedPosts.map((post) => (
             <div
               key={post.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row gap-4 mb-6"
+              className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row gap-4 mb-6 cursor-pointer hover:shadow-lg transition-shadow duration-300"
+              onClick={() => handlePostClick(post.id)}
             >
               <img
                 src={post.image}
@@ -76,7 +53,9 @@ const Blog: React.FC = () => {
               />
               <div className="p-4 flex flex-col justify-between">
                 <div>
-                  <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
+                  <h2 className="text-xl font-semibold mb-2 hover:text-amber-700 transition-colors">
+                    {post.title}
+                  </h2>
                   <p className="text-gray-600 text-sm">{post.description}</p>
                 </div>
                 <p className="text-xs text-gray-400 mt-2">Hoanvngoc • {post.date}</p>

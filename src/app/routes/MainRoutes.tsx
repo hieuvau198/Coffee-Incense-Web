@@ -18,6 +18,7 @@ import Register from "../pages/Authentication/Register";
 import Contact from "../pages/Customer/Contact/Contact";
 import Products from "../pages/Admin/Products/Products";
 import Blog from "../pages/Customer/Blog/Blog";
+import BlogDetail from "../pages/Customer/Blog/partials/BlogDetail";
 import AboutUs from "../pages/Customer/AboutUs/AboutUs";
 import ForgetPassword from "../pages/Authentication/ForgetPassword/ForgetPassword";
 import CartPage from "../pages/Customer/Cart/Cart";
@@ -39,6 +40,7 @@ const MainRoutes = () => {
         <Route path="product-detail" element={<ProductDetail />} />
         <Route path="contact" element={<Contact />} />
         <Route path="blogs" element={<Blog />} />
+        <Route path="blogs/:id" element={<BlogDetail />} />
         <Route path="about" element={<AboutUs />} />
         <Route path="cart" element={<CartPage />} />
         <Route path="profile" element={<Profile />} />
