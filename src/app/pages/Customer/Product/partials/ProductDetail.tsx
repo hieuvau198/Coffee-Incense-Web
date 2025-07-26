@@ -113,7 +113,7 @@ const ProductDetail = () => {
               
               {/* Product Image Section */}
               <div className="relative group">
-                <div className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-[#FFF8F0] to-[#E6D8C8] p-6">
+                <div className="">
                   {imageLoading && (
                     <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#FFF8F0] to-[#E6D8C8] rounded-2xl">
                       <div className="w-12 h-12 border-3 border-[#D4A017] border-t-[#3C2F2F] rounded-full animate-spin"></div>
@@ -122,12 +122,10 @@ const ProductDetail = () => {
                   <img
                     src={product.image || ''}
                     alt={product.title || 'Product image'}
-                    className={`w-full h-full object-cover rounded-xl transition-all duration-700 group-hover:scale-105 ${
-                      imageLoading ? 'opacity-0' : 'opacity-100'
-                    }`}
+                    className={`w-full h-full object-cover rounded-xl  `}
                     onLoad={() => setImageLoading(false)}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className=""></div>
                 </div>
                 
                 {/* Image Badge */}
@@ -148,7 +146,7 @@ const ProductDetail = () => {
                       {formatPrice(product.price || 0)}
                     </span>
                     <span className="text-[#3C2F2F] line-through text-lg">
-                      {formatPrice(75000)}
+                      {formatPrice((product.price || 0) * 1.92307)}
                     </span>
                     <span className="bg-gradient-to-r from-[#D4A017] to-[#6B4E31] text-white px-3 py-1 rounded-full text-sm font-medium">
                       -48%
