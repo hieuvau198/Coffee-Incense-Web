@@ -148,10 +148,10 @@ const ProductDetail = () => {
                       {formatPrice(product.price || 0)}
                     </span>
                     <span className="text-[#3C2F2F] line-through text-lg">
-                      {formatPrice((product.price || 0) * 1.2)}
+                      {formatPrice(75000)}
                     </span>
                     <span className="bg-gradient-to-r from-[#D4A017] to-[#6B4E31] text-white px-3 py-1 rounded-full text-sm font-medium">
-                      -17%
+                      -48%
                     </span>
                   </div>
                 </div>
