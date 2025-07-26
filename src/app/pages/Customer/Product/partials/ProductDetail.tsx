@@ -36,7 +36,9 @@ const ProductDetail = () => {
   };
 
   const handleIncreaseQuantity = () => {
-    setQuantity(prev => prev + 1);
+    if (product && quantity < (product.stock || 0)) {
+      setQuantity(prev => prev + 1);
+    }
   };
 
   const handleDecreaseQuantity = () => {
@@ -46,7 +48,7 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    if (product) {
+    if (product && (product.stock || 0) > 0) {
       addToCart({
         productId: product.id?.toString() || '',
         productTitle: product.title || '',
@@ -63,6 +65,9 @@ const ProductDetail = () => {
       currency: 'VND'
     }).format(price);
   };
+
+  const isOutOfStock = !product || (product.stock || 0) < 1;
+  const availableStock = product?.stock || 0;
 
   const tabs = [
     { id: 'description', label: 'Mô tả', icon: '📝' },
@@ -113,7 +118,7 @@ const ProductDetail = () => {
               
               {/* Product Image Section */}
               <div className="relative group">
-                <div className="">
+                <div className="relative">
                   {imageLoading && (
                     <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#FFF8F0] to-[#E6D8C8] rounded-2xl">
                       <div className="w-12 h-12 border-3 border-[#D4A017] border-t-[#3C2F2F] rounded-full animate-spin"></div>
@@ -122,10 +127,16 @@ const ProductDetail = () => {
                   <img
                     src={product.image || ''}
                     alt={product.title || 'Product image'}
-                    className={`w-full h-full object-cover rounded-xl  `}
+                    className={`w-full h-full object-cover rounded-xl ${isOutOfStock ? 'opacity-60 grayscale' : ''}`}
                     onLoad={() => setImageLoading(false)}
                   />
-                  <div className=""></div>
+                  {isOutOfStock && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-xl">
+                      <div className="bg-red-600 text-white px-6 py-3 rounded-full font-bold text-lg transform rotate-12">
+                        HẾT HÀNG
+                      </div>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Image Badge */}
@@ -142,17 +153,36 @@ const ProductDetail = () => {
                     {product.title}
                   </h1>
                   <div className="flex items-baseline space-x-3">
-                    <span className="text-3xl font-bold text-[#6B4E31]">
+                    <span className={`text-3xl font-bold ${isOutOfStock ? 'text-gray-400' : 'text-[#6B4E31]'}`}>
                       {formatPrice(product.price || 0)}
                     </span>
-                    <span className="text-[#3C2F2F] line-through text-lg">
+                    <span className={`line-through text-lg ${isOutOfStock ? 'text-gray-400' : 'text-[#3C2F2F]'}`}>
                       {formatPrice((product.price || 0) * 1.92307)}
                     </span>
-                    <span className="bg-gradient-to-r from-[#D4A017] to-[#6B4E31] text-white px-3 py-1 rounded-full text-sm font-medium">
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      isOutOfStock 
+                        ? 'bg-gray-400 text-white' 
+                        : 'bg-gradient-to-r from-[#D4A017] to-[#6B4E31] text-white'
+                    }`}>
                       -48%
                     </span>
                   </div>
                 </div>
+
+                {/* Out of Stock Warning */}
+                {isOutOfStock && (
+                  <div className="p-4 bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-300 rounded-2xl">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold">!</span>
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-red-800">Sản phẩm hết hàng</h3>
+                        <p className="text-red-600 text-sm">Sản phẩm này hiện tại không có sẵn để mua. Vui lòng quay lại sau.</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Description */}
                 <div className="p-6 bg-gradient-to-br from-[#F9F2EA] to-[#E6D8C8] rounded-2xl border border-[#D4A017]/20">
@@ -165,35 +195,61 @@ const ProductDetail = () => {
                     Số lượng
                   </label>
                   <div className="flex items-center space-x-4">
-                    <div className="flex items-center bg-white border-2 border-[#D4A017] rounded-2xl overflow-hidden shadow-lg">
+                    <div className={`flex items-center bg-white border-2 rounded-2xl overflow-hidden shadow-lg ${
+                      isOutOfStock 
+                        ? 'border-gray-300 opacity-50' 
+                        : 'border-[#D4A017]'
+                    }`}>
                       <button
                         onClick={handleDecreaseQuantity}
-                        className="w-12 h-12 flex items-center justify-center text-[#3C2F2F] hover:bg-[#D4A017]/20 hover:text-[#6B4E31] transition-all duration-200 font-bold text-lg"
-                        disabled={quantity <= 1}
+                        disabled={quantity <= 1 || isOutOfStock}
+                        className={`w-12 h-12 flex items-center justify-center font-bold text-lg transition-all duration-200 ${
+                          isOutOfStock || quantity <= 1
+                            ? 'text-gray-400 cursor-not-allowed'
+                            : 'text-[#3C2F2F] hover:bg-[#D4A017]/20 hover:text-[#6B4E31]'
+                        }`}
                       >
                         −
                       </button>
-                      <div className="w-16 h-12 flex items-center justify-center border-x-2 border-[#D4A017] bg-[#FFF8F0] font-bold text-[#3C2F2F]">
+                      <div className={`w-16 h-12 flex items-center justify-center border-x-2 font-bold ${
+                        isOutOfStock 
+                          ? 'border-gray-300 bg-gray-100 text-gray-400'
+                          : 'border-[#D4A017] bg-[#FFF8F0] text-[#3C2F2F]'
+                      }`}>
                         {quantity}
                       </div>
                       <button
                         onClick={handleIncreaseQuantity}
-                        className="w-12 h-12 flex items-center justify-center text-[#3C2F2F] hover:bg-[#D4A017]/20 hover:text-[#6B4E31] transition-all duration-200 font-bold text-lg"
+                        disabled={quantity >= availableStock || isOutOfStock}
+                        className={`w-12 h-12 flex items-center justify-center font-bold text-lg transition-all duration-200 ${
+                          isOutOfStock || quantity >= availableStock
+                            ? 'text-gray-400 cursor-not-allowed'
+                            : 'text-[#3C2F2F] hover:bg-[#D4A017]/20 hover:text-[#6B4E31]'
+                        }`}
                       >
                         +
                       </button>
                     </div>
-                    <span className="text-[#6B4E31] text-sm">Có sẵn: 99+ sản phẩm</span>
+                    <span className={`text-sm ${isOutOfStock ? 'text-red-600 font-semibold' : 'text-[#6B4E31]'}`}>
+                      {isOutOfStock ? 'Hết hàng' : `Có sẵn: ${availableStock} sản phẩm`}
+                    </span>
                   </div>
                 </div>
 
                 {/* Add to Cart Button */}
                 <button
                   onClick={handleAddToCart}
-                  className="w-full h-14 border-2 border-[#D4A017] text-[#6B4E31] hover:text-white bg-transparent hover:bg-gradient-to-r hover:from-[#3C2F2F] hover:to-[#6B4E31] rounded-2xl font-semibold transition-all duration-300 hover:border-transparent hover:shadow-lg flex items-center justify-center space-x-3 group"
+                  disabled={isOutOfStock}
+                  className={`w-full h-14 rounded-2xl font-semibold transition-all duration-300 flex items-center justify-center space-x-3 group ${
+                    isOutOfStock
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed border-2 border-gray-300'
+                      : 'border-2 border-[#D4A017] text-[#6B4E31] hover:text-white bg-transparent hover:bg-gradient-to-r hover:from-[#3C2F2F] hover:to-[#6B4E31] hover:border-transparent hover:shadow-lg'
+                  }`}
                 >
-                  <span className="group-hover:scale-110 transition-transform duration-300">🛒</span>
-                  <span>Thêm vào giỏ hàng</span>
+                  <span className={`transition-transform duration-300 ${isOutOfStock ? '' : 'group-hover:scale-110'}`}>
+                    {isOutOfStock ? '❌' : '🛒'}
+                  </span>
+                  <span>{isOutOfStock ? 'Hết hàng' : 'Thêm vào giỏ hàng'}</span>
                 </button>
 
                 {/* Trust Badges */}
