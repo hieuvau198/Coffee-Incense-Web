@@ -427,7 +427,7 @@ const CheckoutPage: React.FC = () => {
                         type="primary"
                         className="bg-[#8B7156] border-[#8B7156] hover:bg-[#64503C] hover:border-[#64503C]"
                         htmlType="submit" // This will trigger the onFinish of the Form
-                        disabled={isSubmitDisabled}
+                        disabled={false}
                       >
                         Xác nhận và đặt hàng
                       </Button>
@@ -438,7 +438,7 @@ const CheckoutPage: React.FC = () => {
                         type="primary"
                         className="bg-[#8B7156] border-[#8B7156] hover:bg-[#64503C] hover:border-[#64503C] ml-3"
                         htmlType="submit" // This will also trigger the onFinish of the Form
-                        disabled={isSubmitDisabled}
+                        disabled={false}
                       >
                         Hoàn tất đơn hàng
                       </Button>

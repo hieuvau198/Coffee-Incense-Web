@@ -81,28 +81,42 @@ export const doSignInWithGoogle = async (): Promise<{ user: User; role: string }
       }
     }
 
+    const currentDate = new Date().toISOString();
+    const fullName = (firstName || "") + " " + (lastName || "");
+
+    // Save to users collection
     await setDoc(userDocRef, {
       uid: user.uid,
       email: user.email,
       firstName,
       lastName,
+      phone: "Ẩn danh",
       displayName: user.displayName || "",
       photoURL: user.photoURL || "",
       role: "customer",
       provider: "google",
-      createdAt: new Date().toISOString()
+      createdAt: currentDate
     });
-    // Thêm vào collection customers
+
+    // Save to customers collection with all relevant user data
     const customerDocRef = doc(db, "customers", user.uid);
     await setDoc(customerDocRef, {
-      name: (firstName || "") + " " + (lastName || ""),
+      uid: user.uid,
+      name: fullName.trim() || user.displayName || "Khách hàng",
       email: user.email || "",
-      phone: "",
+      firstName,
+      lastName,
+      phone: "Ẩn danh",
+      displayName: user.displayName || "",
+      photoURL: user.photoURL || "",
       status: "active",
       totalBookings: 0,
       totalSpent: 0,
       lastBooking: "",
+      provider: "google",
+      createdAt: currentDate
     });
+
     return { user, role: "customer" };
   } else {
     const userData = userDoc.data();
